@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-07 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-07</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 12</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:8.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 12 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "TSLA", title_cn: "特斯拉飙涨6.7%重返$400上方，站稳后这仓该怎么交易？", body_cn: "特斯拉（TSLA）今日飙涨6.69%、重回$420，强势收复昨日失守的$400关口，\"股价skyrocket\"成为市场焦点。反弹背景是纳指与道指同步走高（道指首破53,000）、科技股情绪整体回暖，资金重新拥抱高beta龙头；但媒体也点出\"BYD的胜利给特斯拉带来隐性警告\"，全球电动车竞争的压力未消。$400既是刚收复的多空分水岭，也是回调时的第一道支撑。站上$400的特斯拉，你会突破追多、等回踩$400确认再进，还是趁反弹先了结？", title_en: "Tesla Surges 6.7%, Reclaims $400 — How Do You Trade This Position?", body_en: "Tesla (TSLA) surged 6.69% to $420, decisively reclaiming the $400 level lost in the prior session. The rebound was fueled by broad tech strength — the Dow Jones breached 53,000 for the first time while the Nasdaq rallied — as capital rotated back into high-beta leaders. However, analysts flagged BYD's rising dominance as a lingering structural threat to Tesla's global EV market share. With $400 now acting as the key bull-bear line, do you chase the breakout, wait for a retest of $400, or take profits into the bounce?" },
+  { ticker: "AMD", title_cn: "AMD大涨6.6%冲击万亿俱乐部，高盛上调目标价，还能上车吗？", body_cn: "AMD今日大涨6.61%、站上$552，领跑半导体反弹，直接催化是高盛（Goldman Sachs）上调AMD与泰瑞达（TER）目标价，卖方持续背书。市场同步热议\"AMD能否在2026年结束前跻身万亿美元俱乐部\"，叠加道指破53,000、纳指反弹的强劲科技动能，AMD成为资金轮动的首选。上半年跑赢英伟达的强势叙事仍在延续。当高盛加持遇上万亿想象空间，AMD这波6.6%放量反弹是新一轮主升浪起点，还是短线情绪透支？", title_en: "AMD Jumps 6.6% Toward Trillion-Dollar Club on Goldman Upgrade — Still a Buy?", body_en: "AMD surged 6.61% to $552, leading the semiconductor rebound after Goldman Sachs raised price targets on both AMD and Teradyne (TER), reinforcing persistent sell-side conviction. Market debate intensified around whether AMD can join the trillion-dollar club before end of 2026, with the Dow's 53,000 breakthrough and Nasdaq rebound amplifying tech momentum. AMD's narrative of outperforming Nvidia year-to-date remains intact. With Goldman's backing meeting trillion-dollar upside, is this 6.6% high-volume rally the start of a new leg higher, or a short-term sentiment overshoot?" },
+  { ticker: "SOXL", title_cn: "三倍半导体SOXL反弹7.3%，半导体V型修复，杠杆过山车还能追吗？", body_cn: "三倍做多半导体ETF（SOXL）今日反弹7.26%、冲上$194，追随半导体板块的V型修复，成为昨日暴跌后的强势反抽。板块催化来自三星财报前夕的半导体走强、SK海力士美股上市在即。但SeekingAlpha持续警示杠杆半导体基金\"在借来的时间里生存\"，3倍杠杆的衰减损耗在震荡中被放大，绝非长持工具。当板块情绪修复推动SOXL单日反弹逾7%，这波急拉是抄底良机，还是杠杆资金的又一次冲动？", title_en: "3x Leveraged SOXL Rebounds 7.3% in Semiconductor V-Shape Recovery — Still Chaseable?", body_en: "The Direxion Daily Semiconductor Bull 3X ETF (SOXL) rebounded 7.26% to $194, tracking a sharp V-shaped recovery in the semiconductor sector following the prior session's selloff. Catalysts included pre-earnings strength in Samsung and the imminent U.S. listing of SK Hynix. However, Seeking Alpha continues to warn that leveraged semiconductor funds are \"living on borrowed time,\" as 3x decay erodes returns significantly during volatile periods. With SOXL snapping back over 7% in a single session, is this a genuine dip-buying opportunity, or another impulsive surge driven by leveraged momentum?" },
+  { ticker: "DRAM", title_cn: "内存ETF DRAM涨6.8%，\"AI内存瓶颈见顶\"发酵，超级周期还在加速？", body_cn: "内存ETF（DRAM）今日上涨6.81%、回到$64，随存储板块整体反弹。核心催化是SeekingAlpha的重磅判断——\"AI内存瓶颈正在见顶（Buckle Up As The AI Memory Bottleneck Peaks）\"，暗示DRAM/HBM的结构性紧缺进入最关键阶段。对冲基金Appaloosa（Tepper）靠精准押注内存芯片，上半年大赚32%，更给这轮内存超级周期添了实锤注脚。但该ETF此前曾单日暴跌25%，波动剧烈。当AI内存紧缺叙事再度升温，你会押注内存超级周期延续，还是提防拥挤交易的回撤？", title_en: "Memory ETF DRAM Gains 6.8% as 'AI Memory Bottleneck Peak' Thesis Gains Traction — Supercycle Still Accelerating?", body_en: "The Memory ETF (DRAM) gained 6.81% to $64, rallying alongside a broad storage sector recovery. The core catalyst was Seeking Alpha's high-profile thesis — \"Buckle Up As The AI Memory Bottleneck Peaks\" — signaling that structural scarcity in DRAM and HBM is entering its most critical phase. Hedge fund Appaloosa (Tepper) delivered a 32% gain in H1 by precisely timing memory chip exposure, lending further conviction to the supercycle narrative. Yet this ETF previously fell 25% in a single session. As the AI memory scarcity story reheats, do you ride the supercycle thesis, or brace for a crowded-trade unwind?" },
+  { ticker: "MRVL", title_cn: "Marvell涨势重启，\"悄悄追赶博通AI金矿\"，华尔街终于醒了？", body_cn: "Marvell（MRVL）今日上涨1.62%、回到$249，与NXP半导体同步走强。市场叙事转向积极：媒体称\"Marvell正悄悄追赶博通的AI金矿，华尔街终于开始重视\"，定制AI芯片与光互连（Active Electrical Cable）的成长逻辑获重新定价。相较昨日近10%的杀跌，今日企稳反弹显示卖方前期上调目标价的判断正被验证。当定制芯片赛道被拿来对标博通的估值空间，Marvell这轮修复是价值重估的开始，还是板块普涨下的beta跟随？", title_en: "Marvell Rebounds, 'Quietly Chasing Broadcom's AI Goldmine' — Has Wall Street Finally Woken Up?", body_en: "Marvell Technology (MRVL) gained 1.62% to $249, recovering alongside NXP Semiconductors as market sentiment shifted constructively. Media framing turned bullish, with coverage noting \"Marvell is quietly catching up to Broadcom's AI goldmine\" as its custom AI chip and Active Electrical Cable growth thesis earns fresh valuation re-rating. The stabilization follows a near-10% selloff in the prior session, appearing to validate earlier sell-side price target upgrades. As Marvell is increasingly benchmarked against Broadcom's valuation upside, is this recovery the start of a genuine re-rating, or simply beta-driven sector follow-through?" },
+  { ticker: "MSFT", title_cn: "微软逆势跌1%，再砍4800岗位喂养AI，这笔账划算吗？", body_cn: "微软（MSFT）今日逆大盘微跌0.96%、回落至$387，在科技普涨日显得格外落寞。消息面聚焦成本重构：微软再裁4800人（含Xbox部门3200岗）\"以喂养AI机器\"，市场质疑其把资源持续向AI资本开支倾斜的回报兑现节奏。同时Anthropic在澳洲220亿美元AI云招标的动向，也牵动Azure的竞争格局。当巨头一边裁员、一边加码AI烧钱，微软这种\"节流换算力\"的打法，你认为是长期正确，还是短期盈利承压的信号？", title_en: "Microsoft Bucks Rally, Drops 1% as 4,800 Job Cuts Feed the AI Machine — Worth It?", body_en: "Microsoft (MSFT) fell 0.96% to $387, underperforming on a broad tech up-day as the market focused on its latest cost restructuring. The company announced an additional 4,800 layoffs — including 3,200 Xbox roles — framed as redirecting resources toward AI capital expenditure, prompting questions about the pace of return on its aggressive AI spending pivot. Separately, Anthropic's pursuit of a A$22 billion AI cloud contract in Australia adds competitive pressure to Azure. As Microsoft simultaneously cuts headcount and accelerates AI capex, is this \"streamline-to-compute\" strategy a long-term win, or a near-term earnings headwind?" },
+  { ticker: "META", title_cn: "Meta涨3%进军Neocloud，capex 2027将激增，算力野心太大了吗？", body_cn: "Meta（META）今日上涨2.98%、回升至$600，重新站上关键关口。催化来自算力战略升级：Meta正式进入Neocloud（新型云）业务，SemiAnalysis更预计其资本开支将在2027年激增，直指自建AI算力的长期野心。分析师安抚市场称对CoreWeave等云厂商的冲击有限，此前的\"Meta抛售恐慌\"被指是误读。但市值与估值之争仍在（是bargain还是value trap）。当Meta把算力自主权攥在手里，激增的capex是护城河投资，还是又一轮烧钱赌局？", title_en: "Meta Gains 3%, Enters Neocloud, Capex Set to Surge in 2027 — Is the AI Ambition Overreaching?", body_en: "Meta (META) rose 2.98% to $600, reclaiming a key technical level as its compute strategy took center stage. Meta has officially entered the neocloud business, with SemiAnalysis projecting a sharp surge in capital expenditure by 2027, underscoring long-term ambitions to own its AI infrastructure. Analysts sought to reassure markets that competitive impact on CoreWeave and other cloud providers would be limited, calling the recent \"Meta selloff panic\" an overreaction. Yet the valuation debate — bargain versus value trap — persists. As Meta tightens its grip on compute independence, is the surging capex a durable moat investment, or another high-stakes spending gamble?" },
+  { ticker: "NBIS", title_cn: "Nebius逆势跌1.2%，半年已暴涨124%，Meta恐慌是错杀吗？", body_cn: "Nebius（NBIS）今日微跌1.21%、报$213，但拉长看半年已暴涨124%，是AI算力（neocloud）赛道最猛的标的之一。当前分歧巨大：SeekingAlpha连发两文看多，称\"Meta抛售引发的下跌是重大误读\"、\"正在买入Meta算力恐慌\"，认为对neocloud的担忧\"站不住脚（erroneous）\"。多头逻辑是AI算力需求的结构性紧缺，空头则担心高涨幅后的估值透支。当暴涨124%遇上Meta自建算力的竞争疑云，Nebius的回调是黄金上车点，还是趋势见顶的前兆？", title_en: "Nebius Slips 1.2% Despite 124% Six-Month Surge — Is the Meta Panic a Misread?", body_en: "Nebius (NBIS) edged down 1.21% to $213, though the stock has surged 124% over the past six months, cementing its status as one of the most explosive neocloud AI infrastructure plays. Sentiment is sharply divided: Seeking Alpha published two consecutive bullish pieces arguing that Meta-triggered selling represented \"a major misread\" and that fears over neocloud competition are \"erroneous,\" with the author actively buying the dip. Bulls cite structural AI compute demand; bears flag stretched valuations after a 124% run. With a massive gain already on the books and Meta's self-build ambitions clouding the outlook, is Nebius's pullback a prime entry point, or an early sign of trend exhaustion?" },
+  { ticker: "RKLB", title_cn: "火箭实验室重挫7.3%，太空股集体回调，赛道降温了吗？", body_cn: "火箭实验室（RKLB）今日大跌7.34%、跌至$93，领跌太空板块——AST SpaceMobile跌5%、Intuitive Machines与SpaceX概念也回落3%，太空股集体降温。此前太空赛道因SpaceX合并传闻、星链商业化等题材连续走高，今日在科技普涨日反而逆势回撤，更像前期涨幅过大后的获利了结。板块缺乏新的正向催化。当科技股全线反弹、太空股却独自杀跌，RKLB这波7%回调是题材退潮的开始，还是高波动赛道的正常洗盘？", title_en: "Rocket Lab Plunges 7.3%, Space Stocks Retreat en Masse — Is the Sector Cooling?", body_en: "Rocket Lab (RKLB) tumbled 7.34% to $93, leading a broad space sector retreat — AST SpaceMobile fell 5%, while Intuitive Machines and SpaceX-linked names shed roughly 3%. The selloff stands out on a day when broader tech rallied, suggesting the pullback reflects profit-taking after an extended run fueled by SpaceX merger speculation and Starlink commercialization themes rather than any fresh negative catalyst. No new positive drivers emerged to sustain the sector's momentum. With tech stocks broadly higher while space names sell off in isolation, is RKLB's 7% drop the beginning of a theme rollover, or routine consolidation in a high-volatility sector?" },
+  { ticker: "PLTR", title_cn: "Palantir涨2.5%，携手英伟达做主权AI，估值难题终于解了吗？", body_cn: "Palantir（PLTR）今日上涨2.51%、回到$132，催化来自与英伟达联手为美国政府部署\"主权AI（Sovereign AI）\"的重磅合作，直接强化其政府订单护城河。市场情绪转暖，媒体称\"Palantir的AI估值难题可能终于开始缓解\"。但分歧依旧尖锐：有分析指其\"以现金流看被低估、以盈利看被高估\"，估值仍是最大争议。当主权AI大单落地遇上估值天平的反复摇摆，Palantir这轮反弹是基本面驱动的重估，还是题材催化的又一次脉冲？", title_en: "Palantir Rises 2.5%, Joins Nvidia on Sovereign AI — Is the Valuation Problem Finally Solved?", body_en: "Palantir (PLTR) advanced 2.51% to $132, driven by a landmark partnership with Nvidia to deploy \"Sovereign AI\" infrastructure for the U.S. government, directly reinforcing its federal contract moat. Market sentiment improved, with analysts suggesting that \"Palantir's AI valuation puzzle may finally be starting to resolve.\" Yet disagreement remains sharp — one framework sees the stock as undervalued on cash flow, while another views it as overvalued on earnings, leaving valuation the central battleground. As sovereign AI contract wins meet an endlessly contested price tag, is this rally a fundamentals-driven re-rating, or another catalyst-fueled momentum pulse?" },
+  { ticker: "SPY", title_cn: "标普SPY涨0.9%，道指首破53000，8800点target来了还是要先跌？", body_cn: "标普500 ETF（SPY）今日上涨0.87%、报$751，纳指与标普齐创新高，道指首度突破53,000点，行情由英伟达领衔的科技股强劲反弹支撑。但顶级卖方观点分歧极大：有华尔街策略师喊出\"标普今年或冲8,800点\"，同时警告\"途中可能先来一波10-20%回撤\"；更有SeekingAlpha极端预测\"9月见顶7,800、2029年崩到4,400\"。当创纪录新高遇上愈发响亮的回调警报，你会在道指破53,000时继续追高，还是开始为10-20%的回撤留出仓位？", title_en: "SPY Gains 0.9%, Dow Tops 53,000 for First Time — Is 8,800 Next, or a Correction First?", body_en: "The S&P 500 ETF (SPY) rose 0.87% to $751 as the Nasdaq and S&P 500 hit fresh all-time highs and the Dow Jones Industrial Average crossed 53,000 for the first time, powered by a sharp rebound in Nvidia and the broader tech sector. Sell-side views are sharply polarized: some Wall Street strategists are targeting S&P 8,800 this year while warning of a potential 10-20% pullback along the way; Seeking Alpha's most bearish scenario calls for a peak near 7,800 in September and a collapse to 4,400 by 2029. With record highs coinciding with increasingly loud drawdown warnings, do you keep chasing at Dow 53,000, or start sizing for a 10-20% correction?" },
+  { ticker: "INTC", title_cn: "英特尔涨1.5%，但半导体明星ETF\"拒绝持有它\"，掉队焦虑何解？", body_cn: "英特尔（INTC）今日上涨1.54%、报$122，随半导体板块反弹小幅收红。但一则反差叙事刺痛市场：一只年内大涨54%的明星半导体ETF\"拒绝持有英特尔\"，凸显其在AI芯片浪潮中被机构边缘化的处境；同时其投资的AI芯片公司Syntiant递交IPO，成为为数不多的亮点。当同行乘AI东风狂奔、英特尔却被主动剔除出赢家名单，这1.5%的跟涨是困境反转的萌芽，还是板块普涨下的被动跟随？", title_en: "Intel Rises 1.5%, But Top Semiconductor ETF 'Refuses to Own It' — Can It Escape Irrelevance?", body_en: "Intel (INTC) gained 1.54% to $122, posting a modest gain in line with the broader semiconductor sector rebound. The move was overshadowed by a pointed narrative: a semiconductor ETF up 54% year-to-date has explicitly excluded Intel from its holdings, highlighting the company's institutional marginalization amid the AI chip boom. A rare bright spot emerged as Syntiant — an AI chip company Intel has invested in — filed for an IPO. As sector peers ride the AI wave and Intel is actively removed from winners' portfolios, is this 1.5% gain the early sprout of a turnaround, or merely passive beta-chasing in a rising tide?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
