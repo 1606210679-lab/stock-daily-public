@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-08 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-08</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 13</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:7.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 13 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "MU", title_cn: "美光跌4.7%再失守$950，三星点燃AI担忧，内存回调到头没？", body_cn: "美光（MU）今日下跌4.71%、跌破$950，领跌内存板块，导火索是三星财报——尽管三星录得创纪录季度，市场却读出\"AI需求见顶\"的隐忧（Samsung fans AI fears），叠加伊朗局势推升油价，科技股集体承压。但MU此前给出的乐观业绩指引仍在。当板块情绪从超级周期狂热转向获利了结，美光这波回调是健康换手，还是内存拥挤交易降温的开始？", title_en: "Micron Slides 4.7% Below $950 as Samsung Sparks AI Demand Fears — Has Memory Peaked?", body_en: "Micron (MU) dropped 4.71%, breaking below $950 to lead memory sector losses after Samsung's record quarterly earnings paradoxically triggered fears of peak AI demand. Iran-driven oil price gains added pressure on tech broadly, pushing the sector lower despite MU's own bullish guidance remaining intact. As sentiment shifts from supercycle euphoria to profit-taking, is this a healthy rotation or the start of a crowded-trade unwind?" },
+  { ticker: "SOXL", title_cn: "三倍半导体SOXL崩15%，三星抛售警示全球，杠杆多头被血洗？", body_cn: "三倍做多半导体ETF（SOXL）今日崩跌15.09%、跌至$165，是三星财报引发半导体全面抛售的最大放大器——Benzinga称\"三星抛售给美国投资者敲响警钟\"。与此同时，反向的三倍做空ETF（SOXS）今日暴涨15.11%，成为杀跌日里少数的赢家。3倍杠杆在单边下跌中加速衰减，SOXL两天内上演过山车。当半导体多头情绪急速逆转，你会抄底SOXL赌反弹，还是承认杠杆多头这轮已被血洗？", title_en: "SOXL Crashes 15%, Samsung Selloff Torches Leveraged Semiconductor Bulls — Wiped Out?", body_en: "Triple-leveraged semiconductor ETF SOXL plunged 15.09% to $165, amplifying the broad chip selloff triggered by Samsung's earnings, with Benzinga warning the rout serves as a stark signal for U.S. investors. Inverse counterpart SOXS surged 15.11%, emerging as one of the session's rare winners. With 3x leverage accelerating decay in a one-sided downturn, would you buy the dip in SOXL betting on a reversal, or concede that leveraged longs have been wiped out?" },
+  { ticker: "SNDK", title_cn: "SanDisk跌7.3%，三星利润暴增反成导火索，新故事要被证伪？", body_cn: "SanDisk（SNDK）今日下跌7.26%、回落至$1,618，随内存板块杀跌。耐人寻味的是导火索——三星录得利润暴增的创纪录季度，却因供给增加的担忧触发整个存储板块抛售（西部数据同日跌8.5%）。媒体直指\"一个关键数字将考验SanDisk的新故事\"，SK海力士即将美股上市也让\"谁来买单\"的竞争疑云升温。当供给端好消息反成利空，SanDisk的超级周期叙事你还信几分？", title_en: "SanDisk Drops 7.3% as Samsung's Record Profit Backfires — New Narrative at Risk?", body_en: "SanDisk (SNDK) fell 7.26% to $1,618, swept lower alongside the broader memory sector in a counterintuitive selloff triggered by Samsung's record quarterly profit, which stoked supply-overhang fears and sent Western Digital down 8.5% on the same day. Media flagged that \"one key number will test SanDisk's new story,\" while SK Hynix's upcoming U.S. listing adds competitive uncertainty. With positive supply-side news turning into a headwind, how much do you still believe in SanDisk's supercycle narrative?" },
+  { ticker: "SPCX", title_cn: "SpaceX重挫6.8%失守$150，\"买了别看它\"，太空热还撑得住吗？", body_cn: "SpaceX（SPCX）今日重挫6.83%、失守$150，随科技股回调走弱。市场观点两极：有专家喊出\"SpaceX股价终将翻倍\"，却又建议\"买了就收起来别看它（Put it away, don't look at it）\"，暗示短期波动剧烈。消息面仍有催化：SpaceXAI计划最快周三发布新模型、并加速进入指数基金。当长期想象与短期剧震并存，SpaceX这波回调你会当上车机会，还是先躲开这波高波动？", title_en: "SpaceX Tumbles 6.8% Below $150 — 'Buy It and Don't Look at It.' Can the Space Rally Hold?", body_en: "SpaceX (SPCX) slumped 6.83%, breaking below $150 as tech stocks retreated broadly. Analyst sentiment remains split — one expert projects the stock will eventually double but advises investors to \"put it away, don't look at it,\" signaling extreme near-term volatility. Potential catalysts remain: xAI is targeting a new model release as early as Wednesday, and SPCX is accelerating toward index inclusion. Is this pullback an entry opportunity, or do you sidestep the volatility first?" },
+  { ticker: "NVDA", title_cn: "英伟达逆势翻红0.7%，半导体血流成河它独扛，避险资金选它？", body_cn: "英伟达（NVDA）今日逆势微涨0.71%、站稳$196，在三星引发的半导体全面抛售中罕见抗跌，被列入\"3只仍有上行空间的强势股\"。当SOXL崩15%、AMD与英特尔重挫之际，资金反而向AI算力的绝对龙头集中避险，NVDA的相对强弱明显回升。生态护城河与稀缺性在恐慌日凸显定价权。当板块杀跌把英伟达衬托成\"最后的堡垒\"，你会把它当科技回调中的避风港加仓吗？", title_en: "Nvidia Bucks Chip Rout, Rises 0.7% to $196 — Safe-Haven Flows Into AI's Last Standing?", body_en: "Nvidia (NVDA) edged up 0.71% to $196, a rare bright spot as Samsung's earnings triggered a sweeping semiconductor selloff that crushed AMD, Intel, and sent SOXL down 15%. NVDA was cited among \"3 stocks still with upside\" as capital rotated toward AI compute's dominant leader for relative safety. Its ecosystem moat and scarcity premium came into sharp relief on a panic-driven down day. With the sector under pressure and Nvidia standing apart, would you add it as a defensive anchor in the tech pullback?" },
+  { ticker: "INTC", title_cn: "英特尔暴跌9.7%领跌芯片股，三星+油价双杀，困境又加深？", body_cn: "英特尔（INTC）今日暴跌9.66%、跌破$111，是mega-cap芯片股杀跌的重灾区，直接背景是三星财报引爆的半导体抛售、叠加伊朗局势推升油价拖累风险资产，道指也因此结束连涨。英特尔本就在AI芯片浪潮中掉队，杀跌日向下弹性更大。当宏观利空与个股弱势叠加，英特尔这波近10%重挫是错杀反弹机会，还是掉队者被率先抛弃的信号？", title_en: "Intel Crashes 9.7% to Lead Chip Losses — Samsung Plus Oil Double-Blow Deepens the Rut?", body_en: "Intel (INTC) plummeted 9.66%, breaking below $111 to become the hardest-hit mega-cap chipmaker, as Samsung's earnings ignited a semiconductor-wide selloff and Iran-driven oil gains weighed on risk assets, snapping the Dow's winning streak. Already losing ground in the AI chip race, Intel suffered amplified downside on a broad risk-off day. With macro headwinds compounding company-specific weakness, is this near-10% drop a mispriced dip or a signal that laggards get sold first?" },
+  { ticker: "TSLA", title_cn: "特斯拉回落4%重新考验$400，昨日刚收复今又承压，支撑守得住吗？", body_cn: "特斯拉（TSLA）今日回落4.02%、退守$402附近，昨日刚强势收复的$400关口再度承压。今日下跌并非个股利空，而是全市场科技回调所致——\"Tesla dips more than broader market\"。消息面仍有想象：有银行基于潜在的SpaceX合并上调了TSLA目标价。$400成了这两天多空反复争夺的关键位。刚收复又回踩的特斯拉，$400这道支撑你认为守得住，还是会回补昨日的跳空？", title_en: "Tesla Pulls Back 4% to Retest $400 — Recovered Yesterday, Pressured Again Today. Will Support Hold?", body_en: "Tesla (TSLA) retreated 4.02% to around $402, putting the $400 level back under pressure just one session after a strong recovery, with the decline driven by broad market tech weakness rather than stock-specific news — \"Tesla dips more than broader market.\" A bullish catalyst remains in play: at least one bank raised its TSLA price target citing a potential SpaceX merger. With bulls and bears battling over $400 for two straight sessions, do you think the support holds, or does Tesla fill yesterday's gap?" },
+  { ticker: "QQQ", title_cn: "纳指QQQ挫1.9%，三星+油价+AI泡沫争议齐发，回调才刚开始？", body_cn: "纳指100 ETF（QQQ）今日下跌1.85%、跌至$709，科技股全面承压，道指更结束连涨记录。三重利空叠加：三星财报点燃\"AI需求见顶\"担忧、伊朗局势推升油价、SeekingAlpha再抛\"AI泡沫：好泡沫，坏交易\"的争议。半导体作为领跌板块拖累整体。当创纪录高点后利空集中释放，这轮回调是牛市中的正常换手，还是更大级别调整的前奏？", title_en: "QQQ Falls 1.9% as Samsung, Oil, and AI Bubble Fears Converge — Is the Pullback Just Starting?", body_en: "Nasdaq 100 ETF QQQ dropped 1.85% to $709 as tech sold off broadly, snapping the Dow's consecutive-gain streak. Three headwinds hit simultaneously: Samsung's earnings rekindled peak-AI-demand fears, Iran tensions lifted oil prices, and Seeking Alpha reignited debate with \"AI Bubble: Good Bubble, Bad Trade.\" Semiconductors led sector losses and dragged the index lower. With multiple negatives converging after record highs, is this a routine bull-market reset or the opening act of a deeper correction?" },
+  { ticker: "DRAM", title_cn: "内存ETF DRAM跌6.4%，\"AI内存繁荣开始裂缝\"，超级周期见顶了？", body_cn: "内存ETF（DRAM）今日下跌6.44%、回落至$60，随存储板块杀跌。SeekingAlpha一篇\"AI内存繁荣终于开始裂缝（The AI Memory Boom Is Finally Cracking）\"直击要害，叠加三星创纪录利润反引发供给担忧、西部数据同日跌8.5%。此前狂热的内存超级周期叙事首次遭遇像样的质疑。当\"紧缺\"逻辑被\"供给要来了\"的担忧动摇，你会趁回调布局内存，还是相信这轮超级周期已见顶？", title_en: "Memory ETF DRAM Drops 6.4% — 'AI Memory Boom Is Finally Cracking.' Has the Supercycle Peaked?", body_en: "Memory ETF DRAM fell 6.44% to $60 as the storage sector sold off sharply, with a Seeking Alpha piece titled \"The AI Memory Boom Is Finally Cracking\" crystallizing market anxiety. Samsung's record profit paradoxically triggered supply-glut fears, while Western Digital dropped 8.5% the same day. The previously unquestioned memory supercycle narrative is facing its most meaningful challenge yet. With the scarcity thesis being undermined by supply-is-coming fears, would you buy the dip in memory, or do you believe this supercycle has already peaked?" },
+  { ticker: "MSFT", title_cn: "微软逆势涨0.5%，软件股集体避险走强，杀跌日的诺亚方舟？", body_cn: "微软（MSFT）今日逆势微涨0.54%、报$389，在半导体血洗日显现防御价值，与之呼应的是一批SaaS软件股（HubSpot、Five9、RingCentral等）集体大涨——资金明显从高波动芯片撤向现金流稳定的软件巨头。微软被列入\"2026最值得买的软件股\"候选。当AI叙事从\"卖铲子\"的芯片转向\"用铲子\"的软件应用，微软这类软件龙头的避险属性能延续多久？", title_en: "Microsoft Rises 0.5% as Software Stocks Find Safe-Haven Bid — Tech's Ark on a Down Day?", body_en: "Microsoft (MSFT) edged up 0.54% to $389, displaying defensive characteristics as semiconductors were hammered, with a cohort of SaaS names — HubSpot, Five9, RingCentral — also rallying sharply as capital rotated from high-volatility chips into stable-cash-flow software. MSFT was flagged as a top software buy candidate for 2026. As the AI narrative shifts from \"picks-and-shovels\" chipmakers toward software applications that deploy AI, how long can Microsoft and its peers sustain this safe-haven appeal?" },
+  { ticker: "AMD", title_cn: "AMD暴跌6.5%，昨日冲万亿今日被打回，高盛又下调了？", body_cn: "AMD今日暴跌6.51%、跌回$516，几乎回吐前一日的全部涨幅——\"Why AMD Stock Tanked\"成为热议。背景是三星引发的半导体全面抛售，高盛（Goldman Sachs）也在此时重设了AMD年内目标价，为高位情绪降温。昨日\"冲击万亿俱乐部\"的狂热，今日被板块杀跌迅速证伪。当高beta芯片股两天上演冰火两重天，AMD这波回调是上车机会，还是追高者被套的教训？", title_en: "AMD Tanks 6.5% to $516, Reversing Trillion-Dollar Surge — Goldman Reset the Target Too?", body_en: "AMD cratered 6.51% to $516, erasing virtually all of the prior session's gains as \"Why AMD Stock Tanked\" dominated financial headlines. Samsung's earnings sparked a sector-wide semiconductor rout, and Goldman Sachs reset AMD's year-end price target, cooling the elevated sentiment at the top. The previous day's \"trillion-dollar club\" excitement was swiftly invalidated by the broader selloff. With a high-beta chip stock swinging wildly over two sessions, is AMD's pullback a buying opportunity or a lesson for momentum chasers?" },
+  { ticker: "PLTR", title_cn: "Palantir逆势续涨获大行升Buy，无视科技杀跌，是不是太强了？", body_cn: "Palantir（PLTR）今日逆势再涨1.38%、站上$134，在科技股全面回调中走出独立行情，连涨势头延续。新增强催化：DA Davidson正式将PLTR上调至\"买入（Buy）\"评级；同时川普大幅扩张五角大楼某办公室，PLTR被视为1.5万亿美元国防机遇的核心受益标的。当整个半导体板块血流成河、PLTR却逆势走强并获升级，这份独立强势是资金抱团避险，还是高位情绪过热的危险信号？", title_en: "Palantir Rises 1.4% to $134, Upgraded to Buy by DA Davidson — Is It Getting Too Strong?", body_en: "Palantir (PLTR) climbed 1.38% to $134, extending its winning streak and carving out a clear independent trend as the broader tech market pulled back sharply. DA Davidson upgraded PLTR to Buy, adding conviction to the move, while Trump's significant expansion of a Pentagon office reinforced the view that Palantir is a core beneficiary of a $1.5 trillion defense opportunity. With semiconductors bleeding and PLTR pushing higher on an upgrade, is this independent strength a genuine safe-haven rotation or a dangerous sign of froth at elevated levels?" },
+  { ticker: "RKLB", title_cn: "火箭实验室暴跌10%，任务成功却遭抛售，太空股怎么了？", body_cn: "火箭实验室（RKLB）今日暴跌10.40%、跌至$83，与利好形成强烈反差——公司刚为太空军（Space Force）完成一次创纪录的发射与在轨卫星追踪任务，还宣布了一笔\"可能给SpaceX制造麻烦\"的重磅收购。但在科技股普跌、太空板块整体降温的背景下，好消息完全被市场情绪淹没。当基本面利好撞上系统性杀跌，RKLB这波10%重挫是错杀的黄金坑，还是高估值太空股回归地心引力？", title_en: "Rocket Lab Crashes 10% Despite Mission Success and Major Acquisition — What's Wrong With Space Stocks?", body_en: "Rocket Lab (RKLB) plunged 10.40% to $83, a stark disconnect from its own positive newsflow: the company just completed a record-breaking launch and on-orbit satellite tracking mission for the Space Force and announced a significant acquisition described as a potential threat to SpaceX. Broad tech weakness and a cooling in sentiment toward space stocks overwhelmed the fundamental catalysts entirely. With strong company-specific news failing to defend the stock, is RKLB's 10% drop a mispriced opportunity, or are high-valuation space stocks simply reverting to gravity?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
