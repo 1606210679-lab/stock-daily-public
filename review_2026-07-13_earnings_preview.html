@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-13 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-13</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "JPM, GS, C, BAC, WFC", title_cn: "五大行周二集体开考，Q2财报季拉开序幕，谁给市场定调？", body_cn: "摩根大通、高盛、花旗、美银、富国五大行周二盘前集中发布Q2财报，正式打响财报季\"第一枪\"。市场焦点：净利息收入趋势、市场高波动下投行与交易业务的表现、以及信贷拨备与消费者健康度。最大争议在于利率路径不明、地缘与油价扰动下，银行对下半年的指引与信贷成本走向。作为财报季的宏观风向标，大银行这批业绩与展望，会为整个市场定调向上还是浇一盆冷水？", title_en: "Big Five Banks Kick Off Q2 Earnings Tuesday — Who Sets the Tone?", body_en: "JPMorgan, Goldman Sachs, Citigroup, Bank of America, and Wells Fargo report Q2 results before Tuesday's open, firing the first shot of earnings season. Markets will focus on net interest income trends, investment banking and trading performance amid elevated volatility, and credit provisions signaling consumer health. With rate path uncertainty and geopolitical headwinds clouding the outlook, will the banks' H2 guidance and credit cost trajectories lift market sentiment or deliver a cold shower?" },
+  { ticker: "ASML", title_cn: "ASML周三财报前夕，光刻龙头的新增订单会验证AI扩产热吗？", body_cn: "作为全球光刻机的垄断者、半导体设备的风向标，ASML周三盘前的财报中，市场最紧盯的是新增订单（bookings）——这是AI芯片产能扩张最领先的指标，EUV与High-NA需求、中国区出货是焦点。最大争议在于出口管制对中国营收的拖累，以及订单的季度性大幅波动。在SK海力士上市、内存与AI芯片扩产热升温的当下，ASML的订单会不会给\"AI产能军备竞赛\"再添一记实锤？", title_en: "ASML Reports Wednesday — Will New Orders Confirm AI Capex Boom?", body_en: "As the world's monopoly supplier of lithography equipment and the semiconductor industry's leading bellwether, ASML's pre-market Wednesday report will be scrutinized above all for new bookings — the most leading indicator of AI chip capacity expansion — with EUV and High-NA demand and China shipments in focus. Key risks include export control headwinds on China revenue and sharp quarter-to-quarter order volatility. With HBM momentum building and AI chipmakers accelerating capacity buildout, will ASML's bookings deliver another hard data point for the AI arms race?" },
+  { ticker: "TSM", title_cn: "台积电周四财报压轴，AI代工龙头会给出多强的全年指引？", body_cn: "台积电（TSM）是全球AI芯片代工的绝对龙头，英伟达、AMD、苹果的核心供应商，周四盘前的财报被视为验证整个AI叙事的试金石。市场聚焦其AI/HPC营收占比、3nm/2nm先进制程产能利用率，以及全年营收指引的上修空间。争议点在于地缘风险、海外建厂的成本稀释，以及AI需求能否持续兑现。作为AI产业链最关键的\"卖水人\"，台积电的指引会给这轮AI行情续命，还是踩下刹车？", title_en: "TSMC Reports Thursday — How Strong Will the Full-Year AI Guidance Be?", body_en: "Taiwan Semiconductor (TSM), the undisputed leader in AI chip foundry services and core supplier to Nvidia, AMD, and Apple, reports before Thursday's open in what markets regard as the ultimate litmus test for the entire AI narrative. Investors will focus on AI/HPC revenue mix, utilization rates on 3nm and 2nm advanced nodes, and the magnitude of any full-year revenue guidance upgrade. Geopolitical risk, cost dilution from overseas fabs, and AI demand sustainability remain key debates. As the most critical infrastructure provider in the AI supply chain, will TSMC's guidance extend this rally or tap the brakes?" },
+  { ticker: "NFLX", title_cn: "奈飞周四盘后开考，广告+提价双引擎，高增长还能续写吗？", body_cn: "奈飞（NFLX）周四盘后发布财报，是科技股财报季的重要标志。市场关注付费用户的净增、广告业务（AVOD）的变现进度，以及提价对营收与利润率的实际提振。最大争议在于用户基数变大后的增长放缓风险，以及内容成本与竞争压力。在流媒体格局趋于稳定之际，奈飞的\"广告+提价\"故事能否支撑其偏高的估值继续向上，是这份财报的核心看点。", title_en: "Netflix Reports Thursday After Close — Can Ad Tier and Price Hikes Sustain Growth?", body_en: "Netflix (NFLX) reports after Thursday's close in a marquee event for the tech earnings season. Markets are focused on net subscriber additions, AVOD monetization progress, and the tangible revenue and margin uplift from recent price increases. Core debates center on growth deceleration risk as the subscriber base matures and ongoing content cost and competitive pressures. With streaming industry dynamics stabilizing, can Netflix's dual \"advertising plus pricing\" growth engine continue to justify its premium valuation?" },
+  { ticker: "UNH", title_cn: "联合健康周四财报前夕，医疗成本压顶，能稳住市场信心吗？", body_cn: "联合健康（UNH）是全美最大的健康保险商、道指的重要权重股，周四盘前的财报中，市场紧盯医疗赔付率（MLR）、成本趋势与全年EPS指引。此前几个季度，医疗成本上升与政策监管的不确定性一直是压制其估值的核心争议。在经历前期的盈利承压后，UNH能否用这份财报证明成本可控、重新稳住市场对其盈利能力的信心，将决定这只医疗白马的方向。", title_en: "UnitedHealth Reports Thursday — Can It Restore Confidence Amid Medical Cost Pressure?", body_en: "UnitedHealth (UNH), the largest U.S. health insurer and a significant Dow Jones component, faces intense scrutiny on its medical loss ratio, cost trends, and full-year EPS guidance when it reports before Thursday's open. Rising medical costs and regulatory uncertainty have persistently weighed on its valuation in recent quarters. After a prolonged period of earnings pressure, whether UNH can demonstrate cost control and rebuild market confidence in its earnings power will determine the next directional move for this healthcare bellwether." },
+  { ticker: "JNJ", title_cn: "强生周三财报前夕，医药+器械双主业，防御白马还灵吗？", body_cn: "强生（JNJ）作为医药与医疗器械巨头，周三盘前发布财报，在科技股AI狂热与高波动的当下常被当作防御性配置。市场关注其创新药管线的放量、医疗器械业务的复苏，以及全年指引。争议集中在诉讼阴影、专利悬崖与整体增长动能偏弱。当资金在AI高波动中寻找避风港，强生这类稳健白马的业绩与股息故事，还能不能吸引到防御性买盘？", title_en: "Johnson & Johnson Reports Wednesday — Can the Defensive Giant Still Deliver?", body_en: "Johnson & Johnson (JNJ), the pharmaceutical and medical device conglomerate, reports before Wednesday's open and is widely held as a defensive anchor amid AI-driven tech volatility and elevated market swings. Investors will watch its innovative drug pipeline ramp, medical device segment recovery, and full-year guidance. Key overhangs include ongoing litigation, patent cliffs, and subdued overall growth momentum. As capital seeks shelter from AI-fueled turbulence, can JNJ's steady earnings and dividend story still attract meaningful defensive buying?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
