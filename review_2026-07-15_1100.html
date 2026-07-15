@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-15 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-15</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 10</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:10.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 10 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SKHY, MU, SNDK", title_cn: "存储集体V型反攻：海力士暴涨27%、美光闪迪涨5%，超级周期又回来了？", body_cn: "存储板块今日集体V型反攻。SK海力士（SKHY）暴涨27.29%、冲上$194，从昨日暴跌9%直接反转，港股两倍做多产品飙近20%；美光（MU）反弹4.92%重回$983、闪迪（SNDK）涨5.01%、内存ETF（DRAM）涨6.86%全线回血。资金面与基本面共振：CPI通胀降温至3.5%缓和加息担忧，对冲基金以3.5年最快速度扫货美国半导体、押注\"抛售已到头\"，\"看GPU之外\"的内存新逻辑升温，Cramer还上调了闪迪目标价。但SeekingAlpha提醒\"反弹第一幕已结束\"。昨崩今飙的剧烈反转后，你觉得存储超级周期回来了吗——如果上车，你会选领涨的海力士、龙头美光，还是弹性最大的闪迪？", title_en: "Memory Stocks Stage V-Shaped Reversal: SK Hynix Surges 27% — Is the Super-Cycle Back?", body_en: "The memory sector staged a sharp V-shaped reversal. SK Hynix (000660) surged 27.29% to $194, fully reversing yesterday's 9% plunge, while Micron (MU) rebounded 4.92% to $98, SanDisk (SNDK) gained 5.01%, and memory ETF (DRAM) rose 6.86%. CPI cooling to 3.5% eased rate fears as hedge funds bought U.S. semiconductors at the fastest pace in 3.5 years. After this violent reversal, do you think the memory super-cycle is back — and if you're buying, would you pick SK Hynix, Micron, or SanDisk?" },
+  { ticker: "IBM", title_cn: "IBM暴跌25%带崩软件股，客户钱转投硬件，市场要风格切换了？", body_cn: "IBM今日暴跌25.21%、报$217，因Q2营收初值约172亿美元、仅增1%且不及约178.6亿的预期，领衔软件股杀跌（Salesforce等同步走弱）。更耐人寻味的是IBM自己的信号：6月末它观察到客户把季度资本开支转向服务器、存储与内存，抢在涨价前锁定紧缺的硬件产能。这恰好解释了为何今日存储、半导体全线反攻、而软件独自受伤。当企业的IT预算从\"软件\"挪向\"硬件\"，这是一次性财报暴雷，还是软件→硬件风格切换的开端？你更看好哪一边？", title_en: "IBM Plunges 25%, Drags Software Stocks — Is a Style Rotation Underway?", body_en: "IBM crashed 25.21% to $217 after Q2 revenue came in at approximately $17.2B, up just 1% and missing the ~$17.86B consensus, dragging Salesforce and peers lower. More telling: IBM noted late-June clients were shifting quarterly capex toward servers, storage, and memory to lock in capacity ahead of price hikes — explaining why hardware and semiconductors rallied while software sold off. Is this an isolated earnings miss, or the opening act of a software-to-hardware rotation?" },
+  { ticker: "NVDA", title_cn: "英伟达涨4%重回$211，芯片股甩开战争恐慌反攻，龙头带头冲？", body_cn: "英伟达（NVDA）今日上涨4.06%、重回$211，领衔半导体板块\"甩开战争恐慌\"的强劲反弹——英伟达、英特尔、美光集体反攻。对冲基金以3.5年最快速度买入美国芯片股、押注\"抛售已到头\"，CPI降温也缓和了利率担忧。作为AI算力绝对龙头，NVDA的率先反弹再度确认其风向标地位。当恐慌退去、资金重新拥抱芯片龙头，英伟达这波反攻是新一轮上行的起点，还是超跌后的技术性修复？", title_en: "Nvidia Climbs 4% Back to $211, Chips Shrug Off War Fears — New Rally Begins?", body_en: "Nvidia (NVDA) rose 4.06% to $211, leading a broad semiconductor rebound as the sector shrugged off geopolitical fears, with Intel and Micron also advancing. Hedge funds bought U.S. chip stocks at the fastest pace in 3.5 years, betting the selloff has peaked, while CPI cooling further eased rate concerns. As the undisputed AI compute bellwether, NVDA's lead role in this rebound reaffirms its market-leading status — but is this the start of a new leg higher, or merely a technical bounce from oversold levels?" },
+  { ticker: "INTC", title_cn: "英特尔涨4.5%强势反弹，芯片股集体回血，掉队者也搭上车？", body_cn: "英特尔（INTC）今日上涨4.50%、回到$108，随半导体板块\"甩开战争恐慌\"集体反弹。在对冲基金快速扫货芯片股、CPI降温的背景下，前期跌幅较大的英特尔弹性尽显。不过今日更多是板块beta的普涨修复，英特尔自身在AI芯片竞赛中的掉队处境未改。当板块反攻把落后者也一并抬起，英特尔这4.5%的回血是困境反转的信号，还是仅仅搭了芯片反弹的顺风车？", title_en: "Intel Rebounds 4.5% as Chips Rally Broadly — Laggard Catching a Free Ride?", body_en: "Intel (INTC) rose 4.50% to $108, joining the semiconductor sector's broad rebound as war-related fears faded. With hedge funds aggressively buying chips and CPI cooling, Intel's sharper prior decline translated into stronger upside beta on the day. However, today's move largely reflects sector-wide recovery rather than any change in Intel's structural lag in the AI chip race. Is Intel's 4.5% gain a genuine turnaround signal, or simply a laggard hitching a ride on the chip sector's rally?" },
+  { ticker: "AMD", title_cn: "AMD涨2.6%，高盛喊\"大财报将至\"，AI芯片二当家要发力？", body_cn: "AMD今日上涨2.57%、报$548，跟随芯片股反攻。核心催化来自卖方——高盛（Goldman Sachs）明确看好\"AMD即将迎来强劲财报\"，为其估值再添底气。在对冲基金加速买入半导体、AI内存与算力需求扩散的背景下，AMD作为英伟达之外的第二供应商持续受关注。当高盛提前为财报站台、板块又逢反攻，AMD这波上涨是财报行情的抢跑，还是龙二叙事的持续兑现？", title_en: "AMD Gains 2.6%, Goldman Flags Strong Earnings Ahead — Is the #2 AI Chip Play Accelerating?", body_en: "AMD rose 2.57% to $548, riding the broader chip rebound with added tailwind from Goldman Sachs, which explicitly flagged an upcoming strong earnings report for the company. As the primary alternative to Nvidia in AI compute, AMD remains in focus amid accelerating hedge fund buying of semiconductors and broadening AI memory and compute demand. With Goldman pre-endorsing the print and the sector in rally mode, is AMD's move an early earnings trade, or continued validation of the number-two AI chip narrative?" },
+  { ticker: "MSFT", title_cn: "微软逆势跌1.6%，纽约禁建AI数据中心+再裁4800人，压力多大？", body_cn: "微软（MSFT）今日逆势下跌1.55%、报$385，在芯片股反攻日显得落寞。多重利空压制：纽约州刚宣布禁止新建AI数据中心，给微软、亚马逊、谷歌的算力扩张添堵；微软自身又将再裁4800人。叠加IBM财报暴雷带崩软件板块的情绪传导，软件巨头集体承压。当硬件反攻、软件受伤的\"风格切换\"正在上演，微软这类AI capex最重的软件龙头，短期是被错杀，还是要为投入回报继续买单？", title_en: "Microsoft Drops 1.6% as NY Bans AI Data Centers and 4,800 More Jobs Cut", body_en: "Microsoft (MSFT) fell 1.55% to $385, bucking the chip sector's rally. Headwinds mounted on multiple fronts: New York State announced a ban on new AI data center construction, hampering capex expansion plans for Microsoft, Amazon, and Google, while Microsoft also confirmed an additional 4,800 job cuts. Sentiment was further pressured by IBM's earnings-driven software sector selloff. As a hardware-versus-software rotation plays out, is Microsoft being unfairly punished, or does it still have to answer for the returns on its massive AI investment?" },
+  { ticker: "TSLA", title_cn: "特斯拉守$400微涨，两年最佳季度+目标价上调潮，反转确认了？", body_cn: "特斯拉（TSLA）今日微涨0.36%、守在$396，相对平稳但基本面转暖。重磅催化：马斯克旗下特斯拉交出\"两年来最佳季度\"，随后华尔街掀起一波目标价上调潮，推动股价企稳。此前压制TSLA的竞争与需求担忧有所缓解。不过在$400关口下方，反弹动能仍待确认。当\"最佳季度\"遇上目标价集体上修，特斯拉这波企稳是基本面反转的起点，还是重返$400前的蓄势？", title_en: "Tesla Holds $400 With Modest 0.36% Gain After Best Quarter in Two Years — Reversal Confirmed?", body_en: "Tesla (TSLA) edged up 0.36% to $396, holding steady as fundamentals improved materially. The key catalyst: Tesla delivered its best quarter in two years under Musk, sparking a wave of Wall Street price target upgrades that helped stabilize the stock. Prior headwinds from competition and demand concerns have partially eased. With a landmark quarter now paired with broad analyst upgrades, is Tesla's consolidation the beginning of a fundamental reversal, or simply a coiling move before a push back through $400?" },
+  { ticker: "PLTR", title_cn: "Palantir涨2.8%，64倍市销率争议再起，CEO喊AI造\"难以想象财富\"？", body_cn: "Palantir（PLTR）今日上涨2.83%、报$134，重拾升势。消息面双向：一面是CEO放话\"AI将为最大赢家创造难以想象的财富\"、SBA扩大采用其软件打击疫情欺诈，订单叙事持续；另一面是\"64倍市销率的估值溢价是否合理\"的争议再度升温。作为最贵的AI软件股之一，PLTR的高估值始终是多空核心分歧。当宏大叙事撞上极致估值，Palantir这波上涨你会追,还是等估值消化？", title_en: "Palantir Gains 2.8% at 64x P/S — CEO Touts AI Wealth, But Is the Valuation Justified?", body_en: "Palantir (PLTR) rose 2.83% to $134, resuming its uptrend on mixed catalysts. On the positive side, CEO Alex Karp declared AI will create \"unimaginable wealth\" for top winners, and the SBA expanded adoption of Palantir software to combat pandemic fraud. However, renewed debate over whether a 64x price-to-sales multiple is sustainable intensified. As one of the most expensive AI software stocks, PLTR's valuation remains the core bull-bear battleground. With grand narratives colliding against extreme multiples, would you chase this move or wait for the valuation to compress?" },
+  { ticker: "NBIS", title_cn: "Nebius逆势跌7.8%，Meta自建算力引担忧，AI新贵撑得住吗？", body_cn: "Nebius（NBIS）今日逆势下跌7.80%、报$194，在芯片反攻日独自走弱。压制来自竞争担忧——市场追问\"Meta的最新算力自建计划是否该让Nebius和CoreWeave的投资者害怕\"，neocloud（新型云）赛道的竞争格局生变。不过公司仍在讲\"四管齐下打造下一个AI超大规模云\"的成长故事。当巨头下场自建算力、独立云厂商承压，Nebius这波回调是竞争利空的兑现，还是高波动成长股的正常洗盘？", title_en: "Nebius Drops 7.8% as Meta's In-House AI Compute Push Raises Competitive Fears", body_en: "Nebius (NBIS) fell 7.80% to $194, moving against the chip sector's broad rally. The selloff was driven by competitive concerns as markets questioned whether Meta's latest in-house compute buildout should worry Nebius and CoreWeave investors, signaling a shift in the neocloud competitive landscape. The company continues to pitch its \"four-pronged\" strategy to build the next AI hyperscale cloud. As tech giants accelerate self-built infrastructure, is Nebius's pullback a legitimate competitive red flag, or routine volatility in a high-growth name?" },
+  { ticker: "QQQ", title_cn: "纳指QQQ涨1.1%，CPI降温至3.5%缓情绪，但\"AI股需要证明自己\"？", body_cn: "纳指100 ETF（QQQ）今日上涨1.12%、报$720，风险偏好回暖。宏观转向友好：6月CPI通胀降温至3.5%，缓解了此前的加息与滞胀担忧，道指期货走高、高盛与CrowdStrike领涨。但市场也在提醒\"AI股还需要做点什么来证明自己\"，IBM暴雷更给高估值科技敲了警钟。当通胀降温托底、AI叙事却需业绩兑现，这轮反弹是健康修复的延续，还是财报季前的短暂喘息？", title_en: "QQQ Rises 1.1% as CPI Cools to 3.5% — But 'AI Stocks Still Need to Prove Themselves'?", body_en: "The Nasdaq 100 ETF (QQQ) gained 1.12% to $720 as risk appetite recovered. June CPI cooling to 3.5% eased stagflation and rate-hike fears, lifting Dow futures and boosting Goldman Sachs and CrowdStrike. However, analysts cautioned that \"AI stocks still need to do something to prove themselves,\" and IBM's earnings implosion served as a stark warning for high-multiple tech. With cooling inflation providing a macro floor but AI narratives demanding earnings delivery, is this rebound a healthy continuation, or a brief pre-earnings-season reprieve?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
