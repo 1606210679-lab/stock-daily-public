@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-16 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-16</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 12</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:8.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 12 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SKHY, MU, SNDK", title_cn: "存储全球杀跌：韩股海力士跌11%、三星跌8%，央行加息+杠杆监管双杀，还能上车吗？", body_cn: "存储板块全球同步杀跌。韩国股市7月17日再遭重挫，综合指数KOSPI日内跌幅扩大至6%，权重极高的存储双雄领跌——SK海力士（000660.KR）跌11%、三星电子（005930.KR）跌8%；美股同步走弱，海力士（SKHY）跌9%、美光（MU）跌8%失守$910、闪迪（SNDK）跌8%，港股两倍做多杠杆产品更泻18%。导火索是韩国央行意外加息25个基点至2.75%（2023年1月以来首次），叠加单股杠杆ETF监管收紧预期，韩股资金面临\"利率上行抬升高估值折现压力+散户杠杆承接力被削弱\"的双重挤压。但HBM与高端存储供需紧张、AI资本开支扩张的基本面仍在。这波下跌是政策去杠杆下的估值回调，还是存储景气转弱的信号？双雄之间，你更看好海力士还是三星电子？", title_en: "Memory Stocks Bloodbath: Hynix -11%, Samsung -8% — Still a Buy?", body_en: "Global memory stocks sold off sharply on July 17, with Korea's KOSPI sliding 6% as SK Hynix (000660.KR) fell 11% and Samsung Electronics (005930.KR) dropped 8%. U.S.-listed SKHY lost 9%, Micron (MU) fell 8% below $910, and SanDisk (SNDK) declined 8%, while a 2x leveraged Hong Kong product plunged 18%. The Bank of Korea unexpectedly hiked rates 25bps to 2.75% — its first since January 2023 — compounded by tightening expectations on single-stock leveraged ETFs. HBM and premium memory fundamentals remain intact. Is this a policy-driven valuation reset, or an early signal of fading memory cycle strength? Between the two giants, which do you favor — Hynix or Samsung?" },
+  { ticker: "PYPL", title_cn: "PayPal暴涨17%，传$530亿被收购，支付巨头要易主了？", body_cn: "PayPal（PYPL）今日暴涨17.20%、冲上$55，是今日全场最大黑马。引爆点是重磅并购传闻——市场传出PayPal正面临一笔高达$530亿美元的收购要约，\"PYPL在收购报道下skyrocket\"。作为老牌支付龙头，PYPL近年因增长放缓、竞争加剧而估值低迷，收购传闻直接点燃了价值重估的想象。叠加银行财报强劲、通胀降温提振风险偏好，资金蜂拥而入。当$530亿收购传闻砸下，PayPal这波暴涨你会追题材，还是提防传闻证伪的回落风险？", title_en: "PayPal Surges 17% on $53B Takeover Report — Is a Deal Coming?", body_en: "PayPal (PYPL) skyrocketed 17.20% to $55, making it the session's standout mover after reports emerged of a $53 billion acquisition offer targeting the payments giant. Years of slowing growth and intensifying competition had kept PYPL's valuation depressed, and the takeover speculation ignited a sharp re-rating. Strong bank earnings and cooling inflation further boosted risk appetite, drawing heavy inflows. With a $53B bid rumor hitting the tape, will you chase the momentum — or hedge against the risk of the story falling apart?" },
+  { ticker: "AAPL", title_cn: "苹果逆势大涨4%创新高领跑巨头，杀跌日的避风港又是它？", body_cn: "苹果（AAPL）今日逆势大涨4.01%、站上$327，在存储与芯片股杀跌中领跑科技巨头，媒体直言\"苹果、谷歌掩盖了戴尔、闪迪、美光的抛售\"。银行财报创纪录、CPI与PPI双双降温提振了风险偏好，资金明显向现金流稳健的苹果聚拢避险。不过Jefferies提醒，Q2财报季\"宁买亚马逊也不选特斯拉或苹果\"，长期竞争力仍有分歧。当芯片血洗、苹果独红，这波创新高是确定性避险的胜利，还是缺乏新催化的防御性抱团？", title_en: "Apple Surges 4% to Record High, Leading Mega-Caps on a Down Day — Safe Haven Again?", body_en: "Apple (AAPL) defied the selloff, surging 4.01% to $327 and leading mega-cap tech as memory and chip stocks were hammered, with media noting that Apple and Alphabet masked the carnage in Dell, SanDisk, and Micron. Record bank earnings and simultaneous cooling in both CPI and PPI lifted risk appetite, funneling capital into Apple's durable cash flows. However, Jefferies cautioned that heading into Q2 earnings, Amazon is preferred over both Tesla and Apple. With chips bleeding and Apple alone in the green, is this rally a victory for quality defensiveness — or a crowded retreat lacking fresh catalysts?" },
+  { ticker: "META", title_cn: "Meta逆势涨3%站上$681，\"9月前不会停止买入\"，AI野心还在加码？", body_cn: "Meta（META）今日逆势上涨3.07%、站上$681，在科技分化日跟随巨头走强。多头情绪浓厚——有分析师明确喊出\"我9月前不会停止买入Meta\"，看好其AI应用与算力自建的长期兑现；\"Alphabet vs Meta谁是更好的AI股\"的对比也持续为其聚拢关注。在存储/芯片杀跌、资金转向确定性巨头的背景下，Meta的现金流与AI叙事双支撑凸显。当巨头抱团避险叠加AI野心加码，Meta这波上涨你会跟，还是担心capex狂飙透支估值？", title_en: "Meta Rises 3% to $681 With Analyst Vowing to Buy Until September — AI Ambitions Intact?", body_en: "Meta (META) gained 3.07% to $681, outperforming on a day of sharp sector divergence. Bullish conviction ran high — one analyst explicitly stated they \"won't stop buying Meta before September,\" citing long-term payoffs from AI applications and in-house compute buildout. The ongoing \"Alphabet vs. Meta\" AI stock debate continues to attract investor attention. As capital rotated toward high-conviction mega-caps away from chips and storage, Meta's strong cash flows and AI narrative provided dual support. With defensive mega-cap rotation overlapping Meta's AI ambitions, will you follow this move — or worry that runaway capex will stretch the valuation?" },
+  { ticker: "MSFT", title_cn: "微软涨2.8%重整安全业务抢AI需求，软件巨头企稳反击了？", body_cn: "微软（MSFT）今日上涨2.78%、报$396，在巨头撑盘中收复失地。催化来自业务重构——市场传出微软正\"全面改造其安全业务以抓住AI需求\"，试图把AI能力变现到高毛利的安全板块。相较此前IBM暴雷带崩软件、微软自身裁员的阴霾，今日的企稳反弹显示资金重新关注软件龙头的AI落地能力。当软件板块从\"风格切换\"的受伤方尝试反击，微软重整安全业务能否成为新的增长引擎？", title_en: "Microsoft Gains 2.8% as Security Business Overhaul Targets AI Demand — Stabilizing?", body_en: "Microsoft (MSFT) rose 2.78% to $396, reclaiming lost ground alongside broader mega-cap support. The catalyst was a reported overhaul of its security business to capture AI-driven demand, aiming to monetize AI capabilities within its high-margin security segment. Against the backdrop of IBM's earnings shock dragging software names lower and Microsoft's own recent layoffs, today's rebound signals renewed investor focus on the company's AI commercialization potential. As the software sector attempts to recover from style-rotation headwinds, can Microsoft's security business restructuring become a credible new growth engine?" },
+  { ticker: "NVDA", title_cn: "英伟达微涨0.3%抗住芯片杀跌，华尔街喊还能涨140%到$500，信吗？", body_cn: "英伟达（NVDA）今日微涨0.33%、报$213，在半导体板块普跌中相对抗跌。乐观预期再起——有华尔街观点认为\"NVDA仍可上涨140%、冲向$500\"；同时NVDA为何要向\"打造NVLink替代方案\"的公司投资$20亿也引发热议，显示其在AI互联生态的布局野心。不过美银警告\"做多半导体已是史上最拥挤交易\"，追高风险不小。当龙头在杀跌日独稳、卖方又抛出翻倍目标，你会相信$500的想象，还是警惕拥挤交易的反噬？", title_en: "Nvidia Edges Up 0.3% Amid Chip Rout as Wall Street Eyes 140% Upside to $500 — Believable?", body_en: "Nvidia (NVDA) edged up 0.33% to $213, holding firm as the broader semiconductor sector sold off sharply. Bullish calls resurfaced, with one Wall Street view arguing NVDA could still rally 140% toward $500. Its reported $2 billion investment in a company developing NVLink alternatives also drew attention, underscoring its ambitions across the AI interconnect ecosystem. However, BofA warned that long semiconductors has become \"the most crowded trade in history,\" flagging meaningful reversal risk. With the sector leader standing tall on a brutal day and sell-side targets implying a double, do you believe in $500 — or fear the crowded trade unwind?" },
+  { ticker: "AMD", title_cn: "AMD跌3.5%随芯片回落，\"隐藏AI武器\"将揭晓，抄底名单上榜？", body_cn: "AMD今日下跌3.46%、报$529，跟随半导体板块回落。但看多逻辑仍在积累：媒体称\"AMD隐藏的AI武器可能终于要曝光\"，暗示其下一代AI芯片或有超预期看点，还被列入\"芯片持续抛售中我最想买的3只AI股\"。在美银点名\"做多半导体是史上最拥挤交易\"的谨慎氛围下，AMD的回调更像板块系统性降温。当\"隐藏AI武器\"的想象撞上拥挤交易的警报，AMD这波回落是抄底良机，还是高beta的正常回吐？", title_en: "AMD Falls 3.5% With Chips, but 'Hidden AI Weapon' Teased — A Dip-Buy Candidate?", body_en: "AMD dropped 3.46% to $529, pulled lower alongside the broader semiconductor selloff. However, the bull case continues to build: reports suggest AMD's \"hidden AI weapon\" — likely a next-generation AI chip — may soon be revealed, and AMD was named among the top three AI stocks to buy during the ongoing chip selloff. BofA's warning that long semiconductors is \"the most crowded trade ever\" casts a cautious shadow, making AMD's decline look more like sector-wide cooling than a company-specific breakdown. With a \"hidden AI weapon\" narrative colliding with crowded-trade warnings, is AMD's pullback a buying opportunity — or high-beta giveback in a momentum reversal?" },
+  { ticker: "MRVL", title_cn: "Marvell跌7.3%破$210，AI光互连降温+\"真实风险\"论，还能扛吗？", body_cn: "Marvell（MRVL）今日下跌7.27%、跌破$210，在半导体杀跌中领跌。双重压制：AI光互连（optics）交易降温，Applied Optoelectronics、Coherent、Lumentum等同板块集体下挫；同时\"Marvell股票内部的真实风险\"一文再度质疑其估值与竞争地位。此前它已因\"英伟达押注对手+被踢出指数\"深跌，今日光互连降温又添一刀。当AI硬件热门赛道集体退潮，Marvell破$210是超跌，还是定制芯片/光通信估值回归的延续？", title_en: "Marvell Drops 7.3% Below $210 on AI Optics Cooldown and 'Real Risk' Warning — Can It Hold?", body_en: "Marvell Technology (MRVL) fell 7.27%, breaking below $210 and leading semiconductor declines. The stock faced a double blow: cooling sentiment in the AI optical interconnect trade dragged down peers including Applied Optoelectronics, Coherent, and Lumentum, while a widely circulated piece highlighting the \"real risks inside Marvell stock\" renewed scrutiny of its valuation and competitive positioning. The company had already suffered steep losses after Nvidia reportedly backed a rival and Marvell was dropped from a key index. With the AI hardware sub-sector broadly retreating, is Marvell's break below $210 an oversold opportunity — or the continuation of a custom chip and optical communications valuation reset?" },
+  { ticker: "TSLA", title_cn: "特斯拉守$400微跌，Jefferies喊\"宁买亚马逊\"，Q2财报前被看淡？", body_cn: "特斯拉（TSLA）今日微跌0.43%、守在$394，走势平淡。财报季前遭遇卖方相对看淡——Jefferies明确表示\"进入Q2财报，Mag 7里宁可买亚马逊，也不选特斯拉或苹果\"，把TSLA排在偏后。此外马斯克\"低调收购一家$10亿燃气轮机公司为AI供电\"的消息，则被更多解读为利好SpaceX而非特斯拉。当财报临近却被卖方降序，特斯拉在$400下方的僵持，你认为是财报前的蓄势，还是基本面被重新排序？", title_en: "Tesla Holds $400 With Slight Dip as Jefferies Prefers Amazon — Undervalued Pre-Earnings?", body_en: "Tesla (TSLA) slipped 0.43% to $394, trading in a narrow range ahead of its quarterly results. Sell-side sentiment leaned cautious — Jefferies explicitly ranked TSLA behind Amazon when selecting from the Magnificent 7 for Q2 earnings, placing Tesla toward the bottom of its preference list. News that Elon Musk quietly acquired a $1 billion gas turbine company to power AI infrastructure was broadly interpreted as a positive for SpaceX rather than Tesla. With earnings approaching and sell-side rankings working against it, is Tesla's stall below $400 pre-earnings coiling — or a sign that its fundamental story is being reordered?" },
+  { ticker: "QQQ", title_cn: "纳指QQQ微跌，PPI意外走低强化降息，但\"最拥挤交易\"警报响，怎么走？", body_cn: "纳指100 ETF（QQQ）今日微跌0.27%、报$718，科技内部剧烈分化——巨头撑盘、芯片存储杀跌。宏观继续偏暖：继CPI后，6月PPI批发通胀\"意外下降\"，进一步强化降息预期、银行财报也创纪录。但风险信号同步闪现：美银警告\"做多半导体是史上最拥挤的交易\"，另有观点担忧经济\"濒临衰退\"。当通胀降温托底、拥挤交易又暗藏风险，这轮高位震荡是健康轮动，还是变盘前的拉锯？", title_en: "QQQ Edges Down as PPI Cools and Rate-Cut Bets Build, but 'Most Crowded Trade' Warning Flashes — What's Next?", body_en: "The Nasdaq 100 ETF (QQQ) dipped 0.27% to $718 amid sharp intra-sector divergence — mega-caps provided support while chips and memory names were crushed. The macro backdrop remained constructive: June PPI wholesale inflation \"unexpectedly declined,\" reinforcing rate-cut expectations following a soft CPI print, and bank earnings hit records. Risk signals emerged simultaneously, however, with BofA flagging that long semiconductors is \"the most crowded trade in history\" and separate commentary warning the economy is \"on the brink of recession.\" With cooling inflation providing a floor and crowded positioning hiding underneath, is this high-level consolidation healthy rotation — or a tug-of-war before a trend break?" },
+  { ticker: "SPY", title_cn: "通胀大幅降温，沃什却\"零容忍\"不松口，7·30到底降不降？", body_cn: "美国6月通胀意外大幅降温——CPI环比下降0.4%、为2020年4月以来最大单月跌幅，PPI环比下降0.3%、创近一年首降，两项均低于预期，交易员迅速下调加息押注、降息预期升温。但美联储新主席沃什在参议院听证会上\"泼冷水\"：称近期数据不能完美反映潜在通胀、对任何通胀指标都不满意，强调对高通胀\"零容忍\"、并坚决捍卫美联储独立性。他对AI相对淡定——认为AI投资未来12个月会推高统计价格，但属一次性变动、不必然导致持续通胀，长期还将提升生产力与就业。7月30日美联储将公布利率决议。当转鸽的数据撞上不松口的主席，美股是继续押注降息，还是转向防御？", title_en: "Inflation Cools Sharply, but Fed's Waller Holds Firm — Will July 30 Bring a Rate Cut?", body_en: "U.S. June inflation surprised sharply to the downside — CPI fell 0.4% month-on-month, the largest single-month decline since April 2020, while PPI dropped 0.3% in its first monthly decline in nearly a year, with both readings below consensus. Traders quickly pared rate-hike bets and ramped up easing expectations. However, new Fed Chair Kevin Warsh pushed back at a Senate hearing, stating recent data doesn't fully reflect underlying inflation, expressing dissatisfaction with all inflation metrics, and reaffirming zero tolerance for elevated prices while defending Fed independence. On AI, Warsh was measured — acknowledging AI investment may temporarily lift prices over the next 12 months but calling it a one-time shift unlikely to cause sustained inflation, with long-term productivity and employment benefits. The Fed's next rate decision is due July 30. With dovish data colliding with a hawkish chair, will markets keep pricing in cuts — or rotate defensively?" },
+  { ticker: "ASML, TSM", title_cn: "阿斯麦超预期上调全年指引，台积电周四能接棒AI行情吗？", body_cn: "阿斯麦（ASML）7月15日交出超预期财报——Q2营收93.3亿欧元、净利润29.2亿欧元均超市场预期，并将2026年营收指引从360-400亿欧元大幅上调至430-450亿欧元，为AI芯片产能需求投下强力信任票。接力棒随即交给周四中午发布Q2的台积电（TSM）：其季度营收已同比增长36%创历史新高，市场预计净利润同比增长约59%，有望连续第五个季度刷新纪录。当光刻机垄断者释放订单火爆的信号，全球代工龙头能否印证同样强劲的需求，还是预期已被抬得太高、难以超越？台积电能否延续这波AI资本开支行情？", title_en: "ASML Beats and Raises Guidance — Can TSMC Follow With AI Momentum on Thursday?", body_en: "ASML reported strong Q2 results on July 15, with revenue of €9.33 billion and net profit of €2.92 billion both beating estimates, while raising its 2026 revenue guidance sharply from €36–40 billion to €43–45 billion — a powerful endorsement of surging AI chip capacity demand. The baton now passes to Taiwan Semiconductor (TSM), which reports Q2 earnings Thursday: quarterly revenue already rose 36% year-over-year to a record, with net profit expected to surge roughly 59% YoY, potentially marking a fifth consecutive record quarter. With the lithography monopoly signaling booming orders, can the world's leading foundry confirm equally robust demand — or have expectations been set too high to clear? Can TSMC sustain this AI capex-driven rally?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
