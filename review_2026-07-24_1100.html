@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-07-24 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-07-24</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 11</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:9.1%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 11 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "TSLA", title_cn: "特斯拉财报后崩14.5%,烧钱换未来还撑得住吗?", body_cn: "特斯拉财报后重挫14.52%,Q2经营利润率骤降至1.4%、自由现金流转负,资金大举投向AI与Robotaxi。管理层将其定义为长期押注,但华尔街质疑造车主业的盈利能力正被稀释。叠加Alphabet同日巨额capex,大型科技\"重投入、慢回报\"叙事集体承压。当估值仍锚定AI而非汽车,这轮杀跌是风险释放还是趋势逆转?", title_en: "Tesla Plunges 14.5% Post-Earnings: Can AI Spending Burn Rate Be Sustained?", body_en: "Tesla tumbled 14.52% after reporting Q2 operating margins collapsing to 1.4% and free cash flow turning negative, as capital floods into AI and Robotaxi initiatives. Management frames the pivot as a long-term bet, but Wall Street questions whether core automotive profitability is being systematically diluted. With Alphabet reporting massive capex the same day, the \"heavy investment, slow returns\" narrative across mega-cap tech faces mounting pressure. With valuation still anchored to AI rather than autos, is this selloff a risk reset or a trend reversal?" },
+  { ticker: "MU", title_cn: "美光逆势涨3.2%,HBM需求扛起存储反攻?", body_cn: "美光逆市上涨3.20%,报$990上方,谷歌财报披露的巨额AI资本开支被解读为HBM与高端存储的需求确认,带动美光、SK海力士同步走强。市场认为AI基建的\"卖铲人\"正从GPU向存储链扩散。不过存储周期见顶之争仍在,有分析师警告\"闪存AI狂热已退\"。当大盘因capex担忧回落、存储却逆势收红,这会是资金轮动的新主线吗?", title_en: "Micron Bucks Trend, Rises 3.2%: Is HBM Demand Driving a Memory Comeback?", body_en: "Micron gained 3.20%, trading above $99, as Alphabet's disclosed AI capex blowout was interpreted as demand confirmation for HBM and high-bandwidth memory, lifting Micron and SK Hynix in tandem. Markets increasingly view AI infrastructure's \"picks-and-shovels\" trade as rotating from GPUs into the memory supply chain. However, debate over a memory cycle peak persists, with some analysts warning that \"NAND AI euphoria has faded.\" As broader markets retreated on capex concerns while memory stocks closed higher, could this be the next major rotation theme?" },
+  { ticker: "GOOG", title_cn: "谷歌财报后跌6.9%,2000亿capex把市场吓退?", body_cn: "Alphabet财报后下挫6.89%,主因2026年资本开支指引飙至约2000亿美元,市场担忧AI投入侵蚀利润。尽管云与搜索业绩稳健、巴菲特近期还加持谷歌,但\"重资本、慢回报\"的定价切换让Mag-7单日蒸发超7000亿。资金正重新审视超级科技的估值锚。当AI军备竞赛比拼的是烧钱耐力,谷歌的护城河能消化这笔账吗?", title_en: "Alphabet Drops 6.9% Post-Earnings: Does $200B Capex Spook the Market?", body_en: "Alphabet fell 6.89% after guiding 2026 capital expenditure toward approximately $200 billion, stoking fears that AI investment will erode profitability. Despite solid Cloud and Search results — and recent buying by Buffett — the repricing of \"heavy capex, slow returns\" wiped more than $700 billion from Mag-7 market caps in a single session. Investors are reassessing the valuation anchor for mega-cap tech. As the AI arms race becomes a test of spending endurance, can Alphabet's moat absorb the bill?" },
+  { ticker: "SPCX", title_cn: "SpaceX涨2.6%,谷歌豪掷940亿入股引爆想象?", body_cn: "SpaceX相关标的上涨2.59%,消息面显示Alphabet披露持有约940亿美元头寸,两家Mag-7巨头同时押注,点燃市场对商业航天的估值想象。星链与发射业务的现金流前景被重新定价。但一级市场估值透明度低、映射标的溢价风险高,追高需谨慎。当科技巨头用真金白银为太空经济背书,散户该借道布局还是警惕泡沫?", title_en: "SpaceX Rises 2.6%: Does Google's $94B Stake Ignite Valuation Imagination?", body_en: "SpaceX-linked assets gained 2.59% after Alphabet disclosed a position worth approximately $94 billion, with two Mag-7 giants simultaneously backing the venture and reigniting market enthusiasm for commercial space valuations. Starlink and launch business cash flow prospects are being repriced accordingly. However, limited valuation transparency in private markets and elevated premium risks in proxy plays warrant caution. As tech giants put real capital behind the space economy, should retail investors seek exposure — or watch for a bubble?" },
+  { ticker: "INTC", title_cn: "英特尔盘中跌2.3%,AI财报能否逆转颓势?", body_cn: "英特尔日内回落2.33%,但Q2财报意外亮眼——AI驱动的需求推动销售增速创十年新高,盘后一度跳涨。管理层称与AMD一样在代工与产品端\"重获多年未有的议价筹码\",被视为传统芯片龙头借AI周期翻身的信号。不过毛利修复与先进制程放量仍需验证。当市场愿意重新给英特尔讲成长故事,这轮反转能走多远?", title_en: "Intel Slides 2.3% Intraday: Can AI Earnings Reverse the Downtrend?", body_en: "Intel fell 2.33% during the session, but Q2 earnings surprised to the upside — AI-driven demand pushed revenue growth to a decade-high, sparking an after-hours surge. Management stated that, like AMD, the company has \"regained pricing power not seen in years\" across both foundry and product segments, signaling a potential AI-cycle-driven turnaround for the legacy chipmaker. Gross margin recovery and advanced node ramp-up still require validation. With markets willing to revisit Intel's growth narrative, how far can this reversal run?" },
+  { ticker: "NVDA", title_cn: "英伟达仅跌1.6%,Mag-7抛售里为何最抗跌?", body_cn: "英伟达小幅回落1.56%,在Mag-7单日蒸发超7000亿、AI资本开支引发获利了结的背景下明显抗跌。谷歌、特斯拉的巨额capex反被解读为对英伟达算力的持续下单,相对强弱凸显,有市场老将认为AI龙头\"燃料仍足\"。但苹果财报在即、板块情绪脆弱,龙头也难独善其身。当同行因烧钱被抛售、英伟达却是最大受益者,这份相对强势能延续吗?", title_en: "Nvidia Falls Only 1.6%: Why Is It the Most Resilient in the Mag-7 Selloff?", body_en: "Nvidia edged down just 1.56%, standing out as the most resilient name as Mag-7 stocks shed over $700 billion in a single session amid AI capex-driven profit-taking. Google's and Tesla's massive capital expenditure plans were reinterpreted as sustained orders for Nvidia compute, reinforcing relative strength. Veteran market participants argue the AI leader still has \"ample fuel.\" With Apple's earnings imminent and sector sentiment fragile, can Nvidia's relative outperformance hold?" },
+  { ticker: "QQQ", title_cn: "纳指ETF跌1.9%,capex焦虑撞上油价谁先低头?", body_cn: "QQQ下跌1.90%,科技财报季的资本开支担忧,叠加油价飙升与地缘风险(胡塞武装扰动),推动纳指承压回落。初请失业金降至1969年以来最低,强就业反而强化了美联储9月不急于降息的预期。Mag-7集体获利了结成为主要拖累。当\"AI烧钱\"与\"利率更高更久\"两条叙事同时施压,这轮回调是健康换手还是趋势转向?", title_en: "QQQ Drops 1.9%: Will Capex Anxiety or Surging Oil Prices Blink First?", body_en: "QQQ fell 1.90% as tech earnings capex concerns collided with spiking oil prices and geopolitical risk from Houthi disruptions, pressuring the Nasdaq. Initial jobless claims hit their lowest since 1969, but the strong labor print reinforced expectations that the Fed will not rush to cut rates in September. Broad-based Mag-7 profit-taking served as the primary drag. With both \"AI spending overhang\" and \"higher-for-longer rates\" narratives weighing simultaneously, is this pullback a healthy rotation or the start of a trend shift?" },
+  { ticker: "NOW", title_cn: "ServiceNow上调指引却跌3.7%,好财报为何不涨?", body_cn: "ServiceNow逆势下跌3.69%,尽管Q2业绩超预期并上调全年指引,却仍被大盘抛售裹挟。市场对高估值软件股在capex收缩预期下的持续性存疑,Oracle拿下五角大楼大单也分流了政企AI叙事的关注。基本面与股价的背离,更多反映资金在避险而非选股。当业绩兑现却换来杀估值,这是错杀带来的低吸机会吗?", title_en: "ServiceNow Raises Guidance Yet Falls 3.7%: Why Aren't Good Earnings Rewarded?", body_en: "ServiceNow dropped 3.69% despite beating Q2 estimates and raising full-year guidance, swept lower by broader market selling pressure. Investors are questioning the sustainability of high-multiple software names amid expectations of capex tightening, while Oracle's Pentagon contract win diverted attention from the enterprise AI narrative. The divergence between fundamentals and price action reflects risk-off capital flows rather than stock-specific weakness. With earnings delivered but valuation still punished, does this represent a mispriced dip-buying opportunity?" },
+  { ticker: "MSFT", title_cn: "微软跌2.2%,谷歌capex警报烧到下周财报?", body_cn: "微软下跌2.24%,谷歌2000亿capex指引引发的\"AI重投入\"担忧向整个云板块传导,而微软下周即将发布财报,市场提前为其资本开支定价。云业务增速与AI变现节奏成为最大看点。分析师仍看好其AI商业化领先地位,但估值对\"投入产出比\"愈发敏感。当同行因烧钱被杀估值,微软的财报要拿出怎样的答卷才能稳住人心?", title_en: "Microsoft Falls 2.2%: Will Google's Capex Warning Cloud Next Week's Earnings?", body_en: "Microsoft declined 2.24% as Alphabet's ~$200 billion capex guidance spread \"heavy AI investment\" anxiety across the entire cloud sector, with markets beginning to pre-price Microsoft's own capital expenditure ahead of its earnings next week. Cloud revenue growth and AI monetization cadence are the key focal points. Analysts maintain confidence in Microsoft's AI commercialization lead, but valuations are increasingly sensitive to return-on-investment metrics. As peers are punished for spending, what kind of earnings report will Microsoft need to steady investor confidence?" },
+  { ticker: "NOK", title_cn: "诺基亚财报后跌5.4%,通信设备景气证伪了吗?", body_cn: "诺基亚Q2财报后下挫5.35%,尽管电话会议释放AI数据中心网络需求信号,但业绩与指引未能打消市场对增长放缓的疑虑。运营商资本开支节奏与毛利压力仍是核心变量。在科技板块因capex叙事整体分化之际,通信设备商的定位显得尴尬。当AI基建的红利更多流向算力与存储,诺基亚这类\"卖网络\"的玩家还能分到多少?", title_en: "Nokia Drops 5.4% Post-Earnings: Has the Telecom Equipment Upcycle Been Disproven?", body_en: "Nokia tumbled 5.35% following Q2 results, as signals of AI data center networking demand on the earnings call failed to dispel concerns over slowing growth. Carrier capex timing and gross margin pressure remain the key variables. As the tech sector broadly fragments along the capex narrative, telecom equipment vendors find themselves in an awkward position. With AI infrastructure tailwinds flowing more heavily toward compute and memory, how much of that upside can players like Nokia — selling networks — actually capture?" },
+  { ticker: "AMD", title_cn: "AMD跌2.3%,英特尔财报能否点燃CPU叙事?", body_cn: "AMD回落2.29%,与半导体板块同步承压,但基本面暗流涌动:客户名单持续扩张,且随英特尔财报亮眼,\"英特尔与AMD都重获多年未有的议价筹码\"成为市场新叙事。数据中心CPU与AI加速卡的双线布局被重新审视。不过在Mag-7获利了结、板块risk-off的当口,利好难敌情绪。当行业格局向双雄倾斜,AMD的回调是上车时机还是补跌开端?", title_en: "AMD Slides 2.3%: Can Intel's Strong Earnings Reignite the CPU Narrative?", body_en: "AMD fell 2.29%, moving in line with broader semiconductor weakness, though underlying fundamentals show momentum: its customer roster continues to expand, and Intel's strong earnings introduced a new market narrative that \"both Intel and AMD have regained pricing power not seen in years.\" The dual-track positioning across data center CPUs and AI accelerators is drawing renewed scrutiny. However, with Mag-7 profit-taking and sector-wide risk-off sentiment dominating, positive catalysts struggle to gain traction. As the industry tilts toward a two-horse race, is AMD's pullback a buying opportunity or the start of further downside?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
