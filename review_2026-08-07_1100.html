@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-07 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-07</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 7</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:14.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 7 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SPY / .DJI / QQQ", title_cn: "道指跌464点等非农,今晚数据要哪种脸色?", body_cn: "三大指数周四集体收跌:道指跌464点、跌幅0.85%,标普500指数跌0.18%、SPY跌0.16%,QQQ跌0.37%,美债收益率与原油同时跳升,霍尔木兹海峡重开的进展反而带来新的不确定性。资金在等今晚20:30的7月非农:市场预计新增约8万人、较6月的5.7万人回升,失业率料维持4.2%,但ADP私人就业仅增4.4万、职位空缺回落、ISM服务业就业分项已降到47.4,降温信号在累积。对股市最友好的组合是就业温和放缓、薪资不过热——收益率回落才能给AI与半导体腾出估值空间;数据偏强则会把9月加息预期重新点起来。当好数据可能是坏消息,今晚该盯就业还是盯薪资?", title_en: "Dow Drops 464 Points Ahead of Jobs Data — What Does Tonight's Print Need to Show?", body_en: "U.S. equities fell broadly Thursday: the Dow shed 464 points (-0.85%), the S&P 500 slid 0.18%, SPY lost 0.16%, and QQQ dropped 0.37%, while Treasury yields and crude oil both jumped. Markets are now squarely focused on tonight's July nonfarm payrolls (8:30 a.m. ET / 20:30 Beijing), with consensus expecting around 80,000 new jobs — up from June's 57,000 — and unemployment steady at 4.2%. Cooling signals are stacking up: ADP private payrolls rose just 44,000, job openings retreated, and the ISM services employment sub-index fell to 47.4. The most market-friendly outcome is hiring that cools gently with wages contained — that would pull yields lower and open valuation room for AI and semiconductors, whereas a strong print risks reviving September rate-hike bets. When good data can be bad news, should investors watch the jobs number or wages tonight?" },
+  { ticker: "SPCX / SSPC", title_cn: "SpaceX解禁1160亿反涨6.1%,利空真出尽了?", body_cn: "SpaceX周四逆势收涨6.14%,美股史上最大规模的IPO首轮解禁就此落地——合计9.115亿股内部持股获得出售资格,对应市值约1160亿美元,创下美股解禁规模纪录,股价早盘短暂承压后反手拉升。配合首份财报重新被读了一遍:主业盈利超预期、AI业务亏损大幅收窄,只有AI资本开支略超预期;木头姐借着财报后的回调加仓,摩根大通也在财报后重设目标价,马斯克则强调星链被市场低估。但太空概念并未同步,SSPC同日跌12.16%。当最大的那颗靴子落地、板块却没跟上,这是反转起点还是只完成了出清?", title_en: "SpaceX Surges 6.1% Through $116B Lockup Expiry — Is the Overhang Truly Gone?", body_en: "SpaceX closed up 6.14% Thursday despite the largest lockup expiry in U.S. equity market history, with 911.5 million insider shares — worth approximately $116 billion — becoming eligible for sale, setting a record for lockup size; the stock dipped briefly at the open before reversing higher. Investors revisited the company's inaugural earnings report: core business profit beat estimates, AI-segment losses narrowed sharply, and only AI capital expenditure came in slightly above expectations. Cathie Wood added to her position on the post-earnings dip, JPMorgan reset its price target after results, and Elon Musk argued Starlink remains undervalued by the market — yet space-sector peer SSPC fell 12.16% on the same day. With the single largest overhang now cleared but the broader sector failing to follow, is this a reversal inflection point or merely the end of the liquidation?" },
+  { ticker: "SNDK / WDC / SKHY / SNXX", title_cn: "闪迪140亿回购不买账,好业绩为何连跌两天?", body_cn: "存储财报后的杀跌进入第二天:闪迪周四再跌6.81%,140亿美元回购没能打动市场;西部数据营收同比增44%却重挫13.03%,海力士跟着闪崩4.97%,闪迪2倍杠杆ETF(SNXX)跌13.53%。逻辑很清楚——业绩是后视镜,指引才是定价依据,闪迪对下一财季的谨慎口径把超预期的Q4整个抵消掉。还有人把这轮波动归因到隐性的融资杠杆,警告出清可能没结束。当回购与暴增的利润都换不来上涨,存储的定价权到底在谁手里?", title_en: "SanDisk's $14B Buyback Fails to Impress — Why Two Straight Days of Losses After Strong Earnings?", body_en: "The post-earnings selloff in memory stocks entered a second consecutive session Thursday: SanDisk fell another 6.81%, with a $14 billion buyback program failing to support the shares; Western Digital — reporting revenue up 44% year-on-year — crashed 13.03%, SK Hynix tumbled 4.97%, and the 2x leveraged SanDisk ETF (SNXX) dropped 13.53%. The market's logic is straightforward: past results are a rearview mirror, and guidance sets the price — SanDisk's cautious outlook for the coming quarter fully offset its better-than-expected earnings. Some analysts also attribute the volatility to hidden leveraged positioning, warning the unwind may not be complete. When buybacks and surging profits cannot generate a rally, who really controls pricing power in memory?" },
+  { ticker: "MU / NVDA", title_cn: "英伟达要给GPU减显存,美光的长约会松动?", body_cn: "美光周四收跌1.31%、盘中曾一度冲高,英伟达微跌0.10%。真正的新变量来自上游设计:据报道英伟达正在评估降低显存配置的Rubin Ultra方案,以缓解HBM的供应瓶颈,这条消息直接指向存储需求的强度假设。卖方则在做另一件事——比较海力士与美光的估值差,认为存储交易正在向低估值一侧轮动。当客户开始想办法少用HBM,美光的长约优势还能维持多久?", title_en: "Nvidia Said to Weigh Cutting GPU Memory — Could Micron's Long-Term Contracts Be at Risk?", body_en: "Micron closed down 1.31% Thursday after briefly spiking intraday, while Nvidia edged down 0.10%. The key new variable comes from upstream chip design: Nvidia is reportedly evaluating a reduced-memory configuration for its Rubin Ultra platform to ease HBM supply constraints, a development that directly challenges assumptions about the strength of memory demand. On the sell side, analysts are comparing valuations between SK Hynix and Micron, arguing that the memory trade is rotating toward the lower-valuation name. If customers begin engineering ways to consume less HBM, how long can Micron's long-term contract advantage hold?" },
+  { ticker: "NBIS", title_cn: "Nebius暴跌13.3%,伯里这次直接做空它?", body_cn: "Nebius周四重挫13.29%,是当日跌幅最深的AI标的之一。消息面上,大空头伯里被披露重新买入甲骨文看跌期权,并新增了对Nebius的空头头寸,这与它此前\"neocloud领军者\"的卖方定位形成正面冲突。紧接着CoreWeave与Nebius的数据中心财报就要登场,高杠杆算力玩家的融资成本与订单质量将被逐一检验。当空头把枪口对准最贵的那一段,neocloud的估值靠什么防守?", title_en: "Nebius Plunges 13.3% — Has Burry Taken a Direct Short Position?", body_en: "Nebius crashed 13.29% Thursday, ranking among the day's worst-performing AI names. On the news front, prominent short-seller Michael Burry was disclosed to have re-established put options on Oracle while also initiating a new short position in Nebius — a direct challenge to the sell-side narrative that had positioned the company as a neocloud leader. Upcoming data-center earnings from CoreWeave and Nebius will put the financing costs and order quality of highly leveraged compute players under the microscope. With short sellers targeting the most richly valued segment of the stack, what defends neocloud valuations now?" },
+  { ticker: "AMD", title_cn: "AMD涨1.5%买下Taalas,推理这条路走通了?", body_cn: "AMD周四逆势收涨1.50%,把前一日财报后的杀跌稳住。动作是收购多伦多AI芯片初创公司Taalas,被市场解读为在推理侧加码、更直接地对标英伟达;美银同期给出的判断是英伟达仍主导AI芯片,但AMD正在缩小差距。此前一天它刚因指引不及预期大跌7%,预期已经被打下来。当叙事从训练转向推理,这笔收购能不能成为重新定价的支点?", title_en: "AMD Gains 1.5%, Acquires Taalas — Has Its Inference Strategy Finally Found Traction?", body_en: "AMD reversed course Thursday, closing up 1.50% and stabilizing after the prior session's post-earnings selloff. The company announced the acquisition of Toronto-based AI chip startup Taalas, a move the market interpreted as a deeper push into inference and a more direct challenge to Nvidia; Bank of America noted that while Nvidia still dominates AI chips, AMD is closing the gap. AMD had dropped 7% the previous day after guidance disappointed, resetting expectations lower. With the industry narrative shifting from training to inference, can this acquisition become the catalyst for a re-rating?" },
+  { ticker: "MSFT", title_cn: "微软涨2.5%创纪录,和谷歌的差距被拉开了?", body_cn: "微软周四逆势收涨2.54%,在指数普跌里创出纪录级新高,技术面上已越过卖方定义的买入区间。财报后的强势没有衰减,市场把它与谷歌的竞争重新摆上台面:同一批AI资本开支,微软给出了更清楚的变现路径,而谷歌本周还在调整AI组织架构。云与Copilot的商业化节奏是分歧核心。当资金开始在两家之间做选择,这轮领先能持续到下一份财报吗?", title_en: "Microsoft Rises 2.5% to Record High — Is Its Lead Over Google Widening?", body_en: "Microsoft bucked the broad market decline Thursday, closing up 2.54% at a record high and technically breaking above the buy range defined by sell-side analysts. Post-earnings momentum remains intact, and investors are reassessing its rivalry with Google: the same scale of AI capital expenditure is being credited with a clearer monetization path at Microsoft, while Google was still restructuring its AI organization this week. The pace of cloud and Copilot commercialization sits at the heart of the debate. With capital beginning to choose between the two, can Microsoft sustain this lead into its next earnings report?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
