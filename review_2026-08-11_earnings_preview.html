@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-11 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-11</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "CRWV", title_cn: "CoreWeave今晚交卷,AI云的借钱成本先被算账?", body_cn: "CoreWeave将于今晚盘后公布季报,市场预期营收约26.1亿美元、每股仍亏损1.24美元。它是这轮neocloud定价争议的正中心:上周同赛道的Nebius因信用违约互换成本抬升被砸,伯里随后被披露新开空头,资金关心的已不是订单增速,而是这批高杠杆算力玩家还能不能借到便宜钱。股价周一跌2.74%,先行降温。当收入端确定、融资端存疑,这份财报要先回答哪一半?", title_en: "CoreWeave Earnings Due After-Hours — Can High-Leverage AI Cloud Still Borrow Cheap?", body_en: "CoreWeave reports quarterly results after-hours tonight, with consensus expecting revenue of approximately $2.61 billion and a per-share loss of $1.24. The neocloud pricing debate is centered squarely on CoreWeave: last week peer Nebius was hit as credit default swap costs rose, and Burry was subsequently disclosed to have initiated a new short. Investors have shifted focus from order growth to whether highly leveraged compute players can still access cheap financing — shares fell 2.74% Monday. With revenue visibility intact but funding conditions in doubt, which half does this earnings report answer first?" },
+  { ticker: "SMCI", title_cn: "超微今晚放榜,118亿营收背后的毛利够看吗?", body_cn: "Super Micro同在今晚盘后交卷,市场预期营收约117.8亿美元、每股收益0.98美元。它的老问题从来不是出货量,而是AI服务器这门生意的毛利率——机架级方案卖得越多,议价权越可能被上游的GPU与存储成本吃掉,而近期存储涨价的信号正在变强。股价周一微涨1.06%,情绪并不激进。当营收规模已经不需要证明,市场这次会不会只盯着毛利那一行?", title_en: "Super Micro Reports Tonight — Do Margins Hold Behind $11.78B Revenue?", body_en: "Super Micro also reports after-hours tonight, with consensus calling for revenue of approximately $11.78 billion and earnings per share of $0.98. The perennial question for the company is not shipment volume but gross margin on AI server builds — the more rack-scale solutions it sells, the more pricing power risks being eroded by upstream GPU and memory costs, with recent memory price inflation signals intensifying. Shares edged up 1.06% Monday, reflecting subdued conviction. With revenue scale no longer needing proof, will the market focus exclusively on the margin line this time?" },
+  { ticker: "NBIS", title_cn: "Nebius明早盘前交卷,伯里的空头会被打脸吗?", body_cn: "Nebius将于明天美股盘前公布季报,市场预期营收约5.8亿美元、每股亏损0.693美元,是本周唯一进入社区榜单的财报标的。剧本已经写好一半:它上周先因AI云融资成本担忧重挫12.65%,随后被卖方称作\"neocloud领军者\",接着伯里被披露新开空头,多空在同一周把话说到了尽头。7.75亿美元债务安排究竟算资本效率还是杠杆风险,这份财报会给出第一个可验证的答案。当双方都押了重注,盘前那几分钟谁先松手?", title_en: "Nebius Reports Pre-Market Tomorrow — Will Burry's Short Get Squeezed?", body_en: "Nebius releases quarterly results before the U.S. market opens tomorrow, with consensus expecting revenue of approximately $580 million and a per-share loss of $0.693, making it the only earnings name on the community watchlist this week. The script is already half-written: shares cratered 12.65% last week on AI cloud financing cost concerns, the sell side then labelled it a \"neocloud leader,\" and Burry was disclosed to have opened a new short — bulls and bears both spoke their piece in the same week. Whether the $775 million debt arrangement represents capital efficiency or leverage risk, this report delivers the first verifiable answer. With both sides heavily committed, who blinks first in those pre-market minutes?" },
+  { ticker: "LITE / COHR", title_cn: "光模块双雄财报前先崩,禁令红利要落空?", body_cn: "光互连这条线本周连着交卷:Lumentum在今晚盘后、Coherent在周三盘后,市场预期两家营收分别约10.1亿与20.3亿美元。但盘面提前给了脸色——周一Coherent重挫14.24%、Lumentum跌8.61%,跌幅远超同板块。这与AAOI因\"拟禁中国光模块\"提案连涨的逻辑正好构成对照:同一条政策红利,为什么规模更大的两家先被卖?800G产能与客户集中度是关键分歧。当预期被提前打掉,这两份财报是补跌的终点还是起点?", title_en: "Optical Module Giants Sell Off Before Earnings — Will Policy Tailwinds Fizzle?", body_en: "Two optical interconnect names report this week: Lumentum after-hours tonight and Coherent after-hours Wednesday, with consensus revenue estimates of approximately $1.01 billion and $2.03 billion respectively. Markets delivered an early verdict Monday — Coherent plunged 14.24% and Lumentum fell 8.61%, both far outpacing sector peers. The contrast with AAOI's consecutive gains on a proposed ban on Chinese optical modules is stark: same policy tailwind, yet the two larger players sold off first, with 800G capacity and customer concentration emerging as the key fault lines. With expectations already repriced lower, do these two earnings reports mark the end of the selloff — or the beginning?" },
+  { ticker: "AMAT", title_cn: "应用材料周四放榜,自建芯片厂的钱到账了吗?", body_cn: "应用材料将在周四盘后公布季报,市场预期营收约91.8亿美元、每股收益3.45美元。它是本周检验\"AI巨头自建产能\"这条叙事最直接的标的:上周特斯拉与SpaceX宣布投168亿美元建Terafab园区、英特尔又增发150亿美元为产能融资,这些资本开支最终要变成设备订单,才算落到实处。但股价周一跌3.16%,市场显然还不敢提前定价。当扩产公告一个接一个,设备端的订单指引会不会才是真正的裁判?", title_en: "Applied Materials Reports Thursday — Has AI Fab Capex Translated Into Orders?", body_en: "Applied Materials reports quarterly results after-hours Thursday, with consensus expecting revenue of approximately $9.18 billion and earnings per share of $3.45. It is the most direct bellwether this week for the \"AI giants building their own capacity\" narrative: last week Tesla and SpaceX announced a $16.8 billion investment in the Terafab campus, while Intel raised an additional $15 billion to fund capacity expansion — capital commitments that only become tangible when they convert into equipment orders. Shares fell 3.16% Monday, signaling the market is not yet willing to price this in early. With capacity announcements arriving in rapid succession, will equipment order guidance prove to be the real arbiter?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
