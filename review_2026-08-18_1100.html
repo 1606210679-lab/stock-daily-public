@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-18 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-18</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / .DJI / QQQ", title_cn: "大摩小摩齐喊8000点,指数当天却在跌?", body_cn: "卖方给出了今年以来最积极的一次表态:摩根士丹利与摩根大通同时把标普500的目标点位上调至8000点,理由不是估值还能扩张,而是驱动力正在切换——从\"估值扩张\"转向\"盈利上修+AI商业化兑现\"。但盘面周一并不配合:标普500指数跌0.52%至7745.06点,道指跌0.51%,纳指跌0.32%,QQQ微跌0.16%,上周一度突破7800点后重新回到高位震荡。压制来自两头:8月消费者信心下滑,而卖方内部也有完全相反的声音,有报告以\"三个泡沫、一个流动性问题\"为题提醒市场空间正在收窄,另一份则点出投资者杠杆已到极端水平。本周的真正变量是北京时间周四凌晨2点发布的7月FOMC会议纪要——上次会议维持利率在3.50%-3.75%不变,但有三位委员主张加息,纪要如何权衡通胀、油价与增长,会直接决定科技成长股的估值空间。当目标点位被上调、当天却在跌,你会押AI与半导体、转向金融与消费,还是等纪要落地再动?", title_en: "Morgan Stanley, JPMorgan Both Target S&P 8000 — But Index Falls?", body_en: "Morgan Stanley and JPMorgan simultaneously raised their S&P 500 targets to 8,000, citing a shift in drivers from valuation expansion to earnings upgrades and AI monetization. Markets didn't cooperate Monday: the S&P 500 fell 0.52% to 7,745.06, the Dow dropped 0.51%, and the Nasdaq slid 0.32%. Headwinds came from both ends — August consumer confidence deteriorated, while a dissenting sell-side report titled 'Three Bubbles, One Liquidity Problem' warned of narrowing upside, and another flagged investor leverage at extreme levels. The week's true variable is the July FOMC minutes, due Thursday at 2 a.m. Beijing time — the last meeting held rates at 3.50%–3.75%, though three members favored a hike. With targets raised yet the index falling, do you go long AI and semiconductors, rotate to financials and consumer, or wait for the minutes?" },
+  { ticker: "SNDK / SNXX / MU / WDC / DRAM", title_cn: "闪迪再涨8.9%,Evercore首次覆盖给到跑赢?", body_cn: "存储概念周一继续上攻,闪迪领涨8.88%,闪迪2倍杠杆ETF(SNXX)涨17.73%,美光涨4.13%、西部数据涨5.35%、存储ETF(DRAM)涨5.36%、SK海力士涨3.04%,海力士2倍杠杆产品07709涨3.19%。新增催化是卖方入场:Evercore ISI首次覆盖闪迪即给出跑赢大盘评级,而板块的基本面理由已经不只是投资者日那份远期蓝图——公司披露已与8家客户签约,覆盖约半数2027财年及三分之二2028财年的产能,并计划明年向AI推理设备客户提供HBF(高带宽闪存)样品。AI推理带动的企业级SSD与NAND缓存需求,正与HBM、DRAM的供需紧平衡形成共振。空方的证据在同一天出现,而且更有意思:有卖方以\"苹果面临存储成本逆风\"为理由下调了苹果评级——存储涨价对上游是利润,对下游终端就是成本,这条链的两端第一次被摆在一起定价。接下来关键看订单与合约价能否兑现到毛利率。闪迪、美光、海力士、西部数据,还是直接用2倍杠杆ETF?", title_en: "SanDisk Surges Another 8.9% as Evercore Initiates with Outperform?", body_en: "Memory stocks extended Monday's rally, led by SanDisk (+8.88%), its 2x leveraged ETF SNXX (+17.73%), Western Digital (+5.35%), the DRAM ETF (+5.36%), Micron (+4.13%), and SK Hynix (+3.04%). Evercore ISI initiated coverage of SanDisk with an Outperform rating, adding to fundamentals that go beyond the earlier investor-day roadmap: the company disclosed contracts with eight customers covering roughly half of fiscal 2027 and two-thirds of fiscal 2028 capacity, with HBF (High Bandwidth Flash) samples slated for AI inference customers next year. Enterprise SSD and NAND cache demand driven by AI inference is resonating with tight HBM and DRAM supply. The bear case surfaced the same day in an equally pointed form — one sell-side report downgraded Apple citing memory cost headwinds, placing upstream margin gains and downstream cost pressure on the same pricing axis for the first time. SanDisk, Micron, SK Hynix, Western Digital, or the 2x leveraged ETF — which do you favor?" },
+  { ticker: "AXTI / MRVL / AAOI / 6869", title_cn: "AXT暴涨17.6%,CPO从验证走向量产了?", body_cn: "光通信是周一另一条主线:AXT Inc暴涨17.55%,迈威尔科技涨5.54%,Applied Optoelectronics涨3.07%,港股的长飞光纤光缆今日盘中涨1.75%。催化非常明确——英伟达宣布基于CPO(共封装光学)的Spectrum-X Ethernet Photonics交换机正式进入量产阶段。与传统可插拔光学网络相比,新架构可实现5倍网络功耗效率提升、5倍AI应用不间断运行时长提升,以及10倍平均故障间隔时间延长。这意味着CPO已经从技术验证走向规模化应用,整条产业链从激光器、光引擎到交换芯片都会被重新定价。空方角度同样具体:CPO规模化会压缩传统可插拔光模块的份额,受益与受损在同一条链上并存;而Coherent此前双超预期的财报次日仍大跌7.99%,说明市场对这条链的价格弹性极度敏感;此外有卖方认为博通仍被低估、有50%上行空间,竞争格局并未定型。本周五长飞光纤光缆将披露中期业绩,是这条链最近的一次业绩验证。AXT、迈威尔、AAOI还是长飞,你更关注哪一家?", title_en: "AXT Surges 17.6% — Has CPO Moved from Validation to Mass Production?", body_en: "Optical communications emerged as a key Monday theme: AXT Inc surged 17.55%, Marvell Technology gained 5.54%, Applied Optoelectronics rose 3.07%, and Hong Kong-listed HTGD advanced 1.75% intraday. The catalyst was clear — Nvidia announced its CPO-based Spectrum-X Ethernet Photonics switch has entered mass production, delivering a 5x improvement in network power efficiency, 5x longer AI application uptime, and a 10x increase in mean time between failures versus traditional pluggable optical networks. This signals CPO's transition from technical validation to scaled deployment, repricing the entire supply chain from lasers and optical engines to switch chips. The bear case is equally specific: CPO at scale compresses share for traditional pluggable optical modules, with winners and losers coexisting on the same chain; Coherent's beat-and-raise quarter was followed by a 7.99% drop the next day, underscoring the market's acute sensitivity to valuation along this chain; and one sell-side report argues Broadcom remains undervalued with 50% upside, leaving the competitive landscape unsettled. HTGD reports interim results this Friday, the chain's nearest earnings checkpoint. AXT, Marvell, AAOI, or HTGD — which are you watching?" },
+  { ticker: "META / MSFT / AAPL", title_cn: "Meta微软齐跌3%,存储涨价开始咬终端了?", body_cn: "与存储和光通信的火热形成对照,大市值科技周一集体走弱:Meta跌3.54%、微软跌3.04%,苹果微跌0.11%、谷歌跌0.61%、英伟达基本收平。最值得注意的一条是苹果——有卖方以\"存储成本逆风构成暂停理由\"为由下调其评级,这把上游涨价的账单第一次直接算到了终端厂商头上:内存与闪存合约价上行对美光、闪迪是毛利,对手机与PC厂商就是成本,而苹果这类硬件占比高的公司最先承压。多头的反驳也在:巨头的AI资本开支仍在扩张,盈利上修是卖方上调标普目标位的核心依据,这轮回调更像高位换仓而非趋势反转。风险在于估值——投资者杠杆已到极端水平,任何指引下修都会被放大。当同一条产业链的上下游开始反向定价,你更愿意站在收钱的存储一侧,还是抄底付钱的终端巨头?", title_en: "Meta, Microsoft Both Drop 3% — Is Memory Inflation Hitting End Devices?", body_en: "In contrast to memory and optical communications, large-cap tech broadly weakened Monday: Meta fell 3.54%, Microsoft dropped 3.04%, Alphabet lost 0.61%, Apple slipped 0.11%, and Nvidia closed roughly flat. The most notable datapoint was Apple — a sell-side downgrade citing memory cost headwinds put upstream price increases directly on the terminal manufacturers' ledger for the first time: rising DRAM and NAND flash contract prices translate to gross margin for Micron and SanDisk, but to cost pressure for smartphone and PC makers, with hardware-heavy companies like Apple feeling it first. Bulls counter that mega-cap AI capex continues to expand and earnings upgrades remain the core rationale behind raised S&P targets, making this pullback look more like high-level rotation than trend reversal. The risk is valuation — investor leverage sits at extreme levels, and any guidance cut will be amplified. With the same supply chain pricing its upstream and downstream in opposite directions, do you stand with the memory names collecting the margin, or buy the dip in the device giants paying the bill?" },
+  { ticker: "NBIS / CRWV", title_cn: "Nebius回落3.2%,同一天三份评级三个方向?", body_cn: "Nebius周一回落3.18%,把上周五8.88%的涨幅交回一部分,而卖方的判断在同一天出现了三个方向:一份直接上调评级、称它\"重回多头区间\";一份警告这可能是\"潜在的牛市陷阱\",指出增长故事背后是策略性融资在支撑;第三份针对同赛道的CoreWeave下调评级,理由反而是\"债务融资担忧被过度放大、但这并不构成买入理由\"。分歧的根子还是那组数字:Q2营收5.82亿美元、同比增454%,调整后净亏损收窄至3320万美元,增速无可指摘,但资本开支与债务安排决定了它能否把增速维持到明年。CoreWeave这边的看点仍是能否把客户从AI原生公司扩展到传统企业。当同一天的三份报告指向三个方向,说明这条赛道还没有形成定价共识。你更愿意持有弹性更大的Nebius、客户结构更分散的CoreWeave,还是等下一份财报再确认?", title_en: "Nebius Pulls Back 3.2% as Three Reports Point in Three Directions?", body_en: "Nebius retreated 3.18% Monday, giving back part of Friday's 8.88% gain, while sell-side opinion split three ways in a single session: one upgraded the stock, calling it 'back in bull territory'; a second warned of a 'potential bull trap,' arguing strategic financing is propping up the growth narrative; a third downgraded peer CoreWeave, concluding that while debt financing concerns are overblown, that alone is not a buy signal. The divide traces back to the same figures: Q2 revenue of $582 million, up 454% year-over-year, with adjusted net loss narrowing to $33.2 million — growth that is hard to dispute, but where capex and debt structure will determine whether that pace holds into next year. For CoreWeave, the key question remains whether it can expand its customer base beyond AI-native firms to traditional enterprises. Three reports, three directions on the same day signals the sector has yet to reach a pricing consensus. Do you prefer the higher-beta Nebius, the more diversified CoreWeave, or wait for the next earnings print to confirm?" },
+  { ticker: "SPCX", title_cn: "SpaceX涨4.5%,机构持仓曝光成了新买盘?", body_cn: "SpaceX周一涨4.45%,催化是多家机构的持仓在同一时间被披露——彼得·蒂尔与Founders Fund申报持有约5.5%的股份,数十亿美元级别的仓位曝光后股价随即跳涨。这与上周五的反应形成对比:当时同一条持仓消息公布,股价几乎没动,说明市场消化这类信息需要时间发酵。另一条线索是它正被纳入新的AI主题ETF策略,与OpenAI、Anthropic一同作为\"超越大型科技股\"的配置标的,这让未上市AI资产的定价通道第一次和公开市场打通。空方的理由没有变:财报后有卖方直言\"还有很长的下跌空间\",36倍远期市销率被称作估值陷阱,而史上最大规模的IPO首轮解禁刚刚结束、后续批次仍在时间表上。当机构用真金白银表态、估值却仍在高位,你更信持仓还是更信倍数?", title_en: "SpaceX Jumps 4.5% — Does Institutional Disclosure Create Fresh Buying?", body_en: "SpaceX rose 4.45% Monday after several institutional positions were disclosed simultaneously — Peter Thiel and Founders Fund filed holdings of approximately 5.5%, and the revelation of a multi-billion-dollar stake triggered an immediate price jump. The reaction contrasted with Friday, when the same position data was published with almost no price response, suggesting the market needed time to absorb the information. A parallel development saw SpaceX included in new AI-themed ETF strategies alongside OpenAI and Anthropic as 'beyond big tech' allocations, for the first time opening a public-market pricing channel for unlisted AI assets. The bear case is unchanged: one sell-side note issued after earnings stated bluntly that 'significant downside remains,' flagging a 36x forward price-to-sales ratio as a valuation trap, while the largest IPO lock-up expiration on record has just passed with further tranches still on the calendar. With institutions putting real capital to work yet valuations remaining elevated, do you trust the positioning or the multiple?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
