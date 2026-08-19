@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-19 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-19</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "TGT / LOW / TJX", title_cn: "家得宝已交好数,塔吉特劳氏今晚接棒谁掉队?", body_cn: "本周剩下的美股主线是零售连环放榜:塔吉特与劳氏今晚盘前交卷,TJX同日披露2027财年第二财季。已经交卷的家得宝好于预期,给这批公司立了一个不低的比较基准。共识摆在这里:塔吉特市场预期每股收益约2.31美元、营收约263亿美元;劳氏交卷前反而被连续下调目标价——花旗从285降到267、Piper Sandler从276降到274、美银从257降到256、摩根大通从279降到252,而它的股价已经贴在199.40至293.06美元这个52周区间的下沿;TJX则是这三家里最被看好的,大摩恢复覆盖给到增持、目标181美元,卖方共识目标177.40美元。争议点是同一个:关税与商品成本能不能转嫁到货架价格,以及促销力度会不会先吃掉毛利。折扣零售商在消费降级里通常是受益方,家居建材则要看利率——按揭利率跟着长端一起上行,装修需求最先被推迟。塔吉特的自救、劳氏的利率账,还是TJX的降级红利,你更愿意押哪一边?", title_en: "Home Depot Beats — Can Target, Lowe's and TJX Keep Up?", body_en: "This week's retail earnings gauntlet continues with Target and Lowe's reporting before the open, while TJX discloses its fiscal second-quarter results the same day. Home Depot's beat sets a high bar: consensus expects Target EPS of ~$2.31 on revenue of ~$26.3 billion, while Lowe's has seen a string of price-target cuts — Citi to $267, Piper Sandler to $274, BofA to $256, JPMorgan to $252 — with the stock near the bottom of its 52-week range of $199.40–$293.06. TJX is the consensus favorite, with Morgan Stanley reinstating at Overweight and a $181 target versus a sell-side consensus of $177.40. The key debate: can tariffs and merchandise costs be passed through to shelf prices, or will promotions erode margins first? Which side are you backing — Target's turnaround, Lowe's rate sensitivity, or TJX's trade-down tailwind?" },
+  { ticker: "WMT", title_cn: "沃尔玛周四交卷,1,888亿美元里看得出降级吗?", body_cn: "沃尔玛周四盘前交卷,是本周判断美国消费的总开关:市场预期营收约1,887.9亿美元、每股收益约0.75美元。它的读数比任何一家零售商都硬,因为食品杂货占比高、客群跨越全部收入层级,消费者是不是在降级、降到什么程度,通常先在它的同店销售与客单价结构里露头。多头的理由是它这两年真正的利润引擎已经换成了电商履约、会员与广告这三块高毛利业务,能对冲杂货本身的薄利;空头的理由是估值——它的市盈率已经站在历史高位,任何同店增速放缓都会被放大,而关税成本要么自己吃、要么涨价赶客,两条路都难看。同一周还有塔吉特、劳氏、TJX与仓储会员店BJ,四份数据摆在一起才能分清是行业问题还是个体问题。你会把沃尔玛当防御仓,等它证明广告与会员能撑住毛利,还是干脆换到折扣渠道?", title_en: "Walmart Reports Thursday — Can $188.8B in Revenue Signal a Consumer Trade-Down?", body_en: "Walmart reports before Thursday's open in what may be the week's most important read on U.S. consumer health, with consensus expecting revenue of ~$188.79 billion and EPS of ~$0.75. Its data carries more weight than any single retailer given high grocery exposure and a customer base spanning all income levels — same-store sales and basket composition typically reveal trade-down trends first. Bulls point to e-commerce fulfillment, membership, and advertising as high-margin engines offsetting thin grocery margins; bears flag a historically elevated P/E, where any deceleration in comps will be amplified and tariff costs offer no easy exit. Results land alongside Target, Lowe's, TJX, and BJ's, making it possible to separate sector-wide pressure from company-specific issues. Will you hold Walmart as a defensive position waiting for advertising and membership to underpin margins, or rotate into discount channels instead?" },
+  { ticker: "BABA / 09988", title_cn: "阿里周四交卷,一边烧AI一边补贴闪购还剩多少利润?", body_cn: "阿里巴巴周四披露2027财年第一财季(6月季度),是本周平台标重点的一份。看点不在总营收,而在三笔支出的效率:AI云的增速能不能继续快过资本开支的抬升、淘宝闪购的补贴换来了多少留存、以及为腾出资源做的减法算不算清楚——它正把游戏与零售业务往外剥,已确定把灵犀互娱的全部股权以超过20亿美元卖给中信资本。多头的依据是AI这条线真的在跑:支付宝面向企业的AI平台刚上线,美股ADR周二收涨2.76%,新一代Qwen模型把战线推到笔记本端,卖方共识目标价189.60美元、40家里给到强烈买入。空头的依据是上一财年的账:2026财年营收突破1.02万亿元,但利润同比降了约18%,增收不增利已经连续几个季度;而港股今日盘中回吐1.89%,说明市场对补贴与AI资本开支同时加码并不放心。你会按AI云给它重估,等闪购的补贴退坡见到利润,还是先看这一季资本开支的绝对数?", title_en: "Alibaba Reports Thursday — How Much Profit Remains After AI Spending and Flash-Buy Subsidies?", body_en: "Alibaba discloses its fiscal first-quarter results (June quarter) on Thursday, with the focus less on headline revenue and more on the efficiency of three major cost lines: whether AI cloud growth continues to outpace rising capex, how much retention Taobao Flash Buy subsidies are generating, and how cleanly the company is shedding non-core assets — it has confirmed the sale of its entire stake in LingXi Interactive Entertainment to CITIC Capital for over $2 billion. The bull case rests on genuine AI momentum: Alipay's enterprise AI platform just launched, the latest Qwen model pushes inference to laptop-class devices, the ADR rose 2.76% Tuesday, and sell-side consensus stands at $189.60 with 40 out of coverage at Strong Buy. The bear case is last fiscal year's results: revenue surpassed 1.02 trillion yuan in FY2026, yet profit fell roughly 18% year-on-year, a pattern of revenue growth without earnings growth that has persisted for several quarters, with Hong Kong shares slipping 1.89% intraday today signaling market unease over simultaneous subsidy and AI capex acceleration. Will you re-rate Alibaba on AI cloud, wait for Flash Buy subsidies to unwind and profits to surface, or watch the absolute capex figure this quarter first?" },
+  { ticker: "NTES", title_cn: "网易周四交卷,12倍前瞻市盈率是便宜还是没增长?", body_cn: "网易周四交卷,同一天旗下的网易云音乐与有道也一起披露。它是本周中概里最典型的估值分歧样本:前瞻市盈率约12.6倍,32家卖方给到强烈买入、共识目标161.72美元,而股价还在106.06至159.55美元这个52周区间的中段。多头的理由是游戏这门生意的现金流确定性——老产品的流水基数稳,新作节奏与海外市场是增量,而在长端利率上行、市场重新给\"眼前的现金流\"定价的这一周,低倍数本身就是防守属性。空头的理由是增长天花板:国内游戏版号与用户时长都不再扩张,音乐与教育两块的体量补不上主业增速,低倍数可能是市场对停滞的合理定价,不是错杀。判断的关键落在这一季的递延收入与新游流水占比。你会把网易当防御型现金流买,等新作数据,还是换到弹性更大的腾讯系?", title_en: "NetEase Reports Thursday — Is a 12x Forward P/E Cheap or Just No-Growth?", body_en: "NetEase reports Thursday alongside subsidiaries NetEase Cloud Music and Youdao, making it the week's starkest valuation debate among U.S.-listed Chinese stocks: forward P/E sits at roughly 12.6x, with 32 sell-side analysts at Strong Buy and a consensus target of $161.72, yet the stock trades near the midpoint of its 52-week range of $106.06–$159.55. The bull case is cash-flow visibility — legacy titles provide a stable revenue base, new releases and overseas markets offer incremental upside, and in a week where rising long-end rates are prompting the market to reprice near-term cash flows, a low multiple is itself a defensive attribute. Bears argue the growth ceiling is the real issue: domestic game approvals and user engagement are no longer expanding, and music and education are too small to offset slowing core growth, suggesting the low multiple reflects rational pricing of stagnation rather than mispricing. The quarter's key data points are deferred revenue and the share of new-title GMV. Will you buy NetEase as defensive cash flow, wait for new-title metrics, or rotate to higher-beta Tencent-affiliated names?" },
+  { ticker: "WOLF", title_cn: "碳化硅想挤进AI机房,Wolfspeed今晚能证明吗?", body_cn: "Wolfspeed今晚盘后披露财年第四季与全年业绩,它是本周唯一一份能直接检验\"AI机房用电\"这条新叙事的财报。看点是转型的进度:公司已把碳化硅推向数据中心,与光宝科技合作完成800伏直流电源与算力机架电源的认证,又与通用电气航空航天(GE Aerospace)签了高压碳化硅的合作备忘录,并单独设了数据中心团队。争议比看点更硬:近12个月营收7.13亿美元、同比还在下滑6.4%,2025财年亏损16.1亿美元,覆盖它的两位卖方都给卖出、目标价30美元,Susquehanna刚把目标从40美元砍到30美元,而它周二随半导体板块收跌10.01%、52周区间从8.05美元到80.82美元,波动本身就是风险。所以这份财报只有一个问题:数据中心订单能不能在收入里看见,而不只是在新闻稿里。你会赌它的转型叙事,退到已有AI收入的英伟达电源链,还是干脆离开这类高波动小市值标的?", title_en: "Can Wolfspeed Prove Silicon Carbide Belongs in AI Data Centers Tonight?", body_en: "Wolfspeed reports fiscal fourth-quarter and full-year results after the close tonight — the only earnings this week that can directly test the narrative of silicon carbide powering AI data center infrastructure. The company has pushed SiC into the data center segment, completed 800V DC power and compute rack power certification with Lite-On Technology, signed an MOU with GE Aerospace on high-voltage SiC, and established a dedicated data center team. The challenges are steep: trailing-twelve-month revenue of $713 million is still declining 6.4% year-on-year, the fiscal 2025 net loss reached $1.61 billion, both covering sell-side analysts rate it Sell with a $30 target, Susquehanna just cut its target from $40 to $30, and the stock fell 10.01% Tuesday within a 52-week range of $8.05–$80.82. There is only one question this report needs to answer: are data center orders showing up in revenue, not just in press releases. Will you bet on the turnaround narrative, retreat to Nvidia's power supply chain where AI revenue already exists, or exit high-volatility small-cap names altogether?" },
+  { ticker: "09992", title_cn: "泡泡玛特周四交卷,拉布布之外有第二条腿吗?", body_cn: "泡泡玛特周四披露业绩,它是本周港股消费里赔率最极端的一份。过去12个月的数字仍然惊人:营收同比增长约185%、净利润增长约309%,2025年全年营收从130.4亿元跳到371.2亿元。但股价过去一年跌了约47%,现在贴着140.10至339.80港元这个52周区间的下沿,市场担心的从来不是增速而是结构——去年年报披露拉布布所在的THE MONSTERS系列约占总营收40%,单一IP的集中度就是它的估值折价来源。这一季要看两件事:国内放缓到什么程度,以及海外能不能接上——它刚在新加坡圣淘沙开出新店并落地首家海外烘焙店,用甜品和门店把IP的生命周期往外拉。空头仍在这只票上,而它是香港做空最集中的那批股票里唯一让空头亏钱的一只。你会赌海外扩张接棒,等第二个IP被验证,还是把它当已经过峰的周期股?", title_en: "Pop Mart Reports Thursday — Is There a Second Growth Driver Beyond Labubu?", body_en: "Pop Mart discloses earnings Thursday in what is the most extreme risk-reward setup among Hong Kong consumer stocks this week: trailing revenue grew roughly 185% year-on-year and net profit roughly 309%, with full-year 2025 revenue jumping from 13.04 billion yuan to 37.12 billion yuan. Yet the stock has fallen roughly 47% over the past year and now trades near the bottom of its 52-week range of HK$140.10–HK$339.80 — the market's concern has never been the growth rate but the concentration risk, as last year's annual report showed THE MONSTERS series, home of Labubu, accounting for roughly 40% of total revenue, a single-IP dependency that is the direct source of the valuation discount. Two things matter this quarter: how sharply domestic momentum is slowing, and whether international expansion can absorb the slack — the company just opened a new store at Sentosa in Singapore and launched its first overseas bakery, using food and retail formats to extend IP lifecycle. Short sellers remain positioned in this name, yet it is the only heavily shorted stock in Hong Kong where shorts have been losing money. Will you bet on overseas expansion carrying the next leg, wait for a second IP to be validated, or treat Pop Mart as a cycle stock that has already peaked?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
