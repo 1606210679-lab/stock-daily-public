@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-19 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-19</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 13</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:7.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 13 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .IXIC / SPY", title_cn: "债市把股市按回去,QQQ跌1.7%,纪要能翻盘吗?", body_cn: "周二美股连续第三个交易日收跌,QQQ跌1.69%、纳指跌1.33%、标普500ETF(SPY)跌0.68%,道指跌0.22%,定价权已经交到债市手里:30年期美债收益率停在5.28%附近,本周一盘中一度冲上5.31%,为2007年以来最高;油价同步上行,构成第二重压制。机制并不复杂——长端利率是所有远期现金流的折现率,AI与半导体这类靠2027年之后的盈利支撑估值的板块,分母一动杀伤最大;而无风险收益率给到5%以上时,债券本身就在和股票抢钱。这一轮的源头不在美国:日本长债抛售正把全球期限溢价一起推高,有卖方直接以\"10年后的10年期远期利率已高于2008年高点\"来描述这个位置,另一份把美债规模逼近40万亿美元列为长期风险。多头的反驳来自数据面:最新几份报告显示经济在降温,而降温本应压低利率而非推高。真正的裁判是北京时间周四凌晨2点公布的7月FOMC会议纪要——7月29日那次会议连续第五次按下不动、区间留在3.50%-3.75%,但有三位委员主张加息25个基点。纪要若把加息一派的理由写得更足,长端还会往上顶。你会趁回调加科技、换到金融与能源,还是等纪要落地再动?", title_en: "Bonds Slam Stocks: QQQ Falls 1.7% — Can Fed Minutes Turn the Tide?", body_en: "U.S. equities fell for a third straight session Tuesday, with QQQ dropping 1.69%, the Nasdaq losing 1.33%, SPY off 0.68%, and the Dow down 0.22%, as the 30-year Treasury yield held near 5.28% — briefly hitting 5.31% Monday, its highest since 2007. Rising oil prices added a second layer of pressure, while Japan's long-bond selloff continues to push global term premiums higher, with one sell-side note flagging U.S. debt approaching $40 trillion as a structural risk. The July FOMC minutes, due Thursday at 2 a.m. Beijing time, are the next key test — three officials dissented in favor of a 25 bp hike at that meeting, which held rates at 3.50%–3.75% for a fifth consecutive pause. Will you buy the tech dip, rotate into financials and energy, or wait for the minutes before acting?" },
+  { ticker: "SNDK / SNXX / SNDQ", title_cn: "铠侠先跳水,闪迪跟着收跌9%,拥挤交易开始拆了?", body_cn: "存储板块周二整段翻脸,闪迪收跌9.01%,把周一8.88%的涨幅全部还了回去;它的2倍做多ETF(SNXX)跌17.84%,2倍做空ETF(SNDQ)涨18.00%、盘后继续涨4.16%。导火索出现在亚洲盘:铠侠在日本先跌7.5%,美股盘前闪迪就被压住。但把跌幅推到9%的是另一条——有卖方在同一天摆出\"谁被过度持有、谁还没人买\"的对照,结论是英伟达仍属低配、闪迪属于拥挤交易,这句话出现在AI存储连涨一个月之后,等于给杠杆资金递了减仓的理由。还有一条更直白的提醒:一只在7月遭遇重挫的基金,其13F显示仓位几乎全压在美光与闪迪两只存储股上,把这条赛道的集中度摊在了台面上。多头的依据没有被推翻:HBF样品计划、8家客户锁定2027-2028财年产能、NAND合约价上行都还在,当天亦有市场人士坚持存储行情未走完并点名四只标的。空方要的只是一个价格——当2倍杠杆工具单日一头跌18%、一头涨18%,说明持仓结构比基本面更脆弱。你会把闪迪的回调当加仓机会、退到美光,还是先离开杠杆工具?", title_en: "Kioxia Drops First, SanDisk Follows With 9% Loss — Is the Crowded Trade Unwinding?", body_en: "Memory stocks reversed sharply Tuesday, with SanDisk closing down 9.01%, erasing its entire 8.88% gain from Monday; its 2x leveraged long ETF (SNXX) fell 17.84%, while the 2x inverse ETF (SNDQ) surged 18.00% and added another 4.16% after hours. The selloff was triggered in the Asian session when Kioxia fell 7.5% in Japan, pressuring SanDisk in pre-market trading, but a sell-side note released the same day amplified the decline by flagging SanDisk as a crowded trade versus Nvidia as still underowned — a conclusion that landed after AI memory stocks had rallied for a month straight, handing leveraged holders a reason to reduce exposure. A separate disclosure showing a fund that suffered heavy losses in July held nearly its entire portfolio in Micron and SanDisk underscored how concentrated the sector's positioning had become. Do you treat SanDisk's pullback as a buying opportunity, rotate into Micron, or step away from leveraged instruments entirely?" },
+  { ticker: "MU", title_cn: "目标价被上调,美光却收跌7%,卖方和债市谁对?", body_cn: "美光周二收跌7.02%,而同一天美银把它的目标价上调至1,550美元,另有卖方以\"库存不会说谎\"为由上调评级——卖方在加码,股价在下跌,分歧摆得很清楚。空方的理由不在基本面而在折现率:美光的盈利高峰被押在2027年前后HBM与DRAM的紧平衡上,长端利率抬升直接压缩这段远期利润的现值,这也解释了为什么周二跌得最狠的是存储而不是软件。多头的证据在库存与价格:上调评级的那份报告正是以库存数据为依据,AI推理同时拉动企业级SSD与DRAM需求,而下一份财报要等到9月22日,中间没有可验证的节点。这就是当下的赔率结构——基本面利好已被写进价格,利率却还在动。你更相信1,550美元的目标价,还是先等长端收益率停下来?", title_en: "Micron Target Raised to $1,550, Yet Stock Closes Down 7% — Who's Right, Sell-Side or Bond Market?", body_en: "Micron closed down 7.02% Tuesday even as BofA raised its price target to $1,550 and a separate sell-side firm upgraded the stock citing inventory data as evidence the thesis remains intact — a clear divergence between analyst conviction and price action. The bear case rests not on fundamentals but on the discount rate: Micron's earnings peak is anchored to an HBM and DRAM supply-demand inflection expected around 2027, and rising long-end yields directly compress the present value of those future profits, explaining why memory sold off harder than software on Tuesday. With the next earnings report not due until September 22, there is no verifiable catalyst in the interim to resolve the standoff. Do you trust the $1,550 target, or wait for long-end yields to stabilize first?" },
+  { ticker: "SKHY / 07709", title_cn: "海力士收跌9.2%,HBM龙头也躲不过NAND降温?", body_cn: "SK海力士周二收跌9.20%,其2倍杠杆产品07709跌14.74%。它和闪迪的差别本在结构:海力士的核心筹码是HBM,当天仍有卖方以\"相信这位HBM龙头\"为题维持看多。但同一条链上的NAND正在被重新定价——铠侠在日本先跌7.5%、闪迪跌9%,存储被当成一个整体卖出,HBM的溢价没能提供保护。这一点值得记下来:过去两周市场还愿意把HBM与NAND分开定价,周二这条分界线消失了。多头的理由仍然成立,AI服务器对HBM的需求由算力扩张决定,与消费电子周期关系不大;空方的理由是持仓,亚洲存储链一个月的涨幅让任何利率冲击都被杠杆放大,两倍杠杆产品单日跌近15%就是证据。接下来要看的是HBM合约价能否与NAND脱钩。海力士、美光还是闪迪,你觉得哪一只的溢价最经得起利率考验?", title_en: "SK Hynix Falls 9.2% — Can Even the HBM Leader Escape NAND's Repricing?", body_en: "SK Hynix closed down 9.20% Tuesday, with its 2x leveraged product 07709 falling 14.74%, even as a sell-side note maintained a bullish view on the stock under the headline \"trust the HBM leader.\" The selloff reflected contagion from the NAND segment — Kioxia fell 7.5% in Japan and SanDisk dropped 9% in the U.S. — as the market treated memory as a single block, leaving HBM's structural premium no protection. A notable line was crossed Tuesday: for the prior two weeks, investors had been willing to price HBM and NAND separately; that distinction disappeared. The bull case — that AI server demand for HBM is driven by compute expansion and largely independent of the consumer electronics cycle — remains logically intact, but crowded positioning along the Asian memory supply chain means any rate shock gets amplified through leverage, as a nearly 15% single-day drop in the 2x product illustrates. Among SK Hynix, Micron, and SanDisk, which do you think can best withstand further rate pressure?" },
+  { ticker: "SOXL / SOXS", title_cn: "三倍多空一天换手,SOXS涨15%,杠杆资金认输了?", body_cn: "半导体三倍杠杆工具周二完成一次完整调头:三倍做多的SOXL跌14.80%,三倍做空的SOXS涨15.20%。这组数字的信息量在于对称——它说明当天的抛售不是某只个股的事故,而是整个半导体板块的系统性折价,迈威尔跌7.82%、英特尔跌6.58%、AMD跌4.27%都落在同一个方向。值得提醒的是,几天前还有报道指出杠杆芯片ETF的资金\"黏性很强\",即便有机构警告周期见顶也没有出现明显流出;周二的价格变化说明这份黏性正在被测试。杠杆工具自身的机制风险必须说清:三倍产品每日重置,连续震荡会持续侵蚀净值,方向猜对、时间拖长同样会亏。多头会说这正是错杀后的弹性来源,空方会说长端利率没停之前不该用杠杆接刀。你会用SOXL赌反弹、用SOXS对冲现有持仓,还是回到不带杠杆的个股?", title_en: "SOXS Surges 15% as SOXL Crashes 15% — Are Leveraged Bulls Throwing in the Towel?", body_en: "Semiconductor leveraged ETFs completed a full reversal Tuesday: the 3x long SOXL fell 14.80% while the 3x inverse SOXS gained 15.20%, with the symmetry confirming a broad, systemic sector selloff rather than a single-stock event — Marvell dropped 7.82%, Intel fell 6.58%, and AMD declined 4.27%, all in the same direction. Recent reports had noted unusually strong \"stickiness\" in leveraged chip ETF flows, with little outflow even as some institutions warned of a cycle peak; Tuesday's price action suggests that stickiness is now being tested. The structural risk of 3x daily-reset products must be noted: even a correct directional call can erode NAV through sustained volatility, as consecutive swings compound losses regardless of ultimate direction. Will you use SOXL to bet on a bounce, SOXS to hedge existing positions, or return to unleveraged individual stocks?" },
+  { ticker: "FN", title_cn: "Fabrinet全面超预期仍崩19%,市场改看毛利率了?", body_cn: "Fabrinet(FN)周二收跌19.38%,而它交出来的成绩单每一项都是超预期:第四财季营收13.16亿美元、同比增长45%,高于市场预期的12.8亿美元;非GAAP每股收益4.10美元,高于预期的3.81美元,两项均创纪录。更关键的是下一财季指引也高于共识——营收13.75亿至14.25亿美元(共识约13.5亿),每股收益4.10至4.25美元(共识3.99)。也就是说\"指引不及预期\"这条现成的解释在这里并不成立。被点名的是另外两项:毛利率与自由现金流,多家报道把跌幅归到这里;而它自己的位置同样是理由,作为英伟达光通信供应链的核心一环,即便在崩了19%之后市盈率仍在37倍附近,任何利润质量上的瑕疵都会被高估值放大。这已经是两天内的第二例:此前Coherent双超预期后次日同样大跌7.99%。AI硬件链的定价标准正在从\"增速够不够\"换成\"这段增速值多少毛利\"。你更看Fabrinet的错杀,还是等迈威尔8月27日盘后那份财报给出行业口径?", title_en: "Fabrinet Beats on Every Metric Yet Crashes 19% — Has the Market Shifted to Margin Quality?", body_en: "Fabrinet (FN) closed down 19.38% Tuesday despite delivering a clean beat across the board: fiscal fourth-quarter revenue of $1.316 billion, up 45% year-over-year and above the $1.28 billion consensus; non-GAAP EPS of $4.10 versus the $3.81 estimate, both figures records. Next-quarter guidance also topped consensus — revenue of $1.375–$1.425 billion against an expected ~$1.35 billion, and EPS of $4.10–$4.25 versus the $3.99 consensus — ruling out a guidance miss as the explanation. Multiple reports pointed to gross margin and free cash flow as the culprits; as a core link in Nvidia's optical interconnect supply chain, even after the 19% collapse Fabrinet trades near 37x earnings, meaning any perceived shortfall in profit quality gets magnified by the valuation. This is the second such episode in two days, following Coherent's 7.99% post-earnings drop despite its own double beat. Do you see Fabrinet as an oversold opportunity, or wait for Marvell's upcoming after-hours earnings for a cleaner read on the AI hardware supply chain?" },
+  { ticker: "MRVL / AMD", title_cn: "迈威尔内部人套现6.3亿,股价收跌7.8%谁在接?", body_cn: "迈威尔科技周二收跌7.82%,当天有两条来自公司内部的消息:内部人在这轮160%的涨幅中累计卖出约6.32亿美元股票,CEO本人也有一笔约180万美元的操作。卖方的方向恰好相反——瑞银刚上调它的AI营收预期,认为还有数十亿美元增量;另一份分析则直接以\"股价与它自己的数字之间的差距\"为题提出质疑。AMD周二收跌4.27%,问题相似:有分析同时点向股本稀释与内部人抛售,方舟(ARK)则在四只ETF里买入英伟达、卖出AMD,把资金从二线算力挪回龙头。两只票的共同点很清楚:业务端的增量写在卖方模型的未来里,减持是管理层现在的动作,而长端利率上行让\"未来\"的折价变深。多头的抓手是8月27日盘后迈威尔的财报——定制ASIC与光互连的订单能否兑现,是这条叙事最近的一次硬验证。你会等迈威尔交卷、跟着ARK回到英伟达,还是趁AMD回调布局?", title_en: "Marvell Insiders Sell $630M, Stock Drops 7.8% — Who's Left to Buy?", body_en: "Marvell Technology (MRVL) closed down 7.82% Tuesday as two internal signals competed with bullish sell-side calls: insiders have cumulatively sold approximately $632 million of stock during the stock's 160% run, including a roughly $1.8 million transaction by the CEO, while UBS simultaneously raised its AI revenue estimates for the company and flagged billions in incremental upside. A separate analysis questioned the gap between Marvell's stock price and its own reported figures. AMD fell 4.27% under similar scrutiny, with one note flagging share dilution and insider selling concurrently, as ARK bought Nvidia and sold AMD across four ETFs — rotating capital from second-tier compute back to the leader. The common thread is clear: business upside lives in sell-side models set in the future, insider selling is happening now, and rising long-end yields are deepening the discount applied to that future. The nearest hard verification point is Marvell's upcoming after-hours earnings, where custom ASIC and optical interconnect order trends will be tested. Will you wait for Marvell to report, follow ARK back into Nvidia, or buy AMD on the dip?" },
+  { ticker: "NVDA", title_cn: "财报前一周英伟达收跌2.3%,50%折价还是泡沫?", body_cn: "英伟达周二收跌2.34%,距8月26日盘后的财报只剩一周,多空双方却在同一天把话说到了极端。看多的一侧:美银认为把AI风险计入之后它的估值仍存在最多50%的折价、目标指向约55%的上行空间,并明确指出机构对它仍是低配——这在存储与二线算力被称作\"拥挤交易\"的当口是罕见的表述。看空的一侧集中在融资结构:它为OpenAI在俄亥俄的数据中心提供约1,050亿美元的租约担保,债券投资人冈拉克把它5,000亿美元规模的AI融资安排比作\"用香蕉做抵押的债券\",黄仁勋则公开否认这是循环融资。第三条线是竞争:Cerebras把新产品称作\"业内最快的AI加速器\",Groq以35亿美元估值完成3.5亿美元融资,另据报道H200已开始小批量进入中国市场。筹码与风险都很清楚:低配意味着财报超预期会有增量买盘,担保敞口意味着任何客户的资本开支节奏变化都会先打到它的资产负债表上。你会在财报前加仓、等纪要和收益率落地,还是换去没有这类担保敞口的博通?", title_en: "Nvidia Drops 2.3% a Week Before Earnings — 50% Upside or Bubble?", body_en: "Nvidia closed down 2.34% Tuesday, one week before its after-hours earnings on August 26, as bulls and bears staked out extreme positions simultaneously. BofA argued that even after pricing in AI-related risks, Nvidia still trades at up to a 50% discount to fair value with roughly 55% upside, and notably flagged that institutional investors remain underweight — a rare characterization at a moment when memory and second-tier compute names are being labeled crowded trades. The bear case centers on financing structure: Nvidia is providing approximately $105 billion in lease guarantees for OpenAI's Ohio data center, an arrangement bond investor Gundlach compared to \"bonds collateralized by bananas,\" while CEO Jensen Huang publicly denied the structure constitutes circular financing. A third pressure point is competition — Cerebras launched what it called the industry's fastest AI accelerator, Groq closed a $350 million round at a $3.5 billion valuation, and H200 chips are reportedly entering China in small volumes. Do you add before earnings, wait for the Fed minutes and yields to settle, or rotate into Broadcom to avoid the guarantee exposure?" },
+  { ticker: "INTC", title_cn: "英特尔收跌6.6%,目标价被下调后涨势到顶了吗?", body_cn: "英特尔周二收跌6.58%,直接催化是瑞银把目标价从121美元下调至112美元、维持中性评级,盘中跌幅一度到7%。这条下调之所以有杀伤力,是因为它出现在一段极端的持仓故事之后:13F显示软银把其美股组合的约67%押在了英特尔一只股票上。一边是把身家压上的战略投资者,一边是把目标价往下修的卖方,两种判断指向同一个变量——代工订单的兑现速度。多头的理由是7月23日盘后那份财报的超预期幅度,EPS与营收分别超出约93%和12%;空方的理由是这段涨幅已经把\"代工翻身\"写进了价格,而周二整个半导体板块被利率统一折价,高beta的转型故事跌得最快。它在下一次业绩之前没有自己的节点,只能跟着板块走。你会把这次下调当洗盘、跟着软银的仓位走,还是换到订单确定性更高的台积电?", title_en: "Intel Target Cut to $112, Stock Falls 6.6% — Has the Rally Peaked?", body_en: "Intel closed down 6.58% Tuesday after UBS trimmed its price target from $121 to $112 and maintained a Neutral rating, with the stock briefly falling as much as 7% intraday. The downgrade carried particular weight given the extreme concentration revealed in recent 13F filings: SoftBank has allocated approximately 67% of its U.S. equity portfolio to Intel alone, creating a stark contrast between a strategic investor going all-in and a sell-side analyst pulling back — both views ultimately hinging on the pace at which foundry orders materialize. The bull case rests on the most recent earnings beat, where EPS and revenue exceeded consensus by approximately 93% and 12% respectively; the bear case is that the subsequent rally has already priced in a foundry turnaround, and Tuesday's broad rate-driven semiconductor selloff hit high-beta transformation stories hardest. With no company-specific catalyst before the next earnings report, Intel must trade with the sector. Do you treat this downgrade as a washout and follow SoftBank's position, or rotate into TSMC for greater order visibility?" },
+  { ticker: "META", title_cn: "29州把Meta告上法庭,收跌4.5%成七巨头最差?", body_cn: "Meta周二收跌4.45%,是\"七巨头\"里跌得最狠的一只,原因是当天开庭的一场诉讼:29个州指控Facebook与Instagram的产品设计伤害青少年,多家媒体把它称作社交媒体版的\"大烟草时刻\",并给出高达1.4万亿美元的潜在索赔规模。要说清楚的是,这个数字是原告一方的诉求量级、不是判决结果,但它足以让市场重新给合规与法务成本定价——公司高层已在开庭第一天出庭作证。第二重压力来自成本:投资人史蒂夫·艾斯曼当天质疑它的AI投入,点名费用同比增长约55%,在利率上行、市场开始要求\"投入要有回报\"的时候,这个增速比诉讼更难解释。多头的依据在使用侧,有分析认为AI的实际使用率提升会成为下一阶段的增长驱动,广告效率也确实在被AI改写。风险是两件事叠加:法务成本与资本开支同时抬升,而它的估值靠的是2027年之后的广告利润。你会把这轮下跌当法律风险出清、转去费用更可控的谷歌,还是先看AI投入什么时候体现在收入端?", title_en: "29 States Sue Meta; Stock Drops 4.5%, Worst Among the Magnificent Seven?", body_en: "Meta closed down 4.45% Tuesday, the weakest performer among the Magnificent Seven, as a lawsuit brought by 29 states alleging that Facebook and Instagram's product designs harm minors went to trial — with multiple media outlets describing it as a \"Big Tobacco moment\" for social media and citing a potential claims figure of $1.4 trillion. To be clear, that figure represents the plaintiffs' demand, not a judgment, but it was sufficient to prompt the market to reprice compliance and legal costs, with senior company executives testifying on the opening day. A second pressure point came from costs: investor Steve Eisman questioned Meta's AI spending on the same day, flagging expenses up approximately 55% year-over-year — a growth rate that is harder to defend than the litigation when rising rates force the market to demand returns on investment. The bull case rests on the usage side, with analysts arguing that rising AI adoption rates will drive the next phase of growth and that advertising efficiency is already being transformed by AI. With legal costs and capital expenditure rising simultaneously against an earnings profile that depends on advertising profits beyond 2027, do you treat this selloff as legal-risk clearance and rotate into Alphabet, or wait to see when AI investment starts showing up in revenue?" },
+  { ticker: "AAPL", title_cn: "苹果把欧洲抽成砍到5%,逆势收涨1.5%领跑?", body_cn: "苹果周二收涨1.45%,是\"七巨头\"里唯一像样的上涨,而它上涨的理由和别人下跌的理由不在同一个维度:它宣布全面调整欧盟的App Store条款,把核心技术佣金降至5%、替代支付渠道费率调整为20%,并放宽第三方应用商店的规则,以此了结与欧盟拖了很久的反垄断争议。这笔交易的算法很清楚——用确定的费率让利,换掉不确定的监管罚单与合规风险,对现金流稳定的公司来说,是把尾部风险变成了可以入模型的成本。另有两条同向消息:有分析给出约30%的上行空间,理由是与英伟达相关的AI布局;另有卖方测算折叠屏机型可能把iPhone均价拉高约11%。空方的理由在前一个交易日还很响,存储合约价上行会先咬硬件厂商的毛利,有卖方正是以\"存储成本逆风\"为由下调过它的评级,而这条压力并没有因为降费而消失。有意思的是同一件事的两面:利率上行打的是远期成长,苹果反而因为盈利就在眼前而受益。你会把苹果当成这轮利率冲击里的避风港,还是等存储成本真正反映到毛利率再看?", title_en: "Apple Cuts EU App Store Fee to 5%, Gains 1.5% Against the Selloff?", body_en: "Apple closed up 1.45% Tuesday, the only meaningful gainer among the Magnificent Seven, rising for reasons that had nothing to do with why the rest of the market was falling: the company announced a comprehensive overhaul of its EU App Store terms, cutting the core technology commission to 5%, adjusting alternative payment channel fees to 20%, and broadening third-party app store access to resolve a long-running antitrust dispute with European regulators. The trade-off is straightforward — accepting a defined revenue concession to eliminate an open-ended regulatory and compliance risk, effectively converting tail-risk into a modelable cost for a cash-flow-stable business. Two additional tailwinds appeared the same day: one analyst cited roughly 30% upside tied to Apple's AI positioning alongside Nvidia, while a separate sell-side estimate suggested a foldable iPhone model could lift average selling prices by approximately 11%. The bear case — that rising memory contract prices will pressure hardware gross margins — was cited by at least one analyst who recently downgraded the stock, and that cost headwind has not disappeared. Interestingly, rising rates that punish distant growth stories may actually benefit Apple precisely because its earnings are near-term. Do you treat Apple as a safe harbor in this rate shock, or wait until memory cost pressure actually shows up in gross margins?" },
+  { ticker: "NBIS / CRWV / IREN", title_cn: "二期数据中心刚获批,Nebius反而收跌7.6%?", body_cn: "Nebius周二收跌7.60%,而当天的公司消息全是正面的:新泽西州Vineland市议会通过其数据中心二期扩建、项目拿到监管许可,另有卖方以\"双重好消息\"为题给出看多。好消息换来7.6%的下跌,说明定价的主角不是它自己。AI新云(neocloud)是长端利率最直接的受害者:重资产、靠债务与租约扩张、利润落在两三年后,分母抬高一档估值就要重算一次;同一天还有CRWV、NBIS与IREN谁更值得押注的对比讨论,以及那只7月重挫的基金13F暴露出的赛道集中度问题。另一条不能忽略的是内部动作,公司出现两笔董事减持申报。多头的依据是8月12日盘前那份财报,营收与利润双双好于预期,增速仍在爆发区间;空方的依据是融资节奏,扩张速度取决于能不能在更高的利率下继续借到钱。你会在这轮利率冲击里选客户结构更分散的CoreWeave、算力自建的IREN,还是弹性最大的Nebius?", title_en: "Phase-Two Data Center Approved, Yet Nebius Still Drops 7.6%?", body_en: "Nebius closed down 7.60% Tuesday despite uniformly positive company-specific news: the Vineland, New Jersey city council approved the phase-two expansion of its data center and the project received regulatory clearance, while a sell-side note framed the day as a \"double positive\" and maintained a bullish stance. The disconnect signals that the pricing driver was macro, not company-specific — AI neocloud operators are among the most direct victims of rising long-end yields, given their capital-heavy models, debt- and lease-funded expansion, and profits that fall two to three years out, meaning every move higher in the discount rate requires a full re-rating. Compounding the pressure were two director selling filings disclosed the same day and broader sector discussion around concentration risk, as a 13F from a fund that suffered significant losses in July revealed heavy exposure to the neocloud trade. The bull case is the most recent earnings report, which beat on both revenue and profit with growth still in explosive territory; the bear case is financing pace — expansion depends on continued access to capital at elevated rates. In this rate environment, do you prefer CoreWeave for its more diversified customer base, IREN for its self-owned compute, or Nebius for its higher upside potential?" },
+  { ticker: "SPCX", title_cn: "高盛喊出1.8万亿太空市场,SpaceX仍收跌2%?", body_cn: "SpaceX周二收跌1.98%,当天最大的一条外部消息其实是利好:高盛提出\"第二次太空时代\"的判断,测算全球太空市场到2035年将达到1.8万亿美元规模。股价没有接住,而市场自己也还没决定该怎么给它归类——有报道把上市两个月后仍没解决的问题重新摆了出来:它到底是一只AI股,还是一只太空股。这个分类问题不是文字游戏,它决定用哪套倍数定价:按发射与星链收入算,是可预测的现金流;按AI算力算,估值锚就变成同赛道那些远期故事,而长端利率一动,后者先被打折。多头的抓手正在AI这一侧——英伟达最新的持仓披露显示其持有约210亿美元SpaceX,是那份表里的第二大股票仓位;空方的理由是解禁与倍数,史上最大规模IPO的后续解禁批次仍在时间表上。你会按太空基础设施给它估值,还是干脆当成AI算力链的一部分来买?", title_en: "Goldman Sees $1.8T Space Market by 2035, Yet SpaceX Still Closes Down 2%?", body_en: "SpaceX closed down 1.98% Tuesday even as Goldman Sachs declared a \"second space age\" and estimated the global space market will reach $1.8 trillion by 2035 — a significant positive that the stock was unable to hold. The market has yet to resolve a classification question that has persisted since the IPO: is SpaceX an AI stock or a space stock? The answer is not semantic — it determines the valuation multiple applied. Priced on launch and Starlink revenues, it commands a predictable cash flow multiple; priced as an AI compute play, the valuation anchor shifts to the forward-looking narratives that long-end yields are currently discounting most aggressively. The bull case sits firmly on the AI side: Nvidia's latest portfolio disclosure shows it holds approximately $21 billion of SpaceX, making it the second-largest equity position on that filing. The bear case rests on lock-up expiration and multiples, with subsequent tranches from what was the largest IPO in history still on the schedule. Do you value SpaceX as space infrastructure, or simply buy it as part of the AI compute supply chain?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
