@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-20 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-20</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 12</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:8.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 12 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / SPY", title_cn: "财政部把回购扩容一倍,长债退烧标普能续吗?", body_cn: "压了三天的长端利率周三被按住了:30年期美债收益率盘中先创下19年新高,随后财政部宣布把10至30年期证券的流动性支持回购规模至少扩大一倍,收益率应声下行,30年期一度回落9个基点至5.19%,周三收在5.20%附近,周四进一步降到5.18%。标普500ETF(SPY)收涨0.21%、道指涨0.22%,而涨幅主要来自医药——同一天科技股再度走弱,把利率缓解的好处抵掉了大半。政策面同时给出两个信号:7月FOMC会议纪要显示多数委员支持维持利率不变、部分委员倾向加息,通胀风险还没出清,这与7月29日那次会议的投票结构一致(区间维持3.50%-3.75%,三位委员主张加息25个基点)。宏观交易的下一站是下周的杰克逊霍尔年会,沃什将首度以主席身份登场,措辞偏鹰会重新推高美元与长债、冲击高估值科技,偏鸽则利好小盘与地产。多头的理由是回购扩容至少解决了流动性这一层,空头的理由是供给与付息压力一分没少。你会趁利率退烧回科技、跟着资金留在医药,还是等杰克逊霍尔的措辞再动?", title_en: "Treasury Doubles Buyback Program — Can S&P Rally Sustain?", body_en: "The 30-year Treasury yield hit a 19-year intraday high Wednesday before the Treasury announced it would at least double liquidity-support buybacks on 10- to 30-year securities; the 30-year yield fell as much as 9 basis points to 5.19%, closing near 5.20% and easing further to 5.18% Thursday. SPY rose 0.21% and the Dow gained 0.22%, though gains were concentrated in healthcare as tech weakened again, offsetting much of the rate relief. July FOMC minutes showed most members favored holding rates while some preferred a hike, consistent with the July 29 vote that kept the range at 3.50%–3.75% with three dissents for a 25 bp increase; all eyes now turn to Jackson Hole, where Fed Chair Warsh makes his first appearance in that role. Will you rotate back into tech on the rate pullback, stay with healthcare, or wait for Warsh's tone first?" },
+  { ticker: "MRNA / MRK", title_cn: "mRNA把枪口从病毒转向癌症,单日翻倍还能追吗?", body_cn: "周三最大的一条不在科技:Moderna收涨176.97%至174.38美元,盘中最高176.66美元创52周新高,成交约1.99亿股,市值回到约696亿美元;合作方默沙东收涨12.60%。催化是硬数据——两家联合开发的个性化mRNA癌症疫苗intismeran autogene联合Keytruda,在三期INTerpath-001试验中,对已切除的IIB至IV期黑色素瘤同时达到无复发生存与无远处转移生存两个终点,这是mRNA平台第一次在肿瘤适应症上跑出三期成功。卖方当天集体重估:美银把评级从跑输上调至中性、目标价从40美元提到170美元并称之为分水岭,高盛从67提到120,RBC从45提到130,摩根士丹利从39提到89——但23家的共识评级仍是持有、目标均值78.78美元,因为多数模型还没更新。空头当天损失约48亿美元,被认为可能创下单日纪录。风险同样具体:完整数据尚未公布,公司近12个月营收22.3亿美元、同比还在下滑27.6%,2025年亏损28.2亿美元,而它盘后已回落6.27%。你会追Moderna的平台想象,买确定分成的默沙东,还是等完整数据?", title_en: "Moderna Doubles in a Day on mRNA Cancer Vaccine Data — Still Chaseable?", body_en: "Moderna surged 176.97% to $174.38, hitting a 52-week intraday high of $176.66 on volume of roughly 199 million shares, lifting its market cap to approximately $69.6 billion; partner Merck gained 12.60%. The catalyst was hard data: their jointly developed personalized mRNA cancer vaccine intismeran autogene combined with Keytruda met both recurrence-free survival and distant metastasis-free survival endpoints in the Phase 3 INTerpath-001 trial for resected stage IIB–IV melanoma — the first Phase 3 oncology success for the mRNA platform. Sell-side scrambled to reprice: BofA upgraded to Neutral and raised its target from $40 to $170, Goldman from $67 to $120, RBC from $45 to $130, and Morgan Stanley from $39 to $89, yet the consensus among 23 analysts remains Hold with a mean target of $78.78 as most models are still pending update; short sellers lost an estimated $4.8 billion, potentially a single-day record. Full data have not yet been published, Moderna's last-twelve-months revenue was $2.23 billion and still declining 27.6% year-over-year, the company posted a 2025 loss of $2.82 billion, and the stock had already pulled back 6.27% after hours. Will you chase Moderna's platform story, buy Merck for its confirmed royalty stream, or wait for the complete data?" },
+  { ticker: "BNTX / LLY / ABBV / 02359", title_cn: "一份三期数据外溢,BioNTech涨22%整条链被重估?", body_cn: "疫苗数据的外溢比数据本身更能说明定价在换轨:BioNTech收涨21.96%,礼来收涨4.46%,艾伯维收涨2.72%,强生收涨0.85%,同赛道的Iovance与Tempus AI分别涨约14%和24%,整个医疗板块当天创下纪录高位,有媒体形容\"像回到2020年末\"。港股这一侧周四跟上,药明康德盘中涨4.55%。三条逻辑叠在一起:第一,平台被验证——mRNA能做肿瘤,受益的不只是两家原研,还有上游的CDMO与生命科学耗材;第二,资金从周二就开始撤离贵估值科技,长端利率退烧后它们没有回科技而是留在了医药,因为大药企的现金流就在眼前;第三,AI正从靶点发现、分子设计往个性化治疗延伸,这是把研发周期缩短的叙事,但目前仍是叙事、不是财务数字。空方的理由是位置和节奏:这条链一天基本涨完,药明康德已贴在52周高位附近,而完整数据、定价与产能都没落地。你更看好原研的Moderna与默沙东、平台型的BioNTech,还是卖铲子的药明康德?", title_en: "One Phase 3 Dataset Spills Over — BioNTech +22%, Whole Chain Repriced?", body_en: "The spillover from the vaccine data repriced the entire sector: BioNTech rose 21.96%, Eli Lilly gained 4.46%, AbbVie 2.72%, Johnson & Johnson 0.85%, while Iovance and Tempus AI surged roughly 14% and 24% respectively, with the broader healthcare sector hitting a record high — coverage described it as \"feeling like late 2020.\" Hong Kong followed Thursday, with WuXi AppTec rising 4.55% intraday. Three overlapping theses drove the move: mRNA's validation in oncology benefits not just the two originators but also upstream CDMOs and life-science consumables; capital that had been rotating out of high-valuation tech since Tuesday stayed in pharma for its visible cash flows; and AI's expanding role from target discovery into personalized therapeutics offers a compelling narrative around shorter R&D cycles, though it remains a narrative rather than a financial line item. The bear case is positioning and pace — this chain largely repriced in a single session, WuXi AppTec is trading near its 52-week high, and full data, pricing, and manufacturing capacity have yet to be confirmed. Do you prefer the originators Moderna and Merck, platform play BioNTech, or the picks-and-shovels exposure through WuXi AppTec?" },
+  { ticker: "SKHY / 07709", title_cn: "海力士回购刚落地,三星要拿一半现金流跟牌?", body_cn: "存储巨头开始比谁还钱更狠。SK海力士40万亿韩元(约286亿美元)的回购周三正式落地,盘前一度涨6%,日间收涨0.35%;其2倍杠杆产品07709周四盘中涨3.46%。据MoneyToday报道,三星电子计划在本月董事会后敲定并公布总额超100万亿韩元的股东回报计划,拟把50%的自由现金流用于股东回报、且以现金分红为主;三星周四在韩股盘中涨9.29%,而周三它在首尔跌近8%——跌的那天恰好有报道称AI需求正把芯片价格推高最多15%,涨的这天靠的是分红承诺,资金在意的显然不是同一件事。这件事有两种读法:多头看到AI带来的巨额现金流开始转化为分红与回购,周期股正在获得价值股的估值资格;空头看到的是管理层自己认为继续砸产能不如把钱还给股东,这通常出现在周期的后半段。你会为股东回报买入海力士、跟三星的分红,还是干脆离开这条链?", title_en: "SK Hynix Buyback Lands — Will Samsung Match With Half Its Free Cash Flow?", body_en: "Memory giants are competing on capital returns. SK Hynix's 40 trillion won (approximately $28.6 billion) buyback formally took effect Wednesday, with shares rising as much as 6% pre-market before closing up 0.35%; its 2x leveraged product 07709 gained 3.46% intraday Thursday. According to MoneyToday, Samsung Electronics plans to finalize and announce a shareholder return program exceeding 100 trillion won after its board meeting this month, allocating 50% of free cash flow primarily through cash dividends; Samsung surged 9.29% intraday Thursday on the Seoul exchange after falling nearly 8% Wednesday — the day reports emerged that AI demand is pushing chip prices up as much as 15%. The same stock, two different catalysts, two completely different market reactions. Bulls read massive AI-driven cash flows finally converting into dividends and buybacks, qualifying cyclicals for value-stock multiples; bears see management choosing returns over capacity investment, a signal that typically appears in the latter half of a cycle. Will you buy SK Hynix for its buyback, follow Samsung's dividend commitment, or step away from the memory chain entirely?" },
+  { ticker: "SNDK / MU / SNXX / SNDQ / SOXL / SOXS", title_cn: "闪迪收跌3.5%,80%毛利率是周期顶还是新常态?", body_cn: "存储的多空分歧周三被摆到了同一天的两条研报上:闪迪收跌3.50%,美光基本走平、收跌0.39%,但看多方给出的理由是毛利率——有分析认为闪迪约80%的毛利率不只是一次周期顶,而是AI存储需求改写了定价结构;看空方是方舟的伍德,她两次公开表示投资者应避开存储芯片股,并用自己那套特斯拉式的框架解释为什么绕开美光与海力士。杠杆工具连续第二天替板块做了表态:闪迪2倍做多ETF(SNXX)跌6.90%、2倍做空ETF(SNDQ)涨7.21%,半导体三倍做多的SOXL跌6.48%、三倍做空的SOXS涨6.47%,方向和昨天完全一致,说明资金还在减风险而不是抄底。判断的关键不是需求而是价格能不能守住:NAND与DRAM合约价上行还在继续,但下游已经开始把成本反映到售价上。你会站在80%毛利率这一边、跟着伍德离开存储,还是只用杠杆工具做短线?", title_en: "SanDisk Falls 3.5% — Is 80% Gross Margin a Cycle Peak or New Normal?", body_en: "The memory bull-bear divide played out in two research notes on the same day Wednesday: SanDisk fell 3.50% while Micron was roughly flat, down 0.39%, yet bulls pointed to gross margins — some analysts argue SanDisk's roughly 80% gross margin reflects a structural repricing of memory driven by AI demand, not merely a cycle peak. On the bear side, Ark's Wood publicly stated twice that investors should avoid memory chip stocks, applying her Tesla-style framework to explain why she sidesteps both Micron and SK Hynix. Leveraged products confirmed the sector's direction for a second straight session: SanDisk's 2x long ETF SNXX fell 6.90% while its 2x inverse SNDQ rose 7.21%; semiconductor 3x long SOXL dropped 6.48% as 3x inverse SOXS gained 6.47% — flows remain in risk-reduction mode rather than dip-buying. The pivotal question is not demand but price sustainability: NAND and DRAM contract prices continue to rise, but downstream buyers are beginning to pass costs through to end pricing. Will you stand behind the 80% gross margin thesis, follow Wood out of memory, or use only leveraged instruments for short-term trades?" },
+  { ticker: "INTC", title_cn: "存储把英特尔GPU价格顶高48%,股价却收跌4%?", body_cn: "存储涨价的账单周三走到了第三站。英特尔收跌4.02%,盘后回升1.08%,当天最具体的一条是价格:有报道称其GPU价格因存储成本上涨而跳升48%,Wedbush就此发出警告——涨价短期护住毛利,长期会把客户推向竞品,尤其是在它还在用价格争取AI客户的阶段;另有分析直接质疑它\"为还在建的产能收取溢价\"。把这条和前两天连起来看,链条很完整:上游存储涨价先咬手机厂的毛利(小米二季度净利同比少42.6%),再顶高GPU的售价(英特尔+48%),终端和客户总要有人付这笔钱。反方的证据同样在同一天:有分析认为三星上调代工报价反而会让英特尔与台积电受益,代工价格的天花板被抬高,对后来者是好事。所以这4%跌的不是需求,是市场对\"靠涨价维持的毛利\"给的折价。你会把这次回调当代工翻身的入场点、换到定价权更强的台积电,还是等它下一份财报验证客户结构?", title_en: "Memory Costs Push Intel GPU Prices Up 48% — Stock Still Closes Down 4%?", body_en: "Memory inflation's bill reached a third destination Wednesday. Intel closed down 4.02% before recovering 1.08% after hours, with the day's sharpest data point being a reported 48% jump in its GPU prices due to rising memory costs; Wedbush flagged the risk that near-term margin protection could drive customers toward competitors, particularly damaging while Intel is still using price to win AI clients, and a separate note questioned whether it was \"charging a premium for capacity still under construction.\" The supply-chain logic is now complete across three sessions: upstream memory inflation first compressed smartphone makers' margins, then lifted GPU prices 48%, and someone downstream must ultimately absorb the bill. The counterargument also landed the same day: some analysts contend Samsung raising foundry prices actually benefits Intel and TSMC, as a higher price ceiling for latecomers improves established players' relative positioning. The 4% decline is therefore the market discounting margin quality, not demand. Will you treat this pullback as a foundry rerating entry point, rotate to TSMC where pricing power is stronger, or wait for the next earnings report to verify the customer mix?" },
+  { ticker: "01810", title_cn: "存储咬掉小米42.6%的利润,它反而越跌越有人买?", body_cn: "小米周四盘中涨3.13%,周三盘中也一度涨近5%——这份被存储成本砸出42.6%利润降幅的财报,反而换来了连续的买盘。财报的账很清楚:二季度营收1,089亿元、同比下降约6%,经调整净利润62亿元,净利润同比下滑42.6%且低于预期,直接原因是内存与闪存合约价上行压住手机毛利,叠加补贴退坡与消费疲软;亮点是手机均价创下纪录,汽车与IoT仍在增长。买盘的逻辑不在利润表而在估值:有分析认为它按盈利看只是合理、但按现金流看明显便宜,另一份估值测算给出约38%的低估空间,而过去一年它的股价已经跌了约48%,坏消息被提前定价的程度远超基本面恶化的速度。风险是成本还没见顶——同一天英特尔因存储成本把GPU价格提了48%,说明这轮涨价还在往下游传导,手机的毛利压力至少还有一到两个季度。你会按现金流买小米、等存储合约价见顶再进,还是干脆去买收钱的那一端?", title_en: "Memory Costs Wiped 42.6% of Xiaomi's Profit — Stock Keeps Getting Bought?", body_en: "Xiaomi rose 3.13% intraday Thursday and had surged nearly 5% intraday Wednesday — the same earnings report that saw memory costs erase 42.6% of profits continued to attract buyers. The numbers are unambiguous: quarterly revenue was 108.9 billion yuan, down roughly 6% year-over-year; adjusted net profit was 6.2 billion yuan; net profit fell 42.6% year-over-year and missed expectations, driven directly by rising DRAM and NAND flash contract prices compressing handset margins, compounded by subsidy rolloffs and soft consumer demand. Bright spots included a record average handset selling price and continued growth in automotive and IoT. The buying logic bypasses the income statement: analysts argue the stock looks merely fair on earnings but materially cheap on cash flow, with one valuation study flagging approximately 38% undervaluation, while the share price has already declined roughly 48% over the past year — bad news appears to be priced in well ahead of fundamental deterioration. The risk is that costs have not yet peaked: Intel's 48% GPU price hike on the same day confirms this inflation cycle is still transmitting downstream, leaving handset margins under pressure for at least one to two more quarters. Will you buy Xiaomi on cash flow, wait for memory contract prices to peak before entering, or simply buy the upstream suppliers collecting the margin instead?" },
+  { ticker: "01024", title_cn: "可灵增速从300%掉到200%,快手盘中跌11%?", body_cn: "快手周三披露二季度业绩,周四盘中跌11.32%至52周低位附近,过去一年已跌约55%。数字本身不算爆雷,但每一项都在减速:营收355.35亿元、同比只增1.4%(一季度还有3.4%),经调整净利润39.13亿元、同比减少30.3%,而被寄予最高期望的可灵AI收入同比增超200%——问题是一个季度前这个数字是超300%。市场杀的正是这个二阶导:增长故事的斜率在变平,而投入没有变小,公司自己的口径是\"重AI投入\"配\"稳健现金流与股东回报\",全年260亿元的资本开支指引仍摆在那里。多头的抓手是分拆:今夏可灵AI已从阿里、腾讯等方面拿到超190亿元(约28亿美元)融资,并计划分拆上市,如果估值单独定价,母公司现在的市值就是折价的;空头的抓手是主业,广告与电商的增速已经贴近零增长,AI再快也只是小基数。你会等可灵分拆、换到增速更稳的腾讯,还是先离开这条内容赛道?", title_en: "Kling Growth Slows From 300% to 200% — Kuaishou Drops 11% Intraday?", body_en: "Kuaishou disclosed its quarterly results Wednesday and fell 11.32% intraday Thursday to near a 52-week low, having declined roughly 55% over the past year. The numbers were not a blowup, but every line decelerated: revenue was 35.535 billion yuan, up just 1.4% year-over-year versus 3.4% the prior quarter; adjusted net profit was 3.913 billion yuan, down 30.3% year-over-year; and Kling AI revenue — where expectations ran highest — grew more than 200% year-over-year, down from more than 300% the prior quarter. The market is penalizing the second derivative: the growth story's slope is flattening while investment is not, and management's own framing of \"heavy AI spending\" paired with \"steady cash flow and shareholder returns\" leaves a full-year capex guidance of 26 billion yuan firmly in place. The bull case rests on a spinoff: Kling AI secured over 19 billion yuan (approximately $2.8 billion) in funding from Alibaba, Tencent, and others this summer and plans to list separately, implying the parent trades at a discount to its parts; the bear case is the core business, where advertising and e-commerce growth has nearly stalled, leaving AI as a small-base story. Will you wait for the Kling spinoff, rotate to Tencent for more stable growth, or exit the content sector altogether?" },
+  { ticker: "NBIS", title_cn: "一年三次可转债,Nebius融45亿反被砸9.9%?", body_cn: "Nebius周三收跌9.87%,盘后回升1.94%,催化非常明确:当天上午宣布拟私募发行45亿美元可转换优先票据,分2030年与2034年到期两档,用途是数据中心与AI平台。市场砸它的不是用途而是频率——这是不到一年里第三次数十亿美元级的可转债,杠杆和潜在摊薄叠在一起,当天成交约5,040万股、是20日均量的两倍多。这也解释了昨天那个反常:二期数据中心获批的好消息换来7.6%的下跌,资金早就在担心扩张的钱从哪来,现在答案出来了,是借的。空方的筹码摆得很明:做空占流通股的27.14%,还有报道称伯里在这只票上加仓做空;多方的理由是它今年仍涨167%,而Cantor在下跌后仍维持看多,认为算力订单能覆盖利息。分歧最终落在一个数上:新增负债的利息与转股价,能不能被这批数据中心的租约收入盖住。你会在这轮融资落地后加仓、换到不靠可转债扩张的CoreWeave,还是等它的租约收入先跑出来?", title_en: "Third Convertible in Under a Year — Nebius Raises $4.5B, Stock Hit 9.9%?", body_en: "Nebius closed down 9.87% Wednesday before recovering 1.94% after hours, with the catalyst unmistakable: the company announced a proposed private placement of $4.5 billion in convertible senior notes in two tranches due 2030 and 2034, earmarked for data centers and its AI platform. The market's reaction was not about the use of proceeds but the frequency — this is the third multi-billion-dollar convertible offering in under a year, and the combined leverage and potential dilution drove volume to roughly 50.4 million shares, more than double the 20-day average. This also explains the prior session's anomaly: approval for a second-phase data center had triggered a 7.6% decline, as the market had already been asking how the expansion would be funded — now it has the answer, and the answer is debt. The short case is explicit: short interest stands at 27.14% of the float, with reports indicating Burry has added to his short position; the bull case is that the stock is still up 167% year-to-date and Cantor maintained its positive view post-decline, arguing data-center lease revenues can cover the interest burden. The debate ultimately comes down to one question: whether rental income from the new data centers can cover the cost and conversion terms of this fresh debt. Will you add after this financing closes, rotate to CoreWeave which is not expanding via convertibles, or wait for lease revenues to show up in the numbers first?" },
+  { ticker: "META", title_cn: "1.4万亿索赔压着,Meta反而收涨说明了什么?", body_cn: "Meta周三收涨0.43%,而它面对的诉讼一点没变轻:29个州指控其产品设计伤害青少年的庭审仍在进行,媒体给出的潜在罚则量级高达1.4万亿美元,当天的报道标题干脆写成\"在1.4万亿美元罚则威胁下上涨\"。这个反手比周二那根-4.45%更有信息量:市场用两天时间给这场诉讼定了性——索赔上限是原告的诉求而非判决,时间跨度以年计,在此期间它更像一个尾部风险而不是当期成本;真正决定当天涨跌的还是利率,长端一退烧,估值靠远期广告利润的公司就先松一口气。空方的两条压力没有消失:法务成本与AI资本开支同时抬升,有投资人点名它的费用同比增长约55%;而广告效率的改善目前还只体现在叙事里。这就是当下的赔率:利率的波动是周级别的,诉讼与费用是年级别的,前者决定股价,后者决定估值中枢。你会把诉讼当噪音继续持有、换到费用更可控的谷歌,还是等费用增速回落再看?", title_en: "$1.4 Trillion Lawsuit Hanging Over It — What Does Meta's Gain Tell Us?", body_en: "Meta closed up 0.43% Wednesday even as the multi-state trial alleging its products harm minors continued, with media coverage citing potential penalties quantified at $1.4 trillion. The reversal from Tuesday's 4.45% decline is more informative than the gain itself: in two sessions the market effectively classified the litigation as a tail risk measured in years rather than a current-period cost, with the $1.4 trillion figure representing plaintiff demands rather than a judgment. The true driver of Wednesday's move was rates — as long-end yields pulled back, companies whose valuations rest on distant advertising profits were the first to benefit. Bear pressure has not cleared: operating expenses are reportedly up roughly 55% year-over-year, and advertising efficiency improvements remain a narrative rather than a financial line item. The current risk-reward framing is straightforward: rate volatility plays out over weeks, litigation and expense trajectories play out over years — the former moves the stock price, the latter moves the valuation anchor. Will you treat the lawsuit as noise and hold, rotate to Alphabet for better expense discipline, or wait for expense growth to decelerate before re-entering?" },
+  { ticker: "NVDA", title_cn: "芯片价格最多涨15%,英伟达财报前反而收跌1%?", body_cn: "英伟达周三收跌0.99%,距8月26日盘后的财报还有不到一周,而当天行业侧的消息其实偏正面:有报道称AI需求正把芯片价格推高最多15%,台积电在AI产能上的瓶颈给了三星提价的机会,而代工与存储同步涨价,通常意味着算力需求还在超过供给。它没涨的原因和存储、英特尔是同一个:涨价对上游是收入、对下游是成本,而英伟达同时是两头——它买HBM与先进封装,卖加速卡,芯片价格上行会先压它的毛利,除非它把成本转出去。有分析当天问的是另一面:为什么在同业里反而是它成了折价选项,机构低配、估值相对其AI敞口并不贵。多头的抓手是一周后的财报本身,低配意味着超预期会有增量买盘;空方的抓手是成本与担保敞口,它为客户数据中心提供的租约担保规模摆在那里,任何资本开支节奏变化都会先打到它身上。你会在财报前加仓、等杰克逊霍尔的措辞落地,还是换去直接受益涨价的存储一侧?", title_en: "Chip Prices Up 15%, Nvidia Closes Down 1% Ahead of Earnings?", body_en: "Nvidia closed down 0.99% Wednesday with its earnings print less than a week away, even as industry newsflow skewed positive: reports indicated AI demand is pushing chip prices up as much as 15%, with TSMC's AI capacity constraints giving Samsung room to raise prices, and simultaneous increases in foundry and memory pricing typically signal that compute demand continues to outstrip supply. The disconnect reflects Nvidia's dual position in the supply chain — it is both a buyer of HBM and advanced packaging and a seller of accelerators, meaning upstream price inflation hits its costs before it can be passed through. A separate line of analysis flagged that Nvidia has paradoxically become the relative value option among AI peers, with institutional underweights and valuation multiples that appear undemanding relative to its AI exposure. The bull case is the imminent earnings report itself: underweight positioning means a beat would bring incremental buying; the bear case is cost exposure and the scale of data-center lease guarantees it has extended to customers, which are directly sensitive to any shift in capex cadence. Will you add before earnings, wait for Jackson Hole's tone to settle first, or rotate into the memory names that directly benefit from the price increases?" },
+  { ticker: "SPCX", title_cn: "Grok上了亚马逊云,SpaceX仍收跌2.6%?", body_cn: "SpaceX周三收跌2.57%,连续第二天下跌,而当天它有一条明确的正面进展:把Grok 4.6上线到亚马逊Bedrock,这意味着这块业务开始有可被计量的商业通道,而不只是估值故事里的一行字。股价不认的原因还是归类问题:按太空业务估值,发射与星链是可预测的现金流;按AI资产估值,它的锚就变成那些远期故事,而长端利率虽然周三退烧,这类长久期资产仍是这轮调整中被减仓最快的一类。方舟二季度的持仓更新同一天披露,是判断机构还在不在场的线索。多头的依据仍在AI敞口的稀缺性,英伟达最新持仓披露显示对它有约210亿美元的仓位;空方的依据是解禁时间表与倍数,史上最大规模IPO的后续批次仍未走完。你会按太空基础设施估值,还是按AI资产给它重估?", title_en: "Grok Lands on AWS — SpaceX Still Closes Down 2.6%?", body_en: "SpaceX fell 2.57% Wednesday for a second consecutive session despite a concrete positive development: the launch of Grok 4.6 on Amazon Bedrock gives that business a measurable commercial channel rather than a line item in a valuation narrative. The market's non-response reflects a classification problem — valued as a space company, launch and Starlink generate predictable cash flows; valued as an AI asset, the anchor becomes long-duration growth stories that, even with Wednesday's rate pullback, remain among the fastest-reduced positions in this correction. Ark's Q2 holdings update was disclosed the same day, offering a read on whether institutional holders are still present; separately, Nvidia's latest holdings disclosure showed a position of approximately $21 billion in SpaceX. Bulls cite the scarcity of its AI exposure; bears point to the remaining lock-up schedule from what was the largest IPO in history. Will you value it as space infrastructure, or reprice it as an AI asset?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
