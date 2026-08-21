@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-21 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-21</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 11</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:9.1%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 11 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / SPY", title_cn: "财长把回购单次规模翻倍,债市为何还是不给面子?", body_cn: "救市工具加码了,债市只买了半天账。财长贝森特周四表示,在把长端美债的单次回购规模从20亿美元提高到至少40亿美元之后,未来仍可能继续加码;这条消息先让30年期收益率一度回落近10个基点、美元指数走弱,但债市随后再度承压——财政赤字、通胀与期限溢价这三条根本担忧,回购一分钱也解决不了,它只处理流动性。股指因此掉头:标普500收跌0.87%(标普500ETF跌0.84%),道指收跌1.32%、约600点,而砸盘的不是利率而是沃尔玛给出的消费信号。真正的定价窗口在下周:8月27日至29日的杰克逊霍尔全球央行年会,沃什将首度以主席身份登场,措辞偏鹰会重新推高美元与长端、继续压高估值科技,偏鸽则轮到小盘、地产与利率敏感资产。多头的理由是回购规模还有上调空间、且7月纪要显示多数委员并不急于加息;空头的理由是供给端一点没变,而消费数据刚刚开始转弱。你会继续押科技、换到利率敏感资产,还是等年会措辞落地?", title_en: "Treasury Doubles Buyback Size — So Why Is the Bond Market Still Unimpressed?", body_en: "Treasury Secretary Bessent on Thursday doubled the maximum single-operation buyback size from $2 billion to at least $4 billion, with room to increase further, briefly pushing the 30-year yield down nearly 10 basis points. The rally faded as traders refocused on structural concerns — fiscal deficits, inflation, and term premium — that liquidity operations cannot address. The S&P 500 fell 0.87%, the Dow shed roughly 600 points, and next week's Jackson Hole symposium, where Warsh makes his debut as Fed Chair, is now the key pricing event for rates, the dollar, and rate-sensitive assets. Will you stay long tech, rotate into rate-sensitive assets, or wait for Warsh's tone to land?" },
+  { ticker: "WMT", title_cn: "沃尔玛超预期又上调指引,却创下多年最差单日?", body_cn: "周三那份前瞻问的是\"1,888亿美元里看不看得出消费降级\",周四的答案是看得出。沃尔玛营收增长5.9%(按固定汇率5.1%)、每股收益超预期约9.4%、全年指引还上调了,但股价收跌9.15%,是它多年来最差的单日表现。市场只盯住两个数:美国同店销售增速是六年来最慢,以及下一季调整后每股收益指引0.62至0.64美元,低于0.68美元的共识。管理层的解释里藏着更值得注意的一条——它把29亿美元的关税退款直接用于降价,也就是说这家最强的零售商选择用一次性收入去补贴价格,而不是留在利润表里,这通常意味着它看到的需求比财报数字更弱。多头的证据同样在同一份财报:电商销售增长24%,广告与会员这些高毛利业务仍在扩张,汽油与药品价格下行才是拖累同店的技术性因素。传导已经开始,好市多当天收跌2.3%。你会把这次回调当防御股的入场点,跟着降价逻辑去买折扣渠道,还是先等下个季度的同店数据?", title_en: "Walmart Beats and Raises Guidance — Yet Posts Its Worst Single-Day Drop in Years?", body_en: "Walmart reported revenue growth of 5.9% (5.1% in constant currency) and EPS roughly 9.4% above consensus, while raising full-year guidance, yet shares fell 9.15% — the company's worst single-day performance in years. The market focused on two figures: U.S. comparable-store sales growth at its slowest pace in six years, and next-quarter adjusted EPS guidance of $0.62–$0.64, below the $0.68 consensus. Management's decision to deploy a $2.9 billion tariff refund as price cuts rather than booking it as profit signals demand is weaker than the headline numbers suggest; Costco closed down 2.3% on the same day. Will you treat this pullback as an entry point for a defensive name, follow the price-cut logic into discount retail, or wait for next quarter's comp data?" },
+  { ticker: "TGT / LOW / TJX", title_cn: "关税退款撑起塔吉特净利翻倍,股价还是不涨?", body_cn: "零售放榜周结束,三份成绩单指向同一个结论:好数字撑不住估值。塔吉特二季度销售增长5.3%、超预期并再次上调全年指引,净利润同比大增100.8%,但这个涨幅的主要推手是9.94亿美元的关税退款,而不是经营改善,新任CEO主推的品类与门店改造只是刚见起色,股价周四仍收跌0.47%。劳氏的管理层直接把话说白了,CEO点名消费者支出压力值得警惕,股价收跌1.21%——它还额外背着一层利率账,按揭利率跟着长端上行,装修需求最先被推迟。TJX最有说服力:它被花旗下调评级,理由是核心Marmaxx的同店表现不佳,说明\"折扣零售在消费降级里天然受益\"这个假设并不成立,股价收跌2.64%。周三我把它列为三家里最被看好的一家,现在要更正这个判断的依据。三家的共同点是关税退款这类一次性收入正在美化利润,而同店增速在同步走弱。你会等一次性收入退潮后的真实毛利,买改造见效的塔吉特,还是干脆离开零售?", title_en: "Tariff Refund Doubled Target's Net Profit — So Why Didn't the Stock Rally?", body_en: "Target reported second-quarter sales growth of 5.3%, beat estimates, and raised full-year guidance, while net profit surged 100.8% year-on-year — but the primary driver was a $994 million tariff refund rather than operational improvement, and shares still closed down 0.47%. Lowe's CEO explicitly flagged consumer spending pressure as a concern, sending shares down 1.21%, compounded by rising mortgage rates that defer renovation demand. TJX was downgraded by Citi on weak core Marmaxx comparable-store performance, undermining the thesis that discount retail is a natural beneficiary of trade-down, with shares falling 2.64%. Will you wait for true gross margins once one-time income fades, buy Target on its turnaround, or exit retail altogether?" },
+  { ticker: "BABA / 09988", title_cn: "阿里云外部收入连涨到22季新高,利润却被砸掉四分之三?", body_cn: "阿里巴巴2027财年第一财季交出了这轮AI周期里最典型的一份账:营收2,689.53亿元、同比增长9%,略高于2,685.17亿元的市场预期;而利润是两个口径都要看的地方——经调整净利润207.15亿元、同比下滑38%,按GAAP口径的净利润同比降幅约75%,只给出经调整那个数就会严重低估这一季的失血程度。钱去哪了写得很清楚:本季资本开支676.78亿元、同比大增75%,几乎全部投向AI基础设施。换来的东西也是实的:阿里云外部商业化收入同比增长45%、创下22个季度新高,AI相关产品收入连续12个季度维持三位数增长,AI云的年化收入规模达到约495亿元。市场的分歧就落在这个交换比上——美股周四收涨1.26%,港股周四收跌0.79%,资金一边承认云在加速,一边不确定这个投入强度要持续几个季度。CEO的表述是公司在AI浪潮里处于优势位置。你会按云业务给它重估、等资本开支见顶,还是先看下一季的利润率能不能止跌?", title_en: "Alibaba Cloud External Revenue Hits 22-Quarter High, But GAAP Profit Drops ~75%?", body_en: "Alibaba's fiscal first quarter revenue came in at 268.95 billion yuan, up 9% year-on-year and slightly above the 268.52 billion yuan consensus, but the profit picture demands two lenses: adjusted net profit fell 38% to 20.72 billion yuan, while GAAP net profit dropped approximately 75% — citing only the adjusted figure materially understates the quarter's earnings erosion. Capital expenditure surged 75% year-on-year to 67.68 billion yuan, almost entirely directed at AI infrastructure, in exchange for measurable returns: Alibaba Cloud external revenue rose 45% to a 22-quarter high, AI-related product revenue maintained triple-digit growth for 12 consecutive quarters, and AI cloud annualized revenue reached approximately 49.5 billion yuan. U.S.-listed shares rose 1.26% while Hong Kong shares fell 0.79%, reflecting divided views on how many more quarters of heavy investment lie ahead. Will you re-rate the stock on cloud momentum, wait for capex to peak, or watch whether profit margins stabilize next quarter?" },
+  { ticker: "AMZN / SPCX", title_cn: "Anthropic传冲刺最大IPO,普通人只能借道亚马逊?", body_cn: "AI一级市场的下一颗大瓜正在往公开市场靠。据报道,Claude的母公司Anthropic正筹备一次目标为史上最大规模的IPO,同期两条更具体的进展可以交叉验证:有报道称它已在为创始人安排超级投票权结构,以及IPO前的信贷额度规模将超过100亿美元。必须说清楚的是,发行时间与估值目前都没有公开确认——它尚未出现在公开的新股日历上,市面流传的具体上市窗口与估值数字都还没有第二来源,不宜当成既定事实。可对照的样本是SpaceX:6月12日以135美元发行、市值约1.77万亿美元,而周四它收跌4.05%至134美元、跌回发行价下方,原因是第二批解禁释放了约3.19亿股。这提醒的是同一件事——超级IPO的定价高峰往往在上市那一刻,解禁才是真正的考验。想间接参与的人通常看向亚马逊,它既是Anthropic的投资方也是其云与训练伙伴,但它周四收跌2.16%,当天恰好有报道在质疑其534亿美元AI投资收益的质量,这类账面收益随估值波动、并不等于现金流。你会用亚马逊做替代、等Anthropic正式上市,还是从SpaceX的解禁节奏里先学一课?", title_en: "Anthropic Said to Target Largest-Ever IPO — Can Retail Only Access It Through Amazon?", body_en: "Anthropic, the parent of Claude, is reportedly preparing an IPO targeting a record-breaking size, with corroborating reports citing plans for a founder supervoting share structure and a pre-IPO credit facility exceeding $10 billion. Timing and valuation remain unconfirmed and should not be treated as settled facts. SpaceX offers a cautionary parallel: priced at $135 in June at a roughly $1.77 trillion valuation, it closed Thursday down 4.05% to $134 — below its issue price — after a second lock-up expiry released approximately 319 million shares, underscoring that the pricing peak for high-profile IPOs often arrives on listing day, with lock-up expirations as the real test. Amazon, both an investor and cloud-and-training partner to Anthropic, fell 2.16% Thursday amid reports questioning the quality of returns on its $53.4 billion AI investment commitment. Will you use Amazon as a proxy, wait for Anthropic's formal listing, or take a lesson first from SpaceX's lock-up timeline?" },
+  { ticker: "MRNA", title_cn: "前一天涨177%后一天跌23%,轧空行情该怎么接?", body_cn: "Moderna周四收跌23.55%至133.32美元,盘后再跌2.76%,而它前一天刚涨了176.97%。两天连起来看才是完整的一课:周三那根涨幅里有很大一部分不是估值重估而是机制——多家报道把它称作一次历史级的轧空,市场原本的持仓方向和数据结果完全相反,空头被迫平仓推着股价走。当强制买盘走完,获利了结立刻接管,同时开始有人质疑数据是否被过度炒作:三期结果只公布了顶线,完整数据集尚未披露,而从\"终点达标\"到\"定价、产能与实际销量\"之间还有很长的路。卖方的动作反而说明了尺度:威廉布莱尔与美银在这两天上调评级、目标价上调至170美元附近,但那是把它从\"跑输\"移到\"中性\",不是看多。基本面也没变:公司近12个月营收22.3亿美元、同比下滑27.6%,2025年亏损28.2亿美元。而周四大盘本身也不好,债市抛售把道指砸了600点。你会在回撤后建仓、换到分成确定的默沙东,还是等完整数据公布再说?", title_en: "Up 177% One Day, Down 23% the Next — How Do You Trade a Short Squeeze?", body_en: "Moderna closed Thursday down 23.55% at $133.32, with shares falling a further 2.76% after hours, one day after surging 176.97% in what multiple reports described as a historically large short squeeze driven by forced short covering rather than fundamental re-rating. With the catalyst fading, profit-taking took hold and scrutiny of the data intensified: only top-line Phase 3 results have been disclosed, the full dataset has not been released, and the path from hitting an endpoint to pricing, manufacturing capacity, and actual sales volumes remains long. The scale of sell-side adjustments is illustrative — William Blair and BofA upgraded the stock to neutral with targets near $170, moves from underperform, not bullish calls — while underlying fundamentals are unchanged, with trailing twelve-month revenue of $2.23 billion down 27.6% year-on-year and a 2025 net loss of $2.82 billion. Will you build a position on the pullback, rotate into Merck for more certain revenue sharing, or wait for the complete data release?" },
+  { ticker: "SKHY / MU / SNDK / 07709 / SNXX / SNDQ", title_cn: "分红承诺一出,存储链周四集体反攻还追不追?", body_cn: "被砍了两天的存储链周四全线反攻:SK海力士收涨4.43%,美光收涨3.97%,闪迪收涨2.02%,海力士2倍杠杆产品07709周四收涨7.17%,闪迪2倍做多ETF(SNXX)涨3.84%、2倍做空ETF(SNDQ)跌4.46%,杠杆工具连续两天的减仓方向第一次被扭转。反攻的理由不是需求数据而是股东回报:海力士40万亿韩元(约286亿美元)的回购刚落地,三星据报道计划公布总额超100万亿韩元、把50%自由现金流用于股东回报的方案,AI带来的现金流第一次被明确承诺分给股东。第二条支撑是价格,有报道称AI需求正把芯片价格推高最多15%,而台积电在AI产能上的瓶颈给了三星提价空间。空方的理由没变,而且这一轮反弹恰好放大了它:方舟的伍德本周两次公开表示要避开存储股;更实际的风险是下游,同一周小米的利润被存储成本咬掉42.6%、英特尔的GPU价格被顶高48%,涨价能走多远取决于终端还能吃下多少。你会为分红买海力士与三星,追弹性更大的美光与闪迪,还是等下游的接受度先给出答案?", title_en: "Memory Stocks Stage Broad Thursday Rebound on Shareholder Return Pledges — Do You Chase?", body_en: "The memory sector rebounded broadly on Thursday: SK Hynix rose 4.43%, Micron gained 3.97%, SanDisk advanced 2.02%, the 2x leveraged SK Hynix product 07709 rose 7.17%, and the SanDisk 2x long ETF (SNXX) gained 3.84% while the 2x inverse ETF (SNDQ) fell 4.46% — the first reversal of two consecutive days of deleveraging. The catalyst was shareholder returns rather than demand data: SK Hynix's 40 trillion won (~$28.6 billion) buyback has been announced, and Samsung is reportedly planning a program exceeding 100 trillion won total, committing 50% of free cash flow to shareholders — marking the first explicit pledge to distribute AI-driven cash flows. A secondary support is pricing, with reports that AI demand is pushing chip prices up as much as 15%, giving Samsung pricing leverage where TSMC faces AI capacity constraints. The bear case is unchanged and arguably amplified by this bounce: Cathie Wood publicly stated twice this week she is avoiding memory stocks, and downstream pressure is real — Xiaomi's profits were cut by 42.6% from memory costs in the same week, while Intel GPU prices have been pushed up 48%. Will you buy SK Hynix and Samsung for the dividend, chase Micron and SanDisk for higher leverage, or wait for downstream acceptance to confirm how far the price increases can go?" },
+  { ticker: "WOLF", title_cn: "AI机房收入翻倍了,Wolfspeed还是被砸9.4%?", body_cn: "周三前瞻里我给它的问题是\"数据中心订单能不能在收入里看见\",答案是能看见,但不够。Wolfspeed财年第四季营收1.496亿美元,基本符合1.5亿美元的预期,公司口径里AI数据中心收入同比增长一倍以上,第五代碳化硅产品也已发布;可每股亏损2.81美元,远差于预期的亏损1.47美元,毛利率仍为负,原因是产能利用率不足——它建好的产线还没有足够订单去摊薄折旧。下一季指引同样没有拐点:营收1.4亿至1.6亿美元,非GAAP毛利率预计仍是负值。所以股价的反应分成两段:财报当晚先涨2%到29.80美元,第二天收跌9.42%至26.35美元,市场用一夜时间读懂了\"新叙事的收入增速很高、但基数太小\"。多头能抓的只有两件事:手上还有11亿美元现金、净债务下降,以及与光宝在800伏直流电源上的认证和与通用电气航空航天的高压碳化硅合作;空头的抓手是覆盖它的两位卖方都给卖出、目标价30美元,而它2025年刚经历过破产重整。你会赌产能利用率的拐点、换到已经有AI收入的电源链龙头,还是彻底避开这类负毛利的转型股?", title_en: "AI Data Center Revenue Doubled at Wolfspeed — Stock Still Drops 9.4%?", body_en: "Wolfspeed's fiscal fourth-quarter revenue of $149.6 million was broadly in line with the $150 million consensus, and AI data center revenue more than doubled year-on-year by the company's own measure, with fifth-generation silicon carbide products now launched. However, EPS came in at a loss of $2.81, far worse than the expected loss of $1.47, with gross margin remaining negative due to insufficient capacity utilization — its built-out production lines lack enough orders to absorb depreciation. Guidance for the next quarter offers no inflection point, with revenue of $140–$160 million and non-GAAP gross margin still projected to be negative. Shares initially rose 2% to $29.80 on earnings night before closing down 9.42% to $26.35 the following day, as the market concluded overnight that strong growth off a small base is not enough — a company that emerged from bankruptcy restructuring in 2025 with both sell-side analysts maintaining sell ratings and $30 price targets. Will you bet on a capacity utilization inflection, rotate into power-chain leaders already generating AI revenue, or avoid negative-gross-margin turnaround names altogether?" },
+  { ticker: "NTES", title_cn: "游戏收入涨15%还派息回购,网易为何收跌5.9%?", body_cn: "网易那个\"12倍前瞻市盈率是便宜还是没增长\"的问题,周四给出了第三种答案:有增长,但利润被别的东西吃掉了。二季度营收45亿美元、同比增长15%并超出预期,游戏业务的增长和利润率都在改善;但非GAAP每股收益1.79美元、同比下滑13%,比预期低约22.6%,差在两处——投资损失,以及研发费用上升。公司同时宣布每份ADS派息0.48美元并授权23亿美元回购,这种\"收入好、利润差、现金分给你\"的组合本该是防守型资产的标准配置,股价却收跌5.85%,说明市场在这轮利率与消费双重收缩里,对\"利润为什么变差\"的容忍度极低。多头的抓手是估值与股东回报:低倍数加回购加派息,加上游戏流水的稳定性;空头的抓手是投资损失与研发投入都不是一次性的,如果这两项持续,低倍数就不是错杀。同一天旗下网易云音乐与有道也交了卷。你会为股东回报买入网易、等下一季利润率修复,还是换到弹性更大的腾讯?", title_en: "NetEase Gaming Revenue Up 15% With Dividend and Buyback — Why Did It Fall 5.9%?", body_en: "NetEase's second-quarter revenue of $4.5 billion rose 15% year-on-year, beating estimates, with gaming revenue growth and margins both improving. However, non-GAAP EPS of $1.79 fell 13% year-on-year and missed consensus by approximately 22.6%, dragged down by investment losses and higher R&D expenses. The company simultaneously announced a dividend of $0.48 per ADS and authorized a $2.3 billion buyback — a combination of solid revenue, weaker profits, and cash returns to shareholders that would typically define a defensive holding — yet shares fell 5.85%, reflecting extremely low tolerance for margin deterioration in the current environment of simultaneous rate and consumption headwinds. NetEase Cloud Music and Youdao also reported on the same day. Will you buy NetEase for shareholder returns and wait for margin recovery next quarter, or rotate into Tencent for higher earnings leverage?" },
+  { ticker: "09992", title_cn: "拉布布之后还没找到第二个,泡泡玛特创52周新低?", body_cn: "拉布布之外的第二条腿,暂时还是没长出来。泡泡玛特周四盘后发布上半年业绩,周五早盘直接跳空低开至141.10港元,盘中最低140.10港元创下52周新低,盘中跌幅一度超过4.5%,过去一年累计跌约53.6%。业绩的核心不是亏了,而是失速:有报道指出它的增长在2026年上半年急剧减速,公司仍在寻找下一个能撑起量级的角色形象。这就是它估值折价的全部来源——去年年报显示拉布布所在的系列约占总营收40%,单一IP的周期一旦过峰,再高的历史增速也没法外推;它近12个月的营收仍同比增长80.8%、净利润增长95.3%,而市值同期跌了46%,增速与股价的背离本身就是市场对\"这批增速不可持续\"的投票。多头的抓手是海外与新品类:新加坡圣淘沙的新店和首家海外烘焙店把IP的变现方式从盲盒往门店与餐饮延伸,27家卖方仍给买入、目标204.76港元;空头的抓手是第二个IP还没被验证。你会赌海外接棒、等下一个角色出圈,还是把它当已经过峰的周期股?", title_en: "No Second Act After Labubu Yet — Is Pop Mart Hitting a 52-Week Low?", body_en: "Pop Mart released first-half results after Thursday's close, with shares opening sharply lower Friday at HK$141.10 and hitting an intraday low of HK$140.10 — a 52-week low — with intraday losses briefly exceeding 4.5% and the stock down approximately 53.6% over the past year. The core issue is not a loss but a sharp deceleration: reports indicate growth slowed markedly in the first half of 2026, and the company has yet to identify a character IP capable of replicating Labubu's scale, which accounted for approximately 40% of total revenue in the last annual report. The valuation disconnect is striking — trailing twelve-month revenue still grew 80.8% and net profit 95.3% year-on-year, yet market cap has fallen 46% over the same period, a gap that reflects the market's view that this growth rate is not sustainable. On the positive side, new overseas venues including a Singapore Sentosa store and a first international bakery extend IP monetization beyond blind boxes, with 27 sell-side analysts maintaining buy ratings and a consensus target of HK$204.76; the bear case rests on the second major IP remaining unvalidated. Will you bet on international expansion carrying the growth, wait for the next character to break out, or treat Pop Mart as a peaked cyclical?" },
+  { ticker: "NVDA", title_cn: "下周就交卷,英伟达为何在债市砸盘里只跌0.3%?", body_cn: "英伟达周四收跌0.33%,在道指跌600点、标普跌0.87%的一天里几乎算是抗跌,而它下周三盘后就要交卷。抗跌的原因是筹码而不是消息:多家卖方在这两天维持看多、给出最高约30%的上行空间,机构对它仍属低配,而这一周被砸最狠的是存储、零售与刚炒过的医药,资金并没有从它身上撤。真正的变量都在下周:一是财报本身,市场已经把AI需求的强劲当成既定事实,标准被抬得很高,超预期的门槛比上一季更难;二是同一周的杰克逊霍尔年会,如果沃什的措辞把长端利率重新推上去,估值靠2027年之后现金流的公司会先被折价,英伟达是这类资产里权重最大的一只。行业侧还有一条要注意:代工与存储同步涨价,有报道称AI需求把芯片价格推高最多15%,而它既是买方也是卖方,成本能不能转出去会直接体现在毛利率上。你会在财报前加仓、等年会措辞和财报双落地,还是换到已经受益涨价的上游?", title_en: "Nvidia Reports Next Week — Why Did It Fall Only 0.3% in Thursday's Bond Selloff?", body_en: "Nvidia closed down just 0.33% on Thursday — effectively outperforming on a day when the Dow fell roughly 600 points and the S&P 500 dropped 0.87% — with results due after the close next Wednesday. The relative resilience reflects positioning rather than news: multiple sell-side firms reiterated bullish views with upside targets as high as approximately 30%, institutional investors remain underweight, and Thursday's sharpest selling was concentrated in memory, retail, and recently-run biotech names. Two variables converge next week: the earnings bar is high, as strong AI demand is now consensus and the beat threshold is harder than last quarter; simultaneously, if Warsh's tone at Jackson Hole pushes long-end rates higher, stocks whose valuations depend on cash flows beyond 2027 face the steepest discount risk, and Nvidia carries the largest weight in that category. On the supply chain, reports of AI-driven chip price increases of up to 15% cut both ways for Nvidia as both a buyer and seller — whether it can pass through cost increases will show directly in gross margins. Will you add before earnings, wait for both Jackson Hole and the results to land, or rotate into upstream suppliers already benefiting from the price increases?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
