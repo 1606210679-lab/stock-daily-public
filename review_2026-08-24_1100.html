@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-24 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-24</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / SPY", title_cn: "国债正式破40万亿,这周还要同时消化年会和财报?", body_cn: "上周五美股收得平静,标普500ETF(SPY)收涨0.41%,但这周要一次消化两件大事,而且它们指向相反的方向。第一件是政策:8月27日至29日的杰克逊霍尔全球央行年会,沃什将首度以主席身份登场,而背景数据刚刚变了性质——美国国债规模在8月正式突破40万亿美元,上一周我们还在写\"逼近40万亿\",现在这个数字已经越过去了。财政赤字与期限溢价是长端利率的根,财长贝森特把长端回购单次规模提到至少40亿美元也只处理流动性,不处理这条根,所以年会措辞会直接决定长端往哪走。第二件是财报:英伟达周三盘后交卷,同一晚还有Salesforce、CrowdStrike、Okta与惠普,周四盘后还有迈威尔与IREN。两件事撞在同一周意味着波动不会小:如果沃什偏鹰、长端重新上行,估值靠2027年之后现金流的公司会先被折价,而英伟达正是这类资产里权重最大的一只;反过来,若财报足够强而措辞偏鸽,资金会重新回到AI硬件。多头的理由是回购规模仍有上调空间,空头的理由是40万亿这个数只会继续变大。你会在年会前减仓、等财报和措辞双落地,还是先换到利率敏感资产?", title_en: "U.S. Debt Tops $40 Trillion — Can Markets Absorb Jackson Hole and Earnings This Week?", body_en: "The S&P 500 ETF (SPY) edged up 0.41% Friday, but this week markets face two conflicting forces simultaneously. U.S. Treasury debt officially crossed $40 trillion in August; Fed Chair Warsh makes his debut at the Jackson Hole symposium (Aug. 27–29), where his tone on fiscal deficits and term premiums will directly steer long-end rates. On earnings, Nvidia reports after-hours Wednesday alongside Salesforce, CrowdStrike, Okta and HP, with Marvell and IREN following Thursday — a hawkish Warsh could reprice long-duration AI assets before results even land. Will you trim ahead of Jackson Hole and wait for both the policy signal and earnings to clear, or rotate into rate-sensitive assets first?" },
+  { ticker: "09988 / 00700 / 01810", title_cn: "阿里抽走800亿港元投AI,港股科技一起交学费?", body_cn: "阿里巴巴8月23日宣布向美国境外的非美国人士配售新股,配售总金额800亿港元(约102亿美元),这是它2019年港股上市以来首次启动新股配售,规模被外媒称作创纪录的股份出售;所得款项净额将100%用于投资全栈AI能力与AI基础设施。市场的第一反应是抽血而不是雄心:今日港股盘中阿里跌10.08%,腾讯跌3.72%,小米跌4.41%——同一批资金要腾出仓位去接配售,整条港股科技链一起交学费。两种读法都有依据。看多的一侧:公司称本轮配售已获超额认购,其中主权财富基金等高质量长线做多投资者需求强劲,而它上一财季的资本开支已同比大增75%、阿里云外部商业化收入同比增长45%创22个季度新高,钱确实有地方花。看空的一侧更直接:配售意味着按当前价格增发,老股东立刻被摊薄,而上一财季GAAP净利润已经同比降了约75%——先摊薄、再烧钱,回报要等几个季度才看得见。真正的分水岭是这800亿港元能不能变成云收入,而不是变成折旧。你会趁折价接货、等资本开支见顶,还是换到不需要增发的腾讯?", title_en: "Alibaba Pulls HK$80B for AI — Will Hong Kong Tech Stocks Pay the Tuition?", body_en: "Alibaba announced on August 23 a new share placement to non-U.S. persons outside the United States, raising HK$80 billion (approximately $10.2 billion) — its first share placement since its 2019 Hong Kong listing, described by foreign media as a record-sized share sale — with 100% of net proceeds directed toward full-stack AI capabilities and AI infrastructure. Markets read it as a liquidity drain rather than ambition: Alibaba fell 10.08% intraday, Tencent dropped 3.72% and Xiaomi slid 4.41% as funds rotated to absorb the placement. The bull case rests on the placement being oversubscribed with strong sovereign wealth fund demand, last quarter's capex up 75% year-over-year, and Alibaba Cloud external revenue growing 45% to a 22-quarter high; the bear case is immediate dilution paired with a roughly 75% year-over-year decline in GAAP net profit last quarter — with returns still quarters away. Will you buy the dip and wait for capex to peak, or switch to Tencent, which isn't diluting shareholders?" },
+  { ticker: "INTC / NBIS", title_cn: "英特尔95美元卖了200亿,现在股价跌回93以下?", body_cn: "阿里不是孤例,这轮AI军备竞赛的融资窗口正在同时抽三家公司的血,而市场已经开始给它们分层。英特尔以每股95美元卖出了200亿美元股票,而它上周五收跌2.24%至90.07美元,已经跌回发行价以下——买了这批增发的机构现在是浮亏的,这也解释了它为什么在半导体反弹的那几天里始终跟不上。Nebius更极端:它最终以50亿美元完成可转换票据发行(初始公告是45亿美元,定价时上调,另附约8亿美元的债转股交换),而它的营收基数只有约14亿美元,直接有报道以\"这是不是泡沫\"为题质问这个比例;它上周五收跌0.45%。把三笔放在一起看,机制是同一个:趁估值高把未来的钱先拿到手,代价是当期摊薄;分层的标准也只有一个,就是这笔钱能不能在两三个季度内变成可确认的收入。阿里有云收入的加速做背书,英特尔要靠代工客户,Nebius要靠数据中心租约。空方的理由是利息与摊薄立刻发生,收入要等;多方的理由是不融资就出局。你会买有收入验证的那家、等发行价被收复,还是干脆避开所有正在抽血的标的?", title_en: "Intel Sold $20B at $95 — Why Has the Stock Already Fallen Back Below $93?", body_en: "Alibaba is not alone: the AI arms-race funding window is simultaneously diluting three companies, and markets are already tiering them. Intel sold $20 billion in shares at $95 each, yet closed Friday down 2.24% at $90.07 — below the issuance price — leaving institutional buyers of that placement sitting on a loss and explaining why the stock has consistently lagged during semiconductor rallies. Nebius goes further: it closed a $5 billion convertible note offering (upsized from an initial $4.5 billion, plus roughly $800 million in debt-for-equity exchanges) against a revenue base of only approximately $1.4 billion, prompting reports headlined as a direct question about whether this ratio constitutes a bubble; it closed Friday down 0.45%. The mechanism across all three is identical — lock in capital at peak valuations and accept immediate dilution — and the only criterion for differentiation is whether the proceeds convert into recognizable revenue within two or three quarters: Alibaba has accelerating cloud revenue, Intel depends on foundry customers, Nebius on data center leases. Will you buy the name with revenue validation and wait for the issuance price to be reclaimed, or avoid every dilutive offering entirely?" },
+  { ticker: "SKHY / 07709", title_cn: "110万亿韩元创了韩国纪录,三星为何反跌近7%?", body_cn: "上周我在这条链上写的是\"分红承诺推动存储链反攻\",现在要交代后半段:承诺落地那一刻反而是出货点。三星电子上周五正式宣布2026年将向股东返还最高110万亿韩元(约790亿美元)、约占自由现金流的50%,创下韩国企业史上最高回报纪录,方案包括派发30万亿韩元季息并回购15万亿韩元股票。但路透的标题直接写成\"创纪录的股东回报令市场失望\"——三星电子今日在韩股盘中跌6.84%,而SK海力士上周五只收涨0.20%,它的2倍杠杆产品07709今日盘中跌1.61%。失望的来源是预期差:传闻阶段市场听到的是\"超100万亿\",落地是110万亿且分两块发放,相对它的现金流体量并没有超出想象。还有一层结构性的别扭:有分析以\"股价越好、回购越不划算\"为题指出,这类周期高点上的回购会在股价高位买入自己的股票,对长期股东未必是最优解。多头的理由仍在:AI带动的HBM与DRAM景气把巨额现金流变成了可分配利润,这是周期股争取价值股估值的必经一步。你会为分红买三星与海力士、等预期差被消化,还是认为回购本身就是周期见顶的信号?", title_en: "Samsung's Record KRW 110 Trillion Return — So Why Did the Stock Drop Nearly 7%?", body_en: "Last week the narrative on this chain was \"dividend pledges driving a memory-sector rally\" — now for the second half: the moment the pledge was confirmed turned into the exit point. Samsung Electronics officially announced Friday it will return up to KRW 110 trillion (approximately $79 billion) to shareholders in 2026 — roughly 50% of free cash flow and the largest shareholder return in Korean corporate history — including KRW 30 trillion in quarterly dividends and KRW 15 trillion in buybacks. Yet Reuters headlined the announcement as \"record shareholder return disappoints\" — Samsung fell 6.84% intraday on the Korean exchange, while SK Hynix edged up only 0.20% Friday and its 2x leveraged product 07709 fell 1.61% intraday. The disappointment stems from an expectations gap: rumors had floated figures well above KRW 100 trillion, and the KRW 110 trillion split across two tranches did not exceed what the cash flow base could imply. A further structural concern: analysts note that buybacks executed near a cyclical peak repurchase shares at elevated prices, which may not be optimal for long-term holders. The bull case remains intact — AI-driven HBM and DRAM demand converts massive cash flows into distributable profit, a necessary step for a cyclical stock to earn a value-stock multiple. Will you buy Samsung and SK Hynix for the dividend and wait for the expectations gap to close, or treat the buyback announcement itself as a cyclical peak signal?" },
+  { ticker: "SNDK / MU / SNXX / SNDQ", title_cn: "存储涨价的账单走到第四站,这次寄给了AI机房?", body_cn: "这轮存储涨价的传导链现在有四段,而最后一段刚刚落地:上游合约价上行先咬手机厂的毛利(小米二季度净利同比少42.6%),再顶高GPU的售价(英特尔GPU价格跳升48%),现在轮到整机——有多家报道称英伟达已警告大客户,因存储成本上升,明年初出货的AI服务器价格将上涨超过15%。也就是说这笔账单最终寄给了买算力的人,而不是消化在链条内部。存储股本身却在原地踏步:上周五闪迪收跌0.28%、美光收跌0.77%,闪迪2倍做多ETF(SNXX)跌0.86%、2倍做空ETF(SNDQ)涨0.74%。多空的证据同样对立:看多方有市场人士再次加倍看好存储股,而闪迪在投资者日与财报之后被上调了公允价值估算;看空方是彭博的一条判断——聪明钱正在离开存储股,板块在高位缺乏动能。判断的关键不在需求而在承受力:当涨价开始抬高AI机房的资本开支门槛,需求端会不会自己先放慢。你会跟着涨价买上游的美光与闪迪、等下游的接受度给出答案,还是直接去买能转嫁成本的那一端?", title_en: "Memory Price Hikes Reach the Fourth Stop — This Time the Bill Goes to AI Data Centers?", body_en: "The memory price pass-through chain now has four links — and the final one just landed. Rising contract prices first squeezed handset makers' margins (Xiaomi's net profit fell 42.6% year-over-year last quarter), then pushed GPU prices higher (Intel GPU prices jumped 48%), and now hit complete systems: multiple reports indicate Nvidia has warned major customers that AI server prices for shipments early next year will rise more than 15% due to higher memory costs, meaning the bill is ultimately passed to compute buyers rather than absorbed within the supply chain. Memory stocks themselves were flat: SanDisk closed down 0.28% Friday, Micron down 0.77%, SanDisk's 2x long ETF (SNXX) fell 0.86% and its 2x inverse ETF (SNDQ) gained 0.74%. Evidence is split — bulls point to renewed strong conviction calls on memory stocks and an upward revision to SanDisk's fair value estimate following its investor day and earnings; bears cite a Bloomberg assessment that smart money is exiting memory stocks, with the sector lacking momentum at elevated levels. The critical variable is not demand but tolerance: if price increases begin raising the capex threshold for AI data centers, will demand itself slow first? Will you follow the price hikes into upstream Micron and SanDisk and wait for downstream acceptance to confirm, or go directly to the end that can pass costs on?" },
+  { ticker: "SPCX", title_cn: "Anthropic的2万亿估值,被拿SpaceX当反面教材?", body_cn: "上周我在Anthropic那条里写过一句:超级IPO的定价高峰往往在上市那一刻,解禁才是真正的考验。这周有人把这句话直接当成论据——有华尔街资深人士撰文指出,Anthropic高达2万亿美元的估值正面临现实检验,而SpaceX就是现成的警示样本:它6月12日以135美元发行、市值约1.77万亿美元,随后第二批解禁释放约3.19亿股,股价一度跌回发行价以下。这也是Anthropic那串数字第一次有了第二来源,但要说清楚的是,这个2万亿仍是市场讨论中的估值区间,不是任何已确认的发行定价。SpaceX自己上周五收涨2.22%,并有一条值得注意的表态:公司称中国是它在AI与火箭两条线上的头号竞争对手,这把它的叙事从\"太空基础设施\"进一步推向\"AI与国家竞争\"。多头的依据是稀缺性,英伟达的持仓披露显示对它有约210亿美元的仓位;空方的依据没变——解禁批次还没走完,而按AI资产定价就要接受长久期资产在利率波动里被优先减仓。你会按太空现金流估值、等解禁走完,还是继续用它当未上市AI资产的代理?", title_en: "Anthropic's $2 Trillion Valuation — Is SpaceX Being Used as a Cautionary Tale?", body_en: "A Wall Street veteran has published an argument that Anthropic's $2 trillion valuation faces a reality check, citing SpaceX as the ready-made warning: SpaceX priced at $135 per share on June 12 at a valuation of approximately $1.77 trillion, after which a second unlock released roughly 319 million shares and pushed the stock briefly below its issuance price. This marks the first time the $2 trillion figure has appeared in a second independent source, though it remains a market-discussed valuation range — not any confirmed offering price. SpaceX itself closed up 2.22% Friday and made a notable statement: the company identified China as its primary competitor on both AI and rockets, shifting its narrative further from \"space infrastructure\" toward \"AI and national competition.\" Nvidia's disclosed position of approximately $21 billion underpins the bull case on scarcity; the bear case is unchanged — unlock tranches are not yet exhausted, and pricing an asset on AI multiples means accepting that long-duration exposure is the first to be cut when rates move. Will you value it on space cash flows and wait for the unlock cycle to complete, or continue using it as a proxy for unlisted AI assets?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
