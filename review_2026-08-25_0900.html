@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-25 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-25</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "MU / SNDK / SKHY / AMD / SOXL / AAOI", title_cn: "半导体「最好的财报、最差的走势」：SOXL挫7.83%，该抄底吗？", body_cn: "芯片全链条周一集体杀跌：美光跌5.83%、闪迪跌6.45%、SK海力士跌4.92%、AMD跌3.49%，三倍做多半导体的SOXL重挫7.83%、隐含波动率一度冲到123%，光模块的Applied Optoelectronics更是暴跌13.77%。导火索来自供给端——三星股价大跌带动半导体抛售，叠加特朗普威胁2027年对加拿大汽车、钢铁加征50%关税，市场把成本与需求两头的不确定性一起计入。分歧点很清楚：一边是「半导体是标普里最好的财报、最差的走势」——基本面（存储涨价、AI需求）没坏，卖方还在加码，Needham维持SK海力士买入、目标价上调至220美元；另一边是「AI交易在去杠杆，它的供应商还没」，即主线资金已从AI硬件撤离、而上游存储与设备的估值仍挂在高位，英伟达周三盘后即将交卷更让全板块倾向先减仓避险。多头看的是错杀后的反弹与财报兑现；空头担心的是长端利率一旦回头，这类靠2027年之后订单支撑的重资产会先被折价。你会趁回调布局存储龙头美光、闪迪，等英伟达财报落地再定方向，还是用SOXL这类杠杆工具先离场观望？", title_en: "Semis Post 'Best Earnings, Worst Price Action' — Is SOXL's 7.83% Drop a Buy?", body_en: "The semiconductor complex sold off broadly Monday: Micron -5.83%, SanDisk -6.45%, SK Hynix -4.92%, AMD -3.49%, with 3x leveraged SOXL plunging 7.83% as implied volatility spiked to 123%; Applied Optoelectronics cratered 13.77%. The selloff was triggered by Samsung's sharp decline and Trump's threat of 50% tariffs on Canadian autos and steel by 2027, pricing in cost and demand uncertainty simultaneously. Needham maintained a Buy on SK Hynix with a price target raised to $220, citing solid memory fundamentals and AI demand — but bears argue AI-trade deleveraging has yet to hit upstream memory and equipment valuations, with Nvidia's after-hours results due Wednesday keeping the sector in risk-off mode. Will you buy the dip in Micron and SanDisk ahead of Nvidia's print, or step aside using leveraged instruments like SOXL?" },
+  { ticker: "META / GOOG", title_cn: "芯片全线飘绿，META涨1.66%、谷歌翻红，AI资金从硬件换锚到平台？", body_cn: "与芯片全线杀跌形成对照，平台型巨头周一逆势收红：Meta涨1.66%、Alphabet涨0.83%，是当日为数不多的亮点。驱动来自叙事的相对切换——在英伟达财报与关税扰动让硬件承压时，资金更愿意待在现金流确定、又同样吃到AI红利的应用与平台端；有卖方在Marvell的报告里点出「谷歌正在强化AI逻辑」，自研TPU与云业务让它既是AI买家也是受益者。但两家的隐忧并不相同：Meta头顶诉讼阴影，有分析直言它「缺乏烟草式的定价权」，监管与资本开支的双重压力还在；Alphabet则要在搜索被AI分流与云增长之间，证明利润率不被侵蚀。看多的理由是相对强弱已经站在平台一侧、回撤更浅；看空的理由是一旦大盘系统性去风险，高权重的它们同样会成为提款机。你会跟随相对强势加仓Meta、谷歌，还是认为这只是硬件杀跌里的暂时避风港、等回调更深再上？", title_en: "Chips Flash Red While Meta Gains 1.66%, Alphabet Turns Green — AI Rotation to Platforms?", body_en: "In sharp contrast to the broad chip selloff, platform giants closed higher Monday: Meta +1.66%, Alphabet +0.83%, among the session's few bright spots. With Nvidia's earnings and tariff headwinds pressuring hardware, capital rotated toward platforms offering predictable cash flows while still capturing AI upside; one sell-side note on Marvell highlighted that Google is reinforcing its AI logic, with proprietary TPUs and cloud making it both an AI buyer and beneficiary. Meta faces litigation overhang and what analysts describe as a lack of tobacco-like pricing power, while Alphabet must prove AI-driven search disruption won't erode margins even as cloud grows. Will you add to Meta and Alphabet on their relative strength, or treat Monday's outperformance as a temporary shelter that fades once broader risk-off accelerates?" },
+  { ticker: "TSLA", title_cn: "特斯拉跌3.83%：加拿大50%关税压顶，只剩SpaceX这根救命稻草？", body_cn: "特斯拉周一跌3.83%，压力来自基本面与情绪两端。基本面上，特朗普威胁2027年对加拿大汽车加征50%关税，直接把整个北美汽车供应链推上风口，相关汽车ETF被点名可能首当其冲；情绪上，同期两篇对照性研报持续施压——一篇以「小鹏Q2是比特斯拉更好的选择」质疑其增长，另一篇干脆称「SpaceX是特斯拉唯一的希望」，把市场对汽车主业的悲观、和对马斯克旗下未上市资产的期待摆到了一起。多头的支点是Robotaxi与储能这条第二增长曲线，以及马斯克生态的想象空间；空头的证据更直接：交付增速放缓、价格战未止、关税抬高成本，而估值仍隐含高预期。一个绕不开的矛盾是——若市场真把SpaceX当成特斯拉的「唯一希望」，恰恰说明对汽车主业的定价已经相当谨慎。你会赌Robotaxi兑现而逢低布局特斯拉、转看交付弹性更大的小鹏，还是去追马斯克体系里更纯粹的太空敞口？", title_en: "Tesla Drops 3.83% Under 50% Canada Tariff Threat — Is SpaceX the Last Hope?", body_en: "Tesla fell 3.83% Monday, pressured by both fundamentals and sentiment. Trump's threat of 50% tariffs on Canadian autos by 2027 put the entire North American auto supply chain at risk, with auto ETFs flagged as potentially first in the line of fire. Two contrasting research notes compounded the pressure: one arguing that Xpeng's upcoming quarterly results make it a better near-term pick than Tesla, another bluntly stating that SpaceX is Tesla's only hope — juxtaposing bearishness on the core auto business with optimism around Musk's unlisted assets. The central contradiction is unavoidable: if the market genuinely treats SpaceX as Tesla's sole catalyst, it implies auto-business valuations are already priced with considerable caution. Will you bet on Robotaxi execution and buy Tesla on the dip, rotate toward Xpeng for delivery upside, or seek purer space exposure within the Musk ecosystem?" },
+  { ticker: "BABA", title_cn: "阿里跌0.73%：伯里唱空、CEO却自购近500万美元，谁看错了？", body_cn: "阿里巴巴周一微跌0.73%，港股09988反而微涨0.71%，一天之内多空判断被摆上台面。空头一侧，有分析援引迈克尔·伯里的逻辑称「AI热潮可能让阿里变得更糟」——担心它为云与AI持续重资本开支、却压低了整体利润率；多头一侧，同日出现两条反向信号：一篇研报直言「市场这次把阿里看错了」，更硬的证据是阿里集团CEO本人出手增持约498万美元股票，内部人真金白银站到了估值这边。分歧的核心是同一件事的两种解读：AI投入到底是侵蚀利润的包袱，还是换取云重新加速的入场券。看多者押注云收入拐点与内部人增持的信号价值；看空者担心资本开支会像它的美股同行一样先吃掉利润，再等很久才见回报。你会跟着CEO增持逢低配置阿里、等下一份财报验证云的加速，还是先看整个中概这周集中交卷的结果再决定？", title_en: "Alibaba Slips 0.73% as Burry Bears Down — CEO Buys ~$4.98M: Who's Wrong?", body_en: "Alibaba edged down 0.73% in U.S. trading Monday while Hong Kong-listed 09988 inched up 0.71%, putting the bull-bear debate on full display in a single session. On the bearish side, analysis citing Michael Burry's thesis argues that the AI boom could make Alibaba worse off, warning that heavy cloud and AI capex is compressing overall margins. Countering that, a research note argued the market has mispriced Alibaba, and more concretely, the company's CEO purchased approximately $4.98 million worth of shares — putting real capital behind the valuation case. The core debate centers on one question: is AI investment a margin-eroding burden or the entry ticket to a cloud reacceleration? Will you follow the CEO's insider buy and add exposure ahead of earnings confirmation, or wait for the broader China ADR earnings wave this week before committing?" },
+  { ticker: "MSTR", title_cn: "比特币飙24%扭亏，Strategy再融20亿加码，涨2.83%还追得动？", body_cn: "Strategy（原MicroStrategy）周一逆市涨2.83%，是当日少数逆势收红的标的。催化很直接：本轮比特币上涨约24%，让公司持有的币仓由亏转盈，同时它宣布再融资20亿美元继续加码买币，把「杠杆化比特币代理」的属性再次放大——股价对币价的弹性远高于一比一。多头的逻辑是，只要比特币维持强势，持续融资买币就是把浮盈滚成更大的仓位、并推高每股含币量；空头的警告落在同一处：这套模式在币价上行时是放大器，一旦回调，融资端（可转债与增发）叠加币价下跌会形成双杀，而当前它相对净资产已经带溢价。宏观上，本周杰克逊霍尔与流动性预期还会左右风险偏好，加了杠杆的它对利率与情绪都更敏感。你会把它当高弹性的比特币替代品追进去、直接配置现货比特币以避开融资风险，还是等杰克逊霍尔给出流动性信号再动手？", title_en: "Bitcoin Surges 24%, Strategy Raises $2B More — Still Worth Chasing After 2.83% Gain?", body_en: "Strategy (formerly MicroStrategy) bucked the market Monday, closing up 2.83% as one of the few outperformers in a risk-off session. The catalyst was straightforward: Bitcoin's roughly 24% rally flipped the company's holdings from a loss to a gain, while a fresh $2 billion capital raise to buy more Bitcoin further amplified its identity as a leveraged Bitcoin proxy — with equity sensitivity to coin price well above one-to-one. Bulls argue that as long as Bitcoin holds strength, continuous financing to accumulate coins compounds gains and drives up Bitcoin-per-share; bears warn the same mechanism creates a double-hit on the downside, with convertible debt and equity issuance colliding with coin-price declines, while the stock already trades at a premium to net asset value. This week's Jackson Hole meeting and liquidity signals add macro sensitivity given the company's levered structure. Will you treat it as a high-beta Bitcoin surrogate and buy in, hold spot Bitcoin directly to avoid financing risk, or wait for Jackson Hole to clarify the liquidity outlook first?" },
+  { ticker: "QQQ", title_cn: "纳指ETF跌1%：沃什与贝森特在杰克逊霍尔正面相撞，谁来定调？", body_cn: "纳指ETF（QQQ）周一跌1.00%，标普500（-0.28%）与SPY（-0.29%）跌幅更浅，说明这一跌主要由科技与芯片权重拖累，而非全面避险。真正压住情绪的是宏观日程与结构性担忧的叠加：一是杰克逊霍尔年会，市场焦点被概括为「沃什与贝森特正面相撞」——货币立场与财政、发债思路的分歧要在这里摊牌；二是「财政主导（fiscal dominance）是否开始」的讨论升温，叠加约1万亿美元的国债购买火力与债务担忧，长端利率与流动性成了压制估值的主线；地缘上，伊朗称已为美国新一轮经济施压做好准备，给油价与避险再添变量。多头认为债务恐慌被过度解读，只要沃什措辞不鹰、流动性宽松预期就能托住科技；空头则担心财政主导下利率中枢抬高，对高估值的纳指是持续折价。更近的引信是英伟达周三盘后的财报，任何指引都会被放大。你会在年会与英伟达财报双落地前减仓避险、只留Meta与谷歌这类相对强势的平台股，还是趁科技回调分批布局QQQ？", title_en: "QQQ Falls 1%: Warsh and Bessent Clash at Jackson Hole — Who Sets the Tone?", body_en: "The Nasdaq ETF (QQQ) fell 1.00% Monday while the S&P 500 (-0.28%) and SPY (-0.29%) held up better, indicating the decline was driven by tech and semiconductor weightings rather than broad-based risk aversion. Two macro forces weighed on sentiment: the Jackson Hole symposium, where the market narrative centers on a direct clash between Warsh and Treasury Secretary Bessent over monetary stance versus fiscal and debt-issuance strategy; and intensifying debate over whether fiscal dominance has begun, with roughly $1 trillion in Treasury purchase capacity and rising debt concerns pushing long-end rates and liquidity to the forefront of valuation pressure. Geopolitically, Iran's signal of readiness for a new round of U.S. economic pressure added further uncertainty to oil prices and safe-haven flows. The more immediate trigger is Nvidia's after-hours results Wednesday, where any guidance will be amplified across the sector. Will you trim exposure ahead of both Jackson Hole and Nvidia's print — holding only relative-strength platform names like Meta and Alphabet — or use the tech pullback to scale into QQQ?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
