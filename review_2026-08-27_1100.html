@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-27 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-27</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "NVDA", title_cn: "962亿超了两个基准,英伟达却主动下调自己的毛利率?", body_cn: "英伟达把两个基准一次跨过去了:上一财季营收创纪录的962亿美元,既高于约936亿美元的市场共识,也高于摩根士丹利那份约911亿美元的预测,营收超预期约4.3%、每股收益超预期约6.2%,环比增长85%,数据中心增速再度加快;下一季指引给到约1,080亿美元,更远的2028财年营收指引是增长约70%。股价的反应很能说明门槛有多高:周三日间先收跌1.59%,财报出来后盘后一度走低,直到2028年的指引被读懂才转涨,收在盘后上涨5.26%附近。真正的新信息不在收入而在利润率——公司同时把毛利率展望下调,理由写得很直白:存储芯片价格飙升。这条链绕了一圈回到了起点,涨价先咬手机厂的毛利,再顶高GPU售价,英伟达自己也对客户加价超过15%,现在轮到它自己的毛利率被账单击中。空方还有两条具体证据:客户付款周期比上一季拉长了33%,而OpenAI的自研芯片被认为正在威胁它的利润率,定制硅在抢地盘。多头的抓手是订单与回报——亚马逊把GPU订单追加了两百万块,本季约260亿美元返还股东、回购环比增长约30%,黄仁勋还公开否认循环融资、称AI进入黄金时代。你会为约70%的增长指引买单、等毛利率见底,还是换去卖存储给它的那一端?", title_en: "Nvidia Tops $96.2B Revenue, Yet Voluntarily Cuts Gross Margin Outlook?", body_en: "Nvidia posted record quarterly revenue of $96.2 billion, beating the ~$93.6 billion market consensus and Morgan Stanley's ~$91.1 billion estimate by approximately 4.3% on revenue and 6.2% on EPS, with data center growth reaccelerating. Next-quarter guidance stands at ~$108 billion, with fiscal 2028 revenue growth guided at ~70%. The real surprise was a self-imposed gross margin cut, attributed directly to surging memory chip prices — the same cost pressure Nvidia is passing to customers at 15%-plus markups is now hitting its own bottom line, while bearish signals include a 33% quarter-on-quarter extension in customer payment cycles and rising competition from custom silicon." },
+  { ticker: "MU / SKHY / SNDK / SOXL", title_cn: "英伟达亲口承认存储涨价,存储股盘后一起跳?", body_cn: "存储这条链等的就是这句官方认证。英伟达在下调毛利率展望时把原因写成\"存储芯片价格飙升\",等于由最大的买家出面确认了这轮涨价的强度与持续性,存储股盘后立刻跟上:美光盘后涨3.06%、SK海力士盘后涨3.43%,半导体三倍做多的SOXL盘后涨5.51%。日间它们其实没什么表现——闪迪周三收涨1.26%、美光收涨0.58%,海力士还收跌0.95%,方向是在财报之后才被定下来的。这里的逻辑要拆清楚:同一句话对英伟达是成本、对存储是收入,买家承认成本压力越重,卖家的定价权就越被坐实,这也是为什么盘后跳得最猛的是杠杆工具而不是个股。空方的理由并没有被消灭,反而更清楚了:涨价的终点是需求本身,当AI服务器整机价格被抬高超过15%、云厂商的资本开支门槛跟着上移,总有一层会先缩手;另外周期高点上的股东回报承诺已经出现,三星那份创纪录方案落地当天股价反而下跌,说明市场对\"现金流转分红\"这件事并不当作新的买入理由。你会跟着定价权买美光与海力士、用杠杆工具做短线,还是等云厂商的资本开支指引先表态?", title_en: "Nvidia Confirms Memory Price Surge — Did Memory Stocks Jump After Hours?", body_en: "Nvidia's earnings provided official confirmation the memory sector had been waiting for: citing \"surging memory chip prices\" as the reason for its gross margin cut, the company's largest buyer effectively validated this rally's intensity and durability. Memory stocks responded immediately after hours — Micron gained 3.06%, SK Hynix rose 3.43%, and the 3x leveraged semiconductor ETF SOXL surged 5.51%, outpacing individual names. The core logic is asymmetric: the same price increase that is a cost for Nvidia is revenue for memory suppliers, cementing their pricing power — though bears note that once AI server costs rise beyond 15% and cloud capex thresholds shift upward, demand destruction remains a real endpoint. Will you follow the pricing power into Micron and SK Hynix, use leveraged instruments for short-term trades, or wait for cloud capex guidance to speak first?" },
+  { ticker: "MRVL / AVGO", title_cn: "定制芯片正在抢份额,迈威尔今晚就要给出答案?", body_cn: "英伟达刚交完卷,今晚轮到定制芯片这条线自证。迈威尔今晚盘后披露业绩,市场共识是每股收益约0.94美元、营收约27.6亿美元,而期权市场给这份财报定的价是约208亿美元的市值摆动幅度——这个量级本身就说明分歧有多大。它周三收涨1.97%,盘后跟着英伟达再涨3.63%。争议在同一天被两条消息推到台面上:一是有报道称OpenAI的自研AI芯片正在威胁英伟达的利润率,定制硅确实在抢地盘,而定制ASIC恰恰是迈威尔与博通的主场;二是有分析直接以\"博通就是新的英伟达,而这正是问题所在\"为题提出警告,意思是当一个赛道开始被同样的叙事定价,后来者的估值风险也会跟着复制。博通周三收跌0.32%。所以今晚这份财报要回答的不是增长,而是这轮定制芯片的订单究竟落到了谁手里、能不能兑现成收入。此前公司内部人在160%的涨幅里累计卖出约6.32亿美元,而卖方同期上调它的AI营收预期,今晚就是这两种判断的裁决时刻。你会赌定制芯片继续抢份额、换去份额更稳的博通,还是等财报落地再说?", title_en: "Custom Chips Are Gaining Share — Will Marvell Deliver Answers Tonight?", body_en: "With Nvidia's results in, the custom chip thesis now faces its own test: Marvell reports after hours tonight, with consensus at ~$0.94 EPS and ~$2.76 billion in revenue, while the options market is pricing a market-cap swing of approximately $20.8 billion — a scale that reflects the depth of disagreement. Two narratives collided on the same day: reports that OpenAI's in-house AI chip is threatening Nvidia's margins, validating custom ASIC as a genuine share-taker where Marvell and Broadcom are the primary players, while a separate analysis warned that \"Broadcom is the new Nvidia — and that's the problem,\" cautioning that replicated valuation narratives carry replicated downside risk. Insiders have sold approximately $632 million into a 160% rally, even as sell-side analysts raised AI revenue estimates — tonight's print is the arbitration. Will you bet on custom chips continuing to gain share and rotate into Broadcom, or wait for the earnings to land first?" },
+  { ticker: "NBIS / IREN", title_cn: "英伟达的钱撑起AI新云,IREN今晚也要交卷?", body_cn: "AI新云这条线今晚有第二场考试。IREN今晚盘后交卷,而它的股价已经比高点低了约48%,市场要看的是数据中心的变现能不能体现在收入里。Nebius周三日间收跌3.62%,盘后被英伟达的指引带起来、涨5.36%——这个反差本身就是这条赛道的写照:自身基本面还没证明什么,但只要上游确认AI资本开支仍在扩张,它们就跟着被重估。这一轮的资金流向也更透明了:英伟达首席财务官表示公司已在前沿实验室投入约500亿美元,而OpenAI现有与计划中的承诺规模约相当于12吉瓦,另有报道称Anthropic与Nscale达成约450亿美元的算力协议——钱确实在往这条链上走。空方的证据同样具体:伯里在加空这条线上的多只标的,而Nebius刚以50亿美元完成可转债发行、营收基数只有约14亿美元,融资与收入之间的差距是它最大的风险敞口。判断的关键落在今晚:IREN能否用自建路径证明折旧与电力成本可以被租约收入覆盖。你会选自建的IREN、靠融资扩张的Nebius,还是等云厂商的资本开支指引先落地?", title_en: "Nvidia Capital Backs AI Cloud Buildout — Does IREN Deliver Tonight?", body_en: "The AI cloud infrastructure theme faces a second earnings test tonight: IREN reports after hours with its stock already approximately 48% off its highs, and the market needs to see whether data center monetization is translating into revenue. Nebius fell 3.62% during Wednesday's session but gained 5.36% after hours, lifted by Nvidia's capex guidance — a divergence that captures this sector's dynamic, where upstream confirmation of AI spending triggers re-ratings even before underlying fundamentals are proven. Nvidia's CFO disclosed approximately $50 billion deployed into frontier labs, while a reported ~$45 billion compute agreement between Anthropic and Nscale confirms capital continues flowing into this chain; offsetting this, Burry has been building short positions across several names in the space, and Nebius carries significant risk with a $5 billion convertible issuance against a revenue base of only approximately $1.4 billion. Will you choose self-build IREN, financing-driven Nebius, or wait for cloud capex guidance to land first?" },
+  { ticker: "QQQ / .SPX", title_cn: "通胀比预期还黏了一点,市场却全在等一份财报?", body_cn: "周三的盘面几乎是停摆的:标普500收跌0.02%、QQQ收涨0.09%,而当天其实有一份足够重要的数据。7月PCE通胀同比3.7%,与6月持平,但略高于3.6%的市场预期;核心PCE同比3.3%同样持平,更值得注意的是核心的环比从0.1%抬到了0.2%——通胀不是在恶化,而是黏住了,这对正在权衡9月是否加息的联储不是好消息。市场当时几乎没反应,因为所有仓位都压在同一份财报上,直到英伟达盘后交卷,标普500ETF在盘后才涨了0.59%。真正的政策变量从今天开始:杰克逊霍尔全球央行年会8月27日至29日举行,今年主题是\"金融创新:对支付与政策的影响\",而北京时间明晚10点沃什将发表首次以主席身份的重要讲话。两条线索合起来看更有意思——通胀数据偏黏给了鹰派措辞的理由,而年会主题指向支付与数字资产,意味着这次讲话对稳定币与加密支付这条链的影响可能比对股指更直接。多头的理由是财报已经把AI资本开支的持续性坐实;空头的理由是通胀没有继续下行,而措辞一旦偏鹰,长端与美元会同时抬头。你会趁财报利好加科技、先看明晚的措辞,还是换到利率敏感资产?", title_en: "Inflation Stickier Than Expected, but Markets Focused on One Earnings Report?", body_en: "Wednesday's session was effectively paralyzed — the S&P 500 closed down 0.02% and QQQ edged up 0.09% — despite a meaningful macro data point: July PCE inflation came in at 3.7% year-on-year, in line with June but slightly above the 3.6% consensus, while core PCE held at 3.3% annually with the monthly reading ticking up from 0.1% to 0.2%, signaling stickiness rather than deterioration — an unwelcome signal for the Fed as it weighs a September decision. Markets barely reacted, with all positioning concentrated on Nvidia's earnings; S&P 500 ETFs gained 0.59% after hours once results dropped. The policy focus now shifts to the Jackson Hole symposium running August 27–29, with Fed Chair Warsh delivering his first major address as chair — sticky inflation provides cover for hawkish language, while the conference theme of financial innovation and payments suggests his remarks may carry more direct implications for stablecoins and crypto payment infrastructure than for equity indices. Will you add to tech on the earnings tailwind, wait for tonight's remarks, or rotate into rate-sensitive assets?" },
+  { ticker: "GOOG / META", title_cn: "同样在烧AI,谷歌被卖Meta被买差在哪?", body_cn: "周三的巨头是分化的:谷歌收跌1.23%,是几家里跌得最明显的一只,而Meta收涨1.07%、苹果收涨1.15%、微软收涨0.95%、Palantir收涨2.76%。谷歌被卖的理由被写得很清楚——投资者在拿它的AI支出去对冲云业务的增长,当资本开支的斜率比云收入更陡时,市场就会先减仓;这与阿里那份财报被砸的逻辑是同一个,区别只是谷歌的云基数更大。Meta这边的分歧更极端:同一天既有分析以\"该上车了,这是便宜货\"为题看多,也有以\"AI泡沫警报,2027年才见真章\"为题的警告,意思是这一轮AI资本开支的回报要到2027年才会被验证,而估值现在就要付。这就是当下大市值科技的共同处境:AI支出是确定的,回报的时间表不确定,谁的现有业务能扛住这段空窗期,谁就先被买。值得注意的是Palantir的涨幅——伯里正在加空它,而它周三仍收涨2.76%,分歧同样没有收敛。你会买现有业务更扛的Meta、等谷歌的云增速重新超过资本开支,还是干脆避开这段回报空窗期?", title_en: "Both Burning AI Capex — Why Is Google Sold While Meta Is Bought?", body_en: "Wednesday's mega-cap session was sharply bifurcated: Google fell 1.23%, the steepest decline among peers, while Meta gained 1.07%, Apple 1.15%, Microsoft 0.95%, and Palantir 2.76%. The case against Google is straightforward — investors are discounting its AI spending against cloud revenue growth, and when capex slopes steeper than cloud revenue, the market reduces exposure first, echoing the same logic that punished Alibaba's recent results. Meta drew polar opposite calls on the same day, with one analyst framing it as a buying opportunity and another warning that AI capex returns won't be validated until 2027 — the shared condition across large-cap tech is that AI spending is certain while the return timeline is not, and whichever company's existing business can sustain the gap longest gets bought first. Notably, Burry is building a short in Palantir even as it closed up 2.76% Wednesday, with no sign of that divergence narrowing. Will you buy Meta for its more resilient core business, wait for Google's cloud growth to re-accelerate past capex, or sidestep the return gap entirely?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
