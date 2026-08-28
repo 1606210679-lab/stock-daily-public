@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-28 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-28</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .SPX / XAUUSD / BTC.USD", title_cn: "聚焦今晚10点,沃什会给市场一个方向吗?", body_cn: "2026年杰克逊霍尔全球央行年会8月27日至29日举行,今年主题是\"金融创新:对支付与政策的影响\",而北京时间今晚10点,美联储主席沃什将发表重要讲话。市场的普遍预期反而是\"不会有答案\"——他大概率延续惯常的模糊风格、不给出明确的利率信号,债券市场因此很难拿到方向指引。有意思的是周四的盘面已经先给了答案:QQQ收涨1.37%,现货金涨1.12%至4,649美元,比特币涨2.96%重回81,370美元,股票、黄金与加密同时上涨,通常意味着资金押的不是某一类资产的基本面,而是流动性与美元的方向。今年的会议主题也值得单独留意,支付与数字资产被放到央行的正式议程上,这次讲话对稳定币与加密支付这条链的影响可能比对股指更直接。沃什能否缓解市场对美国债务问题的担忧?美股、黄金与BTC,你更关注哪一类?", title_en: "Fed Chair Warsh Speaks Tonight — Will He Give Markets a Direction?", body_en: "The 2026 Jackson Hole symposium runs August 27–29, themed \"Financial Innovation: Implications for Payments and Policy.\" Fed Chair Warsh is scheduled to speak at 10 p.m. Beijing time, though consensus expects him to maintain his characteristically vague style and offer no clear rate signal. Thursday's session may have pre-answered the question: QQQ gained 1.37%, spot gold rose 1.12% to $4,649, and Bitcoin climbed 2.96% to $81,370 — equities, gold, and crypto rallying in tandem typically signals a liquidity and dollar directional bet rather than any single asset's fundamentals. This year's agenda places payments and digital assets on the official central bank docket, meaning Warsh's remarks may carry more direct implications for stablecoins and crypto payments than for equity indices. Can Warsh ease market concerns over U.S. fiscal debt? Among U.S. equities, gold, and BTC — which are you watching most closely?" },
+  { ticker: "NVDA / CRM / CRWD / OKTA / NOW", title_cn: "英伟达带头软件补涨,AI主线一天全回来了?", body_cn: "周四是这轮AI行情罕见的普涨日,而且涨幅最大的不是英伟达。英伟达在财报兑现后收涨8.74%,真正夸张的是软件这一侧:Okta收涨28.63%,赛富时收涨22.58%,CrowdStrike收涨20.50%,ServiceNow收涨10.04%,Palantir收涨4.75%,微软收涨1.75%。这批公司的共同点是刚交完卷,且都不吃存储涨价的成本——订阅收入没有物料清单,英伟达那句\"四季度毛利率因存储涨价触底至71%-72%\"对它们完全不适用。落后股也被带起来,英特尔收涨4.36%、特斯拉收涨2.60%、博通收涨4.49%。要留意的是位置:这些跳涨集中在财报当日,能否守住取决于下一份指引,而软件板块此前已经被并购传闻推高过一轮。AI的钱是先流向卖算力的,还是先流向用算力的?你更看好硬件龙头英伟达、贵但兑现的软件三家,还是刚补涨的落后股?", title_en: "Nvidia Leads AI Surge — Did the Entire Rally Recover in One Day?", body_en: "Thursday marked a rare broad-based AI rally, with software names — not Nvidia — posting the sharpest gains. Nvidia rose 8.74% on earnings delivery, but the standout moves came from software: Okta +28.63%, Salesforce +22.58%, CrowdStrike +20.50%, ServiceNow +10.04%, Palantir +4.75%, and Microsoft +1.75%. These companies share two traits: fresh earnings releases and zero exposure to memory cost inflation — their subscription-based revenue carries no bill of materials, making Nvidia's guidance that Q4 gross margins would trough to 71–72% due to rising memory prices entirely irrelevant to their cost structure. Laggards were also lifted: Intel +4.36%, Tesla +2.60%, Broadcom +4.49%. The key risk is position — these gap-ups are concentrated on earnings day, and sustainability hinges on the next guidance cycle, while software had already been bid up in a prior round of M&A speculation. Does AI capital flow first to compute sellers or compute users? Do you favor hardware leader Nvidia, the pricey-but-delivered software trio, or the laggards that just caught up?" },
+  { ticker: "MRVL / LITE / COHR / AVGO / AAOI", title_cn: "迈威尔绩后走弱,光通信还能布局么?", body_cn: "北京时间周五凌晨,迈威尔科技披露2027财年第二财季财报,数据本身相当亮眼:第二季度营收同比大增57%并超出市场预期,同时给出31.5亿美元的第三季度营收指引,大幅高于一致预期。但股价没接住——它日间已经收跌1.49%,财报落地后盘后再跌8.02%,原因不在业绩而在位置:年内累计涨幅已达184%,市场前期把预期打得太满,超预期的幅度不够填补估值。回调还传到了同赛道,Lumentum与Coherent盘后同步走弱,而它们日间其实还是涨的,Lumentum收涨1.82%、Coherent收涨0.35%、Applied Optoelectronics收跌0.42%。另一边博通收涨4.49%,定制ASIC与光互连的份额之争仍没有分出胜负。光通信能否成为AI行情的下一条主线?如果布局,你会优先关注迈威尔、博通,还是上游的光模块厂?", title_en: "Marvell Drops After Earnings — Is Optical Networking Still a Trade?", body_en: "Marvell Technology reported its fiscal Q2 results in early Friday morning Beijing time, with headline numbers looking strong: revenue surged 57% year-over-year, beating consensus, while Q3 revenue guidance of $3.15 billion came in well above expectations. Yet the stock failed to hold — shares had already closed down 1.49% intraday, then fell a further 8.02% after hours, with the selloff driven by valuation rather than fundamentals: the stock had already gained 184% year-to-date, leaving the earnings beat insufficient to justify the priced-in expectations. The weakness spread across the optical networking space, with Lumentum and Coherent pulling back after hours despite having closed higher on the day — Lumentum +1.82%, Coherent +0.35%, Applied Optoelectronics -0.42%. Meanwhile Broadcom gained 4.49%, leaving the market-share battle between custom ASICs and optical interconnects unresolved. Can optical networking become the next major AI theme? If positioning, would you prioritize Marvell, Broadcom, or upstream optical module suppliers?" },
+  { ticker: "MU / SNDK / SKHY / SOXL", title_cn: "涨价刚被最大买家确认,存储股怎么反而掉队?", body_cn: "这轮反弹里最反常的一块是存储。英伟达前一晚刚把\"存储组件涨价\"写进四季度毛利率展望,等于由最大的买家确认了涨价的强度,可周四存储股并没有跟着普涨:美光收跌0.32%,闪迪收跌0.96%,SK海力士只收涨2.27%,而同期半导体三倍做多的SOXL收涨5.53%、英伟达收涨8.74%,差距相当明显。一个可能的解释是这轮涨价已经被提前定价——过去一个多月,存储链已经消化了小米利润被咬掉42.6%、英特尔GPU价格跳升48%、英伟达对客户加价超15%这一整条传导,涨价对存储是利好这件事早就不是新闻;另一个变量是三星110万亿韩元的股东回报方案落地当天股价反而下跌,说明现金流转分红也没能提供新的买点。真正的分歧还是在下游能不能一直吃下涨价。你会趁存储掉队去补仓美光与海力士,还是认为定价权的高点已经过去?", title_en: "Memory Prices Just Confirmed by Their Biggest Buyer — So Why Are Memory Stocks Lagging?", body_en: "The most anomalous corner of Thursday's rally was memory. The night before, Nvidia explicitly cited rising memory component costs in its Q4 gross margin outlook — effectively having the industry's largest buyer confirm pricing strength — yet memory stocks failed to participate in the broad advance: Micron -0.32%, SanDisk -0.96%, SK Hynix +2.27%, against SOXL +5.53% and Nvidia +8.74%. One explanation is that this pricing cycle was already fully discounted — over the past month-plus, the memory supply chain had absorbed a full transmission chain including a 42.6% bite into Xiaomi's margins, a 48% jump in Intel GPU pricing, and Nvidia passing through over 15% cost increases to customers, making memory price inflation as a bullish catalyst old news. A second variable: Samsung's ₩110 trillion shareholder return program failed to provide a buy catalyst on the day it was announced, suggesting even cash-to-dividend conversion offers no fresh entry point. The real debate remains whether downstream customers can continue absorbing these price increases. Will you buy the dip in Micron and SK Hynix, or do you believe pricing power has already peaked?" },
+  { ticker: "MSTR / BTC.USD", title_cn: "比特币重回8万,MSTR一天为何能涨11.5%?", body_cn: "比特币周四涨2.96%重新站上81,370美元,而杠杆效应更明显的是Strategy——它日间收涨11.54%、盘后再涨3.81%,单日涨幅接近币价的四倍。原因在它的资本结构:这家公司本质是一只加杠杆的比特币持仓工具,币价的每一次波动都会被放大到股价上,所以它涨得比币猛,跌的时候也一样。同一周的另外两条信息要放在一起看:一是萨勒本人公开提醒股东\"要准备好经历几个难受的年份\",这话从最坚定的多头嘴里说出来分量不轻;二是今晚沃什的讲话与年会主题都指向支付与数字资产,政策措辞对加密资产的定价影响可能是最直接的。风险资产的整体水位仍由长端利率决定,而加密在利率上行期通常最先被减仓。你会用MSTR做加杠杆的比特币代理、直接持币,还是等今晚的措辞落地再决定敞口?", title_en: "Bitcoin Reclaims $80K — Why Did MSTR Surge 11.5% in a Single Day?", body_en: "Bitcoin gained 2.96% Thursday, reclaiming $81,370, but the leverage effect was far more pronounced at Strategy — shares closed up 11.54% intraday and added another 3.81% after hours, a single-day move nearly four times the magnitude of the underlying coin. The explanation lies in its capital structure: the company is effectively a leveraged Bitcoin holding vehicle, amplifying every move in coin price — to the upside and the downside equally. Two other developments from the same week deserve to be read together: Strategy's own Michael Saylor publicly warned shareholders to \"be prepared for several difficult years\" — a remark carrying significant weight coming from the most committed bull in the space — and tonight's Warsh speech, set against a Jackson Hole agenda focused on payments and digital assets, may deliver the most direct policy language on crypto asset pricing in some time. Overall risk-asset levels remain anchored to long-end rates, and crypto has historically been the first position cut during rate-rise cycles. Will you use MSTR as a leveraged Bitcoin proxy, hold coins directly, or wait for tonight's policy language before setting your exposure?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
