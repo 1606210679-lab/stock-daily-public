@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-08-31 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-08-31</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / VOO / XAUUSD / BTC.USD", title_cn: "沃什首秀就是最鹰,9月加息概率被推到近60%?", body_cn: "北京时间8月28日,美联储主席沃什在杰克逊霍尔完成首秀,而市场原本预期的\"模糊风格\"没有出现。他重申坚守2%的PCE通胀目标,明确表示通胀的小幅改善不足以确认趋势下行,经济与信贷韧性充足、金融条件并不算收紧,短期利率仍是主要政策工具;他同时拒绝给出前瞻指引,并留下一句关键的话——若通胀回落不及预期,仍有加息空间。这被视为2009年以来最鹰的一次杰克逊霍尔表态,市场随即把9月加息概率定价到近60%,并预计到2027年3月前可能再加息两次,美国2年期国债收益率上行超过10个基点。资产端的反应立刻分层:上周五QQQ收跌0.65%、标普500ETF(VOO)收跌0.21%,现货金从上周四的4,649美元一路回落至4,478美元附近,比特币退到77,779美元。要留意的是长短端走势出现分化,市场并没有形成\"9月必加息\"的共识,机构的解读是沃什意在打消降息预期、但没有给出明确路径。接下来只看9月的就业与通胀。你更关注美股科技、黄金还是BTC?", title_en: "Warsh Debuts Hawkish at Jackson Hole; September Hike Odds Near 60%?", body_en: "Fed Chair Warsh delivered his Jackson Hole debut on August 28, dismissing expectations of an ambiguous tone. He reaffirmed the 2% PCE inflation target, stating modest disinflation is insufficient to confirm a downtrend, and signaled room for further hikes if inflation undershoots — widely seen as the most hawkish Jackson Hole stance since 2009. Markets priced September hike odds near 60%, two additional hikes by March 2027, and the 2-year Treasury yield rose over 10 bps; QQQ fell 0.65%, spot gold retreated from $4,649 to near $4,478, and Bitcoin slipped to $77,779. Are you more focused on U.S. tech, gold, or BTC?" },
+  { ticker: "NVDA / MRVL / SOXL / AAPL / MSFT", title_cn: "鹰派一出手,AI硬件被杀巨头却逆势涨,差在久期?", body_cn: "上周五的盘面把\"鹰派冲击\"的传导路径写得非常清楚:跌得最惨的是靠远期盈利定价的AI硬件——迈威尔收跌10.28%,半导体三倍做多的SOXL收跌9.52%,英伟达在财报大涨8.74%的第二天就收跌4.57%,英特尔收跌2.85%;而现金流在眼前的大市值科技逆势收涨,苹果涨1.63%、微软涨1.68%、谷歌涨1.53%、Meta涨1.21%。机制没有悬念:利率预期一旦上移,分母先动,盈利越靠后的资产折得越狠,而苹果与微软这类当期利润充沛、AI资本开支相对可控的公司反而成了避风港。存储这一侧几乎没动,美光收跌0.27%、闪迪收平、SK海力士收跌0.35%,它们的定价现在更取决于合约价而不是利率。真正的考验在本周:9月的就业与通胀数据会决定这次鹰派定价是被确认还是被推翻,而AI硬件是弹性最大的那一头。你会趁回调补AI硬件、留在现金流确定的巨头,还是先降低整体仓位?", title_en: "Hawks Strike, AI Hardware Slammed — Yet Mega-Caps Rally: A Duration Story?", body_en: "Friday's session mapped the hawkish transmission clearly: long-duration AI hardware bore the brunt, with Marvell down 10.28%, SOXL falling 9.52%, and Nvidia dropping 4.57% the day after an 8.74% post-earnings surge, while Intel shed 2.85%. Cash-rich mega-caps bucked the trend — Apple +1.63%, Microsoft +1.68%, Alphabet +1.53%, Meta +1.21% — as rising rate expectations hit distant-earnings assets hardest. Memory stocks were largely unmoved, with Micron -0.27%, SanDisk flat, and SK Hynix -0.35%, their pricing driven more by contract rates than rates policy. Will you buy the AI hardware dip, stay in cash-flow compounders, or reduce overall exposure?" },
+  { ticker: "CL / BZ / XLE / XOM", title_cn: "美伊从停火传闻打到真开火,布伦特一度破90美元?", body_cn: "中东的剧本在一周内彻底反转。当地时间8月30日,伊朗拉腊克岛传出爆炸声,美军对该岛两处伊朗伊斯兰革命卫队军事设施实施轰炸,这是一个多月来美军首次对伊朗动用武力;伊朗随即还击,革命卫队称已向美军基地发射导弹,并发表声明称袭击必将遭到报复。就在几天前,市场流传的还是双方就停火条款达成共识、协议包含霍尔木兹海峡自由航行——那份共识始终没有等来官宣,现在等来的是导弹。油价应声上行,布伦特原油一度突破每桶90美元、目前在90.5美元附近,WTI涨2.43%至85.43美元。需要提醒的是节奏差:上周五收盘时冲突还没发生,能源股当时几乎没动,能源ETF(XLE)收涨0.63%、埃克森美孚收涨0.17%,也就是说这轮地缘溢价还没有在股票端定价。油价上行同时意味着通胀预期抬升,这与沃什的鹰派表态叠在一起,对成长股是双重压力。你认为这次冲突会持续多久?你会买能源股对冲,还是先看霍尔木兹的通行状况?", title_en: "U.S.-Iran Swings From Ceasefire Rumors to Live Fire; Brent Briefly Tops $90?", body_en: "The Middle East narrative reversed entirely within a week: on August 30, U.S. forces struck two IRGC facilities on Iran's Larak Island — the first direct U.S. military action against Iran in over a month — and Iran retaliated with missile strikes on U.S. bases, vowing further reprisals. This followed market speculation days earlier of a ceasefire framework including free passage through the Strait of Hormuz, which never received official confirmation. Brent crude briefly surpassed $90/bbl and last traded near $90.50, WTI rose 2.43% to $85.43; energy stocks had yet to price the geopolitical premium at Friday's close, with XLE up just 0.63%. Do you think this conflict will be prolonged, and will you hedge via energy equities or first monitor Hormuz transit conditions?" },
+  { ticker: "MRVL / AVGO / DELL", title_cn: "超预期还被砍两刀,迈威尔给本周财报立了个规矩?", body_cn: "迈威尔的这份财报值得所有本周要交卷的公司看一遍:第二季度营收同比大增57%、超出市场预期,第三季度营收指引31.5亿美元也大幅高于一致预期,数据没有任何问题,但股价先在盘后跌8.02%,上周五日间再收跌10.28%,两刀砍下来把年内涨幅削掉一大截。原因不在业绩而在位置——它年内累计涨幅一度达到184%,预期被打得太满,超预期的幅度填不上估值的缺口;叠加沃什的鹰派表态,这类靠2027年之后订单支撑的公司首当其冲。同赛道的博通上周五收跌0.74%,而它本周三盘后就要交卷,市场共识是每股收益约3.30美元、营收约299.5亿美元;戴尔在周二盘后,共识每股收益约5.01美元、营收约458.5亿美元,它上周五已经先跌3.39%。规矩已经立在那里:在这个位置上,好数字只是及格线。你会等博通的定制ASIC订单落地再动,先看戴尔的AI服务器订单,还是干脆避开这一周?", title_en: "Marvell Beats and Still Gets Hit Twice — Setting the Rules for This Week's Earnings?", body_en: "Marvell's report is required reading for every company reporting this week: revenue surged 57% year-over-year, topping estimates, and the revenue guidance of $3.15 billion also beat consensus — yet the stock fell 8.02% after-hours and an additional 10.28% on Friday, erasing a large portion of its year-to-date gains. The problem was positioning, not fundamentals: shares had rallied as much as 184% year-to-date, leaving valuations too stretched for even a solid beat to close the gap, compounded by Warsh's hawkish tone hitting order-backlog-dependent names hardest. Broadcom reports after-hours Wednesday with consensus at ~$3.30 EPS and ~$29.95 billion in revenue; Dell reports Tuesday after-hours at ~$5.01 EPS and ~$45.85 billion in revenue, having already dropped 3.39% on Friday. The bar is set: at these levels, a beat is merely the price of admission. Will you wait for Broadcom's custom ASIC orders to materialize, focus on Dell's AI server demand, or simply sit out this week?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
