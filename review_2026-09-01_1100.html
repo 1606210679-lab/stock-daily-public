@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-01 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-01</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "TSLA / SPCX", title_cn: "Cybercab后天上路,特斯拉这5.5%在按AI估值算?", body_cn: "特斯拉收涨5.51%,是标普500当天涨幅最靠前的成分股,而同一天标普500收跌0.58%、道指盘中一度跌约360点,它几乎是逆着大盘走的。三条催化叠在一起:德州机动车管理部门的自动驾驶车辆名录显示,首批Cybercab已经登记进入付费robotaxi车队,而奥斯汀的Cybercab就在9月3日投入运营;马斯克同期放出FSD的新进展,下一步是识别并避让坑洼路面;香港的入门款Model 3把起售价下调8.5%,砍掉部分舒适配置、保留三电与智驾硬件,直接对着亚洲市场的价格战去。市场的定价口径因此变了——它不再按交付量给估值,而是按一家AI公司给估值,发布会前的这段涨幅买的是Robotaxi的商业化预期,不是这个季度的车。分歧同样具体:有分析师直接称当前的多头逻辑站不住脚,预测市场对\"年内以约3万美元售价卖出Cybercab\"只给到约17%的概率,而许可与登记只是准入,车队、保险与运维要花的钱一分不会少。同属马斯克体系的SpaceX收涨1.55%,它这一周的叙事是用燃气轮机去解AI数据中心的电力瓶颈。你会赌9月3日之后Robotaxi的单车经济性、等首批运营数据出来,还是把这轮涨幅当发布会前的情绪?", title_en: "Cybercab后天上路,特斯拉这5.5%在按AI估值算?", body_en: "特斯拉收涨5.51%,是标普500当天涨幅最靠前的成分股,而同一天标普500收跌0.58%、道指盘中一度跌约360点,它几乎是逆着大盘走的。三条催化叠在一起:德州机动车管理部门的自动驾驶车辆名录显示,首批Cybercab已经登记进入付费robotaxi车队,而奥斯汀的Cybercab就在9月3日投入运营;马斯克同期放出FSD的新进展,下一步是识别并避让坑洼路面;香港的入门款Model 3把起售价下调8.5%,砍掉部分舒适配置、保留三电与智驾硬件,直接对着亚洲市场的价格战去。市场的定价口径因此变了——它不再按交付量给估值,而是按一家AI公司给估值,发布会前的这段涨幅买的是Robotaxi的商业化预期,不是这个季度的车。分歧同样具体:有分析师直接称当前的多头逻辑站不住脚,预测市场对\"年内以约3万美元售价卖出Cybercab\"只给到约17%的概率,而许可与登记只是准入,车队、保险与运维要花的钱一分不会少。同属马斯克体系的SpaceX收涨1.55%,它这一周的叙事是用燃气轮机去解AI数据中心的电力瓶颈。你会赌9月3日之后Robotaxi的单车经济性、等首批运营数据出来,还是把这轮涨幅当发布会前的情绪?" },
+  { ticker: "SNDK / MU / SKHY / SOXL", title_cn: "闪迪尾盘暴拉5.5%,买它的是指数不是基本面?", body_cn: "8月收官日闪迪从盘中跌超2%一路拉到收涨5.50%,而这根尾盘阳线的触发不是订单也不是评级——它被纳入MSCI World与ACWI指数,被动资金必须在调仓日按权重买入,这是机械买盘。证据在盘后:调仓的窗口一过,它立刻回吐1.06%。同一天存储链其余标的的成色也值得看清楚,美光收涨2.77%,但成交量只有2,260万股、不到日均4,560万股的一半,涨幅是在缩量里走出来的;SK海力士收涨2.20%,半导体三倍做多的SOXL只涨1.30%,弹性工具并没有跟上。基本面这一侧,两个方向同时在推进:供给端铠侠与闪迪宣布在存储上投资超过310亿美元扩产;而中国的长鑫科技上半年营收同比大增874%、HBM3E已进入小批量试产,巴伦周刊两天内连发两篇讨论美光与长鑫的份额战。价格端也还有想象空间,有报道称36GB HBM3E的现货价约2,100美元、相当于长协价的4至5倍,而美光过去几个月主要在签多年长约,等于把现货那部分上行提前锁掉了一块。空方的提醒来自下游,Palo Alto的CEO说这轮存储超级周期终究会回到周期本身。你会把指数买盘当反攻信号,跟着现货与长协的价差去买美光与海力士,还是等长鑫的良率先给出答案?", title_en: "闪迪尾盘暴拉5.5%,买它的是指数不是基本面?", body_en: "8月收官日闪迪从盘中跌超2%一路拉到收涨5.50%,而这根尾盘阳线的触发不是订单也不是评级——它被纳入MSCI World与ACWI指数,被动资金必须在调仓日按权重买入,这是机械买盘。证据在盘后:调仓的窗口一过,它立刻回吐1.06%。同一天存储链其余标的的成色也值得看清楚,美光收涨2.77%,但成交量只有2,260万股、不到日均4,560万股的一半,涨幅是在缩量里走出来的;SK海力士收涨2.20%,半导体三倍做多的SOXL只涨1.30%,弹性工具并没有跟上。基本面这一侧,两个方向同时在推进:供给端铠侠与闪迪宣布在存储上投资超过310亿美元扩产;而中国的长鑫科技上半年营收同比大增874%、HBM3E已进入小批量试产,巴伦周刊两天内连发两篇讨论美光与长鑫的份额战。价格端也还有想象空间,有报道称36GB HBM3E的现货价约2,100美元、相当于长协价的4至5倍,而美光过去几个月主要在签多年长约,等于把现货那部分上行提前锁掉了一块。空方的提醒来自下游,Palo Alto的CEO说这轮存储超级周期终究会回到周期本身。你会把指数买盘当反攻信号,跟着现货与长协的价差去买美光与海力士,还是等长鑫的良率先给出答案?" },
+  { ticker: "NVDA / MRVL / AVGO / AMD", title_cn: "英伟达35亿投联发科,定制芯片的围墙修到哪了?", body_cn: "英伟达收涨1.48%,催化是它把一个潜在对手拉进了自己的体系:联发科接入NVLink Fusion,英伟达同时认购35亿美元的联发科可转债,黄仁勋在同一天公开表示不惧定制芯片。这句话有分量,因为对面的战报刚好相反——迈威尔收跌2.29%,它手上是谷歌那份被称作1200亿美元量级的长期合作,但市场给出的判断是这笔收入确认的时点太晚,合作规模对冲不了兑现时间,财报后的两刀砍到现在还没止住。第三方是博通,收涨0.42%,周三盘后交卷,共识是每股收益约3.30美元、营收约299.5亿美元,它在定制ASIC这条线上份额最大,但也有分析指出TPU的占比上升正在稀释它的毛利率,规模换来的不全是利润。AMD收涨1.10%,走的是完全不同的第四条路:与思科、HUMAIN合作的沙特AI基础设施已经上线并朝1吉瓦规模扩,芬兰3.878亿欧元的LUMI-AI主权超算也选用了MI430X。要留意的是同一天的反向信号,有分析把主权AI称作展示窗口而不是收入窗口,而方舟当日减持AMD、换入英伟达与博通。通用GPU、定制ASIC还是主权算力,你更看好哪条路把订单变成收入?", title_en: "英伟达35亿投联发科,定制芯片的围墙修到哪了?", body_en: "英伟达收涨1.48%,催化是它把一个潜在对手拉进了自己的体系:联发科接入NVLink Fusion,英伟达同时认购35亿美元的联发科可转债,黄仁勋在同一天公开表示不惧定制芯片。这句话有分量,因为对面的战报刚好相反——迈威尔收跌2.29%,它手上是谷歌那份被称作1200亿美元量级的长期合作,但市场给出的判断是这笔收入确认的时点太晚,合作规模对冲不了兑现时间,财报后的两刀砍到现在还没止住。第三方是博通,收涨0.42%,周三盘后交卷,共识是每股收益约3.30美元、营收约299.5亿美元,它在定制ASIC这条线上份额最大,但也有分析指出TPU的占比上升正在稀释它的毛利率,规模换来的不全是利润。AMD收涨1.10%,走的是完全不同的第四条路:与思科、HUMAIN合作的沙特AI基础设施已经上线并朝1吉瓦规模扩,芬兰3.878亿欧元的LUMI-AI主权超算也选用了MI430X。要留意的是同一天的反向信号,有分析把主权AI称作展示窗口而不是收入窗口,而方舟当日减持AMD、换入英伟达与博通。通用GPU、定制ASIC还是主权算力,你更看好哪条路把订单变成收入?" },
+  { ticker: "GOOG / META / MSFT / AAPL", title_cn: "OpenAI广告年化冲上10亿,谷歌一天跌掉2.2%?", body_cn: "谷歌收跌2.18%,是当天大市值科技里跌得最深的一只,而归因这次异常清楚:有报道称OpenAI的广告业务年化收入已经达到10亿美元,而奥特曼此前把广告称作\"最后手段\",从这句表态到10亿只用了约200天。伯恩斯坦顺着这条线把话说得更远,认为Meta的广告收入可能在2026年就超过谷歌搜索。但当天的盘面说明市场砍的不只是谷歌的份额:Meta自己收跌0.98%,微软收跌1.22%,苹果收跌0.89%,四家一起走弱,被重新定价的是\"流量入口\"这门生意本身的确定性——过去十几年广告预算跟着搜索框走,现在多了一个每天都在扩张的对话框。对照另一侧更能看出资金的方向,同一天卖算力的在涨,英伟达收涨1.48%,AMD收涨1.10%。伤口其实更早就裂开了,8月27日Alphabet单日蒸发过6,920亿美元市值。多头的抓手是谷歌自有TPU、成本结构比对手厚实,而且它在把AI工具卖向新的行业;空方的抓手是AI资本开支正在逼近万亿量级,而高盛提示这一轮资本开支还会给市场一个意外。你会趁回调接谷歌、换到广告份额在扩张的Meta,还是干脆站到卖算力的一侧?", title_en: "OpenAI广告年化冲上10亿,谷歌一天跌掉2.2%?", body_en: "谷歌收跌2.18%,是当天大市值科技里跌得最深的一只,而归因这次异常清楚:有报道称OpenAI的广告业务年化收入已经达到10亿美元,而奥特曼此前把广告称作\"最后手段\",从这句表态到10亿只用了约200天。伯恩斯坦顺着这条线把话说得更远,认为Meta的广告收入可能在2026年就超过谷歌搜索。但当天的盘面说明市场砍的不只是谷歌的份额:Meta自己收跌0.98%,微软收跌1.22%,苹果收跌0.89%,四家一起走弱,被重新定价的是\"流量入口\"这门生意本身的确定性——过去十几年广告预算跟着搜索框走,现在多了一个每天都在扩张的对话框。对照另一侧更能看出资金的方向,同一天卖算力的在涨,英伟达收涨1.48%,AMD收涨1.10%。伤口其实更早就裂开了,8月27日Alphabet单日蒸发过6,920亿美元市值。多头的抓手是谷歌自有TPU、成本结构比对手厚实,而且它在把AI工具卖向新的行业;空方的抓手是AI资本开支正在逼近万亿量级,而高盛提示这一轮资本开支还会给市场一个意外。你会趁回调接谷歌、换到广告份额在扩张的Meta,还是干脆站到卖算力的一侧?" },
+  { ticker: "QQQ / .SPX / BZ", title_cn: "道指刚收下第五个红月,9月这道坎怎么过?", body_cn: "8月最后一个交易日收得很拧巴:道指录得连续第五个月上涨,把整个夏天的涨势完整保住,但收官当天标普500收跌0.58%,QQQ只收涨0.05%,盘中道指一度跌约360点。砸下去的是地缘——美国对伊朗动武之后,加息押注同步升温,布伦特原油现在报91.28美元、单日涨0.87%,月内累计涨约9%。这两条其实是同一个方向的压力:油价抬高通胀预期,而通胀预期又把沃什上周那番鹰派表态坐得更实,长端利率一旦回头,估值靠远期盈利的成长股先被折。日历风险也摆得很密,本周是就业周、非农即将公布,而9月在统计上是标普500全年表现最差的一个月,这个季节性偏偏撞上了利率与油价同时抬头。多头的理由是道指五连阳本身就说明趋势没断,AI资本开支的扩张也还在继续;空头的理由是这轮上涨已经把好消息定价得很满,而非农只要偏强,加息这条线就会被重新押注。你会在非农前降低仓位、留在现金流确定的巨头,还是用能源做一层对冲?", title_en: "道指刚收下第五个红月,9月这道坎怎么过?", body_en: "8月最后一个交易日收得很拧巴:道指录得连续第五个月上涨,把整个夏天的涨势完整保住,但收官当天标普500收跌0.58%,QQQ只收涨0.05%,盘中道指一度跌约360点。砸下去的是地缘——美国对伊朗动武之后,加息押注同步升温,布伦特原油现在报91.28美元、单日涨0.87%,月内累计涨约9%。这两条其实是同一个方向的压力:油价抬高通胀预期,而通胀预期又把沃什上周那番鹰派表态坐得更实,长端利率一旦回头,估值靠远期盈利的成长股先被折。日历风险也摆得很密,本周是就业周、非农即将公布,而9月在统计上是标普500全年表现最差的一个月,这个季节性偏偏撞上了利率与油价同时抬头。多头的理由是道指五连阳本身就说明趋势没断,AI资本开支的扩张也还在继续;空头的理由是这轮上涨已经把好消息定价得很满,而非农只要偏强,加息这条线就会被重新押注。你会在非农前降低仓位、留在现金流确定的巨头,还是用能源做一层对冲?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
