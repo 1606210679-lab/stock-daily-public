@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-02 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-02</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "AAPL / META / GOOG", title_cn: "库克交棒当天苹果涨2.6%,下周发布会要扛起4.75万亿?", body_cn: "苹果收涨2.61%,是当天大市值科技里几乎唯一像样的红盘,而同一天道指收跌419点、标普500收跌0.71%,它是逆着大盘走完全天的。催化就是交接本身:约翰·特努斯正式接任首席执行官,库克转任执行董事长;特努斯上任首日发出的全员信里把下周那场活动形容为\"极其非凡\",市场直接把这句话当产品预期在买。日历是硬的,美东9月9日、对应北京时间9月10日凌晨开发布会,焦点在新一代iPhone,以及折叠形态究竟会不会在这一代露面。估值这一侧的账也摆得很清楚,总市值约4.75万亿美元、市盈率37倍,新帅接手的是一份已经把高预期提前定价进去的资产,而离5万亿只差5%出头。分歧同一天就出现了,罗森布拉特维持中性,目标价只从300美元抬到303美元,明显低于现价;也有分析师把新帅的首要任务定义为把流失的人才拉回来,而不是这场发布会。巨头内部的分化值得一并看,Meta收涨1.08%,谷歌收跌1.01%,微软收跌1.24%,同一根利率的压力棒下,资金明显在挑叙事最新的那一只。你会把换帅当成苹果AI叙事的重启,还是等9月10日凌晨的实物出来再决定?", title_en: "Apple Rises 2.6% on CEO Transition Day — Can It Defend $4.75T at Next Week's Event?", body_en: "Apple gained 2.61%, standing out as virtually the only large-cap tech stock in the green as the Dow fell 419 points and the S&P 500 lost 0.71%. John Ternus officially assumed the CEO role with Tim Cook moving to Executive Chairman; Ternus described next week's product event as 'extraordinarily extraordinary' in a company-wide letter, prompting markets to price in product expectations. The calendar is fixed: the event runs September 9 U.S. Eastern time, early morning September 10 Beijing time, with focus on the next-generation iPhone and whether a foldable form factor appears in this cycle. Apple's market cap stands at approximately $4.75 trillion at 37x P/E — just over 5% away from $5 trillion — while Rosenblatt held a Neutral rating, nudging its target only from $300 to $303, well below current levels; other analysts define the new CEO's first task as reversing talent attrition rather than the event itself. The split among mega-caps is worth noting: Meta rose 1.08%, Alphabet fell 1.01%, and Microsoft dropped 1.24%, with capital visibly favoring the freshest narrative under the same rate pressure. Will you treat the leadership change as a reset for Apple's AI narrative, or wait for the physical products to appear at the September 10 event before deciding?" },
+  { ticker: "QQQ / .SPX / MSFT / NVDA / NBIS", title_cn: "加息概率一周从四成跳到七成,AI资本开支要按4.8%重算?", body_cn: "债市才是当天真正的主角。10年期美债收益率升破4.8%,回到2023年10月以来的高位附近,30年期到5.29%,道指收跌419点,标普500收跌0.71%,QQQ收跌1.27%。推力有两条,而且互相加强:美伊僵局把布伦特原油推到90美元上方、连涨第三个交易日;沃什重申抗通胀立场,巴尔表态若通胀不回落就该准备加息,市场对本月加息的定价一周之内从约四成跳到约七成。传导路径这次写得格外具体——微软收跌1.24%,当天的归因干脆写成\"410亿美元的资本开支撞上4.8%的收益率\":AI基建是一笔长久期的现金流投入,贴现率抬一档,回本年限就得重算一遍。卖算力的一侧同样没能免疫,英伟达收跌1.51%,Nebius收跌3.29%,甲骨文当天跌约4%,那笔靠举债撑起来的AI扩产正被债市当面测试。日历排得很密,周三ADP、周五8月非农,市场预期新增约4.5万人。多头的理由是收益率上行来自增长而不是衰退,资本开支的订单一分没少;空头的理由是这轮估值本来就架在低贴现率上,利率多走一段,估值就得少给一段。你会在非农前把仓位挪到现金流确定的一侧,还是认为利率这一跳只是噪音?", title_en: "Rate-Hike Odds Jump From 40% to 70% in a Week — Time to Reprice AI Capex at 4.8%?", body_en: "Treasuries were the day's real story: the 10-year yield broke above 4.8%, returning to levels last seen around October 2023, while the 30-year reached 5.29%; the Dow fell 419 points, the S&P 500 lost 0.71%, and QQQ dropped 1.27%. Two reinforcing catalysts drove the move — the U.S.-Iran standoff pushed Brent crude above $90 for a third straight session, while Warsh reiterated his anti-inflation stance and Barr signaled readiness to hike if inflation fails to retreat, lifting the market's rate-hike pricing for this month from roughly 40% to roughly 70% within a week. Microsoft fell 1.24%, with its $41 billion capex plan directly cited against a 4.8% discount rate; Nvidia dropped 1.51%, Nebius fell 3.29%, and Oracle slid roughly 4%, with Wednesday's ADP and Friday's August payrolls — consensus near 45,000 new jobs — now squarely in focus. Will you rotate toward cash-flow-certain positions ahead of payrolls, or treat this rate jump as noise?" },
+  { ticker: "MU / SNDK / SKHY / SOXL", title_cn: "美光台湾近万人酝酿罢工,存储的风险从价格换到了产线?", body_cn: "存储链集体回吐,美光收跌2.64%,闪迪收跌1.90%,SK海力士收跌2.31%,三倍做多的SOXL收跌6.10%,把前一天靠指数调仓拉出来的那根阳线还了回去。这次的变量不在需求端:代表其台湾厂区近万名员工的工会正在推动罢工,诉求是奖金与利润分享——这是本轮AI存储周期里第一次,风险项从\"价格会不会见顶\"换成了\"产线能不能开满\"。位置也刁,台湾是美光最大的生产基地,而HBM的产能爬坡本来就没有多少余量。第二条压力来自对面,有报道称长鑫科技在新一代AI存储芯片上取得突破,而它上半年营收同比大增874%,巴伦周刊连着几天在讨论美光与长鑫的份额战。第三条是老问题,美光过去几个月主要在签多年长约,现货价的上行它吃不满,有分析直接把这套合约称作\"最坏情况的地板\",封住下限的同时也封住了上限。当供给端的确定性从\"我能不能拿到产能\"变成\"工厂开不开工\",这个板块的定价锚就换了一个。你会把罢工当成一次性扰动去接回调,还是认为这条线一旦松动,整轮存储的估值逻辑都得重写?", title_en: "Nearly 10,000 Micron Taiwan Workers Weigh Strike — Memory Risk Shifts From Price to Production?", body_en: "Memory stocks retreated broadly: Micron fell 2.64%, SanDisk dropped 1.90%, SK Hynix declined 2.31%, and the 3x-leveraged SOXL sank 6.10%, erasing the prior session's index-rebalancing gains. The key variable this time is on the supply side — a union representing nearly 10,000 employees at Micron's Taiwan facilities is pushing for a strike over bonuses and profit-sharing, marking the first instance in this AI memory cycle where the risk has shifted from 'will prices peak' to 'can production lines run at full capacity.' Additional pressure came from reports that CXMT has achieved a breakthrough in next-generation AI memory chips, with the company's revenue surging 874% year-over-year in the first half, fueling share-war discussions; Micron's reliance on multi-year fixed contracts has also been flagged as capping its upside even as spot prices rise. Will you treat the strike threat as a one-off disruption and buy the dip, or does a supply-side crack force a full re-write of memory sector valuation logic?" },
+  { ticker: "NIO / TSLA", title_cn: "蔚来毛利率翻倍仍创52周新低,存储涨价的账单寄到车厂了?", body_cn: "蔚来收跌4.02%,盘后继续走低,收盘价创下52周新低。它交出的是一份撕裂的成绩单:每股亏损比市场预期窄了约两成,而营收低于预期约1.3%,亏损收窄靠的是车辆毛利率——有报道称这一项同比翻了一倍。市场没有买账,砍下去的是另外两件事:一是营收和销售展望都不够看,二是成本端冒出新变量,存储芯片涨价开始进入整车厂的物料清单。这条线值得单独记一笔,过去一年市场把存储涨价当成美光和海力士的利好在买,现在它开始以成本的形式出现在下游的损益表里,同一个价格,在产业链两端是两个方向的符号。卖方反应很快,摩根大通把评级下调至中性,并与花旗一起下调目标价与长期销量预测,理由都指向需求偏慢;管理层这一侧,首席财务官表示有信心完成全年经营目标。同一天特斯拉收跌3.22%,把前一日靠Cybercab叙事拉出来的涨幅回吐了大半,而奥斯汀那批车9月3日才真正投入运营。你会把存储成本当成整个电动车板块的新压力项,还是认为毛利率翻倍才是这份财报里更该被定价的部分?", title_en: "NIO Gross Margin Doubles Yet Hits 52-Week Low — Is Memory Inflation Now Billing Automakers?", body_en: "NIO fell 4.02%, extending losses after hours to a 52-week closing low, despite a mixed earnings report in which per-share losses came in roughly 20% narrower than consensus while revenue missed estimates by approximately 1.3%, with vehicle gross margin reportedly doubling year-over-year. Markets focused instead on two negatives: a weak revenue and sales outlook, and a new cost variable — memory chip price increases are now appearing in automakers' bills of materials, flipping the same price signal from a positive for Micron and SK Hynix into a margin headwind for downstream manufacturers. J.P. Morgan downgraded NIO to Neutral and cut its price target alongside Citi, both citing sluggish demand, while management expressed confidence in meeting full-year operating targets; Tesla also fell 3.22% the same day, surrendering most of its prior session's Cybercab-driven gains even as the Austin fleet does not formally enter service until September 3. Will you treat rising memory costs as a new sector-wide pressure on EV makers, or is the doubling gross margin the more important data point to price in from this report?" },
+  { ticker: "DELL / AMD", title_cn: "戴尔日间跌6.8%盘后拉8%,AI服务器的订单终于变成利润?", body_cn: "戴尔是当天最分裂的一张图:正股日间收跌6.80%,盘后财报一出反手涨8.01%,把日间砍掉的几乎全部收了回来。数字给得很硬,每股收益7.04美元、超出预期约43%,营收约470亿美元、超出预期约4.6%,公司同时把全年营收指引上调约250亿美元,给出的理由是存储与服务器需求,AI服务器营收翻倍、订单创纪录。这一条之所以要单独拎出来,是因为它正面回答了整个AI硬件链最被怀疑的那个问题——订单能不能落到利润表上,而不是永远停在待交付的口径里。但同一天另一侧的提醒也很清楚,AMD收跌2.36%,有分析直接给出\"上行空间有限\"的判断,理由是主权AI和数据中心的增量已经被提前定价,而这类合作的收入确认往往比公告晚很多。日历上还有一道更大的坎,博通在美东周三盘后交卷,对应北京时间周四凌晨,卖方共识落在每股收益3.22到3.30美元、营收294亿到300亿美元这个区间,不同口径给出的数并不一致,而它手上正是定制ASIC这条线最大的份额。你会把戴尔这份财报当成AI硬件兑现的样本,还是等博通把定制芯片那本账也摊开再说?", title_en: "Dell Falls 6.8% Intraday, Then Surges 8% After Hours — Are AI Server Orders Finally Hitting the P&L?", body_en: "Dell presented the most bifurcated chart of the day: shares fell 6.80% during regular trading, then reversed sharply to gain 8.01% after hours once earnings were released, recovering nearly all of the intraday loss. The numbers were emphatic — EPS of $7.04 beat estimates by roughly 43%, revenue of approximately $47 billion topped expectations by roughly 4.6%, and the company raised its full-year revenue guidance by approximately $25 billion, citing storage and server demand with AI server revenue doubling and orders reaching a record. Broadcom reports after the U.S. close on Wednesday, with sell-side consensus clustering around EPS of $3.22–$3.30 and revenue of $29.4–$30.0 billion — figures that differ across sources — holding the largest share of the custom ASIC segment; AMD fell 2.36% the same day, with analysts citing limited upside as sovereign AI and data center increments are seen as already priced in. Will you treat Dell's report as proof that AI hardware is converting to earnings, or wait for Broadcom to open its custom-chip books before deciding?" },
+  { ticker: "GPRO", title_cn: "GoPro两天翻倍冲过并购对价,买的是这笔交易还是网红?", body_cn: "GoPro收涨40.38%,两个交易日累计翻倍,当天成交5.0亿股,是日均约950万股的五十多倍。催化有两条,性质完全不同。一条是硬的:公司与Starman Optical签下确定性合并协议,对价为每股1.14美元现金、规模约2.85亿美元,合并后仍将保持上市地位。另一条是软的:一位YouTube创作者披露持仓、金额约1,000万美元,据报道成为其最大个人股东,消息在前一晚就先把股价推高了一截。真正值得看的是价格和对价的关系——收盘价已经站到1.14美元这个现金对价的上方,这意味着买盘定价的不再是这笔交易本身,而是交易之外的东西:更高的竞价,或者纯粹的情绪。风险全摆在明面上,公司年内出现过持续经营的警示,裁员约23%,并聘请投行评估战略选择;空头占流通盘约19.9%,轧空会把波动放大一倍不止;相对强弱指标一度到81,盘后已经回落5.69%。你会把站上对价的这部分溢价理解成对更高报价的押注,还是一次由流量驱动的错价?", title_en: "GoPro Doubles in Two Days, Surpassing Deal Price — Are Buyers Pricing the Merger or the Influencer?", body_en: "GoPro surged 40.38%, doubling over two sessions on volume of 500 million shares — more than fifty times the daily average of roughly 9.5 million — driven by two catalysts of very different natures: a definitive merger agreement with Starman Optical at $1.14 per share in cash, valuing the deal at approximately $285 million with the combined entity remaining publicly listed, and a YouTube creator's disclosure of a roughly $10 million stake, reportedly making them the largest individual shareholder. With the closing price already above the $1.14 cash consideration, the market is no longer pricing the deal itself but something beyond it — a higher competing bid or pure sentiment — against a backdrop of going-concern warnings issued earlier this year, roughly 23% workforce reductions, and a short interest of approximately 19.9% of the float, with the RSI briefly hitting 81 before shares fell 5.69% after hours. Will you interpret the premium above deal price as a bet on a higher offer, or as a momentum-driven mispricing?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
