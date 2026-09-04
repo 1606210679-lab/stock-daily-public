@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-04 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-04</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / MSFT / AAPL / META", title_cn: "鹰群里飞出一只鸽子,标普一个月最好的一天能撑过今晚非农吗?", body_cn: "把利率往上推了几周的都是鹰派声音,昨天飞出一只鸽子:美联储理事沃勒说,只要朝2%目标的进展能延续,他就愿意支持把利率维持在当前水平。市场立刻改价,本月加息的押注从七成回落到五成,10年期收益率从4.81%退到4.74%。标普500收涨1.06%,道指收涨约614点,两者都创下一个月来最好的单日表现;巨头跟得很整齐,微软收涨2.68%,Meta收涨3.01%,苹果收涨1.00%——压力棒松一档,先反弹的还是最贵的那批资产。但这只鸽子只租不卖:目标区间仍停在3.50%到3.75%,7月按兵不动时有三名委员主张加息25个基点,9月16日的会议照样开着门。真正的裁判在今晚20:30,8月非农共识新增5.6万人、失业率4.1%,7月那份是负2.3万;更该盯时薪,同比预期3.0%,为2021年5月以来最弱。工资一旦有黏性,今天这根阳线要还回去一部分。你会在数据出来前押利率见顶,还是先只信“维持不动”这四个字?", title_en: "A Dove Breaks Fed Hawk Chorus — Can S&P's Best Day in a Month Survive Tonight's Jobs Report?", body_en: "Fed Governor Waller broke weeks of hawkish pressure, saying he would support holding rates at current levels as long as progress toward the 2% inflation target continues. Markets repriced immediately: odds of a rate hike this month fell from 70% to 50%, and the 10-year yield retreated from 4.81% to 4.74%. The S&P 500 gained 1.06% and the Dow rose ~614 points — both posting their best single-day performance in a month — with Microsoft +2.68%, Meta +3.01%, and Apple +1.00% — when the pressure eases a notch, the most expensive assets bounce first. But this dove is on loan, not for sale: the target range remains 3.50%–3.75%, three members backed a 25 bp hike at the July pause, and the September 16 meeting remains live. The real referee arrives at 20:30 Beijing time tonight: August nonfarm payrolls consensus is +56,000 with unemployment at 4.1% — July printed at -23,000 — and the more critical watch is hourly earnings, seen at +3.0% year-over-year, the weakest since May 2021; any wage stickiness risks giving back today's gains. Will you call peak rates before the data, or trust only the \"hold\" signal for now?" },
+  { ticker: "AVGO / MRVL / NVDA / AMD", title_cn: "博通把2028年的账摊到2300亿,市场为什么只肯付下个季度的钱?", body_cn: "博通收跌2.74%,成交量放大到日均的2.35倍,距52周高点还差约28%。它交的并不是差卷子:单季营收创下296亿美元的纪录,同比增长86%。被摆出来的是更远的一张表——首席执行官陈福阳给出2028财年AI收入2300亿美元的目标,约为今年的四倍。矛盾就在这里:公司卖的是2028年的账,市场付的是下个季度的钱,而下季指引恰好落在共识之下。卖方因此分成两半,麦格理上调至跑赢大盘、目标价490美元,理由是Anthropic的算力爬坡;美银则一边下调目标价一边上调盈利预测,等于承认它赚得更多、却愿意给更低的估值。同一天定制芯片这一侧并不弱,迈威尔收涨1.14%,英伟达收涨1.80%,只有AMD收跌0.20%。多头的抓手是订单结构,能签到2028年的客户不会中途换供应商;空头的抓手是贴现,越远期的收入,在利率没确定见顶时越不值钱。你会按2300亿那张表重新定价,还是等下一季的指引先追上来?", title_en: "Broadcom Pitches a $230B 2028 Target — Why Is the Market Only Paying for Next Quarter?", body_en: "Broadcom fell 2.74% on volume 2.35 times the daily average, still ~28% below its 52-week high, despite reporting record quarterly revenue of $29.6 billion, up 86% year-over-year. CEO Hock Tan laid out a fiscal 2028 AI revenue target of $230 billion — roughly four times this year's figure — but the disconnect is stark: the company is selling a 2028 story while the market is paying for next quarter's guidance, which came in below consensus. The sellside split accordingly: Macquarie upgraded to outperform with a $490 price target citing Anthropic's compute ramp, while BofA cut its price target even as it raised earnings estimates, implying higher profits deserve a lower multiple; on the same day, custom-chip peers held up — Marvell +1.14%, Nvidia +1.80%, only AMD edging down 0.20%. Bulls anchor on order structure — customers locked in through 2028 don't switch suppliers mid-cycle; bears anchor on discounting — the further out the revenue, the less it's worth when peak rates aren't confirmed. Will you reprice against the $230 billion roadmap, or wait for near-term guidance to catch up first?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "涨潮没托起存储三家,中国厂商把份额抢到什么程度了?", body_cn: "在标普500收涨1.06%、科技板块普遍被抬起来的一天,存储三家原地不动:美光收涨0.22%,闪迪收涨0.10%,SK海力士收跌0.79%。掉队的原因不含糊,是份额。Counterpoint的数据显示,中国厂商正在快速拿走全球存储份额,长鑫在DRAM上反超,三星、SK海力士与美光同步松手;NAND那一侧更直接,长江存储第二季度以14%对11%的营收份额超过闪迪。这条线要和涨价叙事分开看:过去一年市场买的是供给紧、价格涨,谁有产能谁赚钱;份额被拿走,涨价的持续性就得打折。价格已经先反应了一部分,美光远期市盈率只有6.17倍,闪迪5.90倍,便宜到不像周期顶部。多头的抓手是HBM这类高端产品短期换不了供应商,中国份额主要落在中低端;空头的抓手是价格战一旦往上走,估值再便宜也压不住。9月30日美光的财季业绩会给出第一个正面回答。你会趁低估值接存储的回调,还是等美光把份额和价格这两笔账说清楚?", title_en: "Rising Tide Left Memory Stocks Behind — How Much Share Have Chinese Vendors Taken?", body_en: "On a day when the S&P 500 rose 1.06% and tech broadly rallied, the three major memory names were effectively flat: Micron +0.22%, SanDisk +0.10%, SK Hynix -0.79%. The reason is straightforward — market share. Counterpoint data shows Chinese vendors rapidly capturing global memory share, with CXMT overtaking incumbents in DRAM as Samsung, SK Hynix, and Micron all cede ground; in NAND, YMTC was even more direct, posting a 14% revenue share versus SanDisk's 11% in the second quarter. This must be read separately from the reflation narrative: the past year's trade was tight supply driving prices higher — share losses undercut the durability of that thesis. Valuations have already partially adjusted, with Micron's forward P/E at just 6.17x and SanDisk's at 5.90x, cheap levels atypical of a cycle peak. Bulls point to HBM and other high-end products where Chinese vendors can't yet substitute; bears warn that if a price war breaks out, cheap multiples won't provide enough cushion. Micron's fiscal quarter results on September 30 will be the first real answer on both share and pricing. Will you buy the memory dip on valuation, or wait for Micron to address both the share loss and the pricing outlook?" },
+  { ticker: "SNOW / PLTR", title_cn: "一份财报加一纸合作,AI软件把前一天的跌全收了回来?", body_cn: "AI软件同一天出现两张性质不同的收据。Snowflake收涨16.55%,盘中创下52周新高,催化是9月2日盘后那份财报:产品收入连续第三个季度加速增长,公司同时上调全年展望,首席执行官把超出部分中约一半归给AI。卖方几乎齐步走,高盛把目标价从300美元抬到436美元,另有三家直接给到450美元。Palantir收涨7.71%,靠的不是业绩而是渠道——它与普华永道扩大战略联盟,推出AI原生的并购交易平台与ERP现代化产品,把前一天因谷歌切入国防AI丢的跌幅几乎收回。两者的区别值得记一笔:一个是已落进利润表的收入,一个是还要靠合作伙伴去交付的管道。空头的抓手集中在后者,Palantir市盈率仍在156倍、远期约80倍,迈克尔·伯里公开警告其市值可能跌破1000亿美元;方舟同期减持约2,600万美元。你会按收入已兑现去选Snowflake,还是认为Palantir这类渠道扩张是更长的坡?", title_en: "One Earnings Report, One Partnership Deal — Did AI Software Fully Erase the Prior Day's Losses?", body_en: "Two AI software names posted gains on the same day, but through fundamentally different mechanisms. Snowflake surged 16.55%, hitting a 52-week intraday high, catalyzed by its September 2 post-close earnings report: product revenue accelerated for a third consecutive quarter, the company raised its full-year outlook, and the CEO attributed roughly half the beat to AI; the sellside moved in near-lockstep, with Goldman Sachs lifting its target from $300 to $436 and three other firms going to $450. Palantir gained 7.71% not on results but on a channel expansion — its enlarged strategic alliance with PwC introduced AI-native M&A and ERP modernization products, nearly recovering the prior session's losses tied to Google's push into defense AI. The distinction matters: one company is booking revenue already on the income statement; the other is building a pipeline that still depends on partners to deliver. Bears on Palantir note the stock still trades at 156x trailing and ~80x forward earnings, with Michael Burry publicly warning the market cap could fall below $100 billion, while ARK trimmed ~$26 million in the same period. Will you favor Snowflake for revenue already recognized, or see Palantir's channel expansion as the longer runway?" },
+  { ticker: "MSTR / CRCL / COIN", title_cn: "比特币只涨5%,加密股票为什么能放大成17%?", body_cn: "比特币重回8万美元、单日涨约5%,触发点和股市是同一个:利率押注松动、美元走弱。但放大倍数很不一样,Strategy收涨17.56%,Circle收涨16.46%,Coinbase收涨10.14%,同一个5%被放到两到三倍,而机制各不相同。Strategy是杠杆式持币,8月31日以3.7亿美元买入4,603枚比特币,结束约十周空窗,持仓约占比特币供应量的4%——币价每一次波动都先撞上它的资产负债表。Circle放大的是牌照与网络:纽约信托牌照叠加联邦银行牌照,Arc主网9月16日上线,创始验证人里有Visa和贝莱德。风险也分开,Strategy近一年仍跌超56%,伯恩斯坦下调目标价100美元,MSCI的规则变动还可能把它剔出指数;Circle面对的是高盛、花旗、美银等21家银行计划在2027年上半年推出竞品稳定币。你会用Strategy放大币价,用Coinbase押交易量,还是用Circle押牌照壁垒?", title_en: "Bitcoin Rose 5% — Why Did Crypto Stocks Amplify That to 17%?", body_en: "Bitcoin reclaimed $80,000, gaining ~5% on the day, sharing the same catalyst as equities: easing rate bets and a weaker dollar. The amplification, however, varied sharply by vehicle — Strategy surged 17.56%, Circle gained 16.46%, and Coinbase rose 10.14%, turning one 5% move into two to three times that, each through a distinct mechanism. Strategy is leveraged Bitcoin exposure: it purchased 4,603 BTC for $370 million on August 31, ending a ~ten-week pause, with holdings now representing ~4% of Bitcoin supply, meaning every price swing hits its balance sheet first. Circle's amplifier is licensing and network: a New York trust charter plus a federal bank charter, with the Arc mainnet launching September 16 and Visa and BlackRock among its founding validators. Risks diverge too — Strategy is still down more than 56% over the past year, Bernstein cut its price target by $100, and MSCI rule changes could see it removed from indices; Circle faces competition from a coalition of 21 banks including Goldman Sachs, Citigroup, and BofA planning a rival stablecoin by the first half of 2027. Will you use Strategy to amplify Bitcoin price moves, Coinbase to play transaction volume, or Circle to bet on licensing moats?" },
+  { ticker: "TSLA / GOOG / SPCX", title_cn: "45辆Cybercab上路,撑得起1.49万亿的自动驾驶叙事吗?", body_cn: "特斯拉收涨5.42%,盘后基本走平——涨的是“要上路”,走平的是“已上路”。Cybercab在奥斯汀正式载客,没有方向盘和踏板,采取邀请制,车队目前是45辆,美国安全监管机构随即启动评估。特斯拉同时在向用户征询是否愿意自购并运营Cybercab车队。对照组就在同一天,Waymo刚在丹佛、圣迭戈和坦帕开出付费服务,并完成首次30亿美元债务融资;谷歌收涨1.59%,当天还避开了广告业务被拆分的最坏结果。SpaceX收涨6.42%,重回2万亿美元估值。落差摆在这里:特斯拉市值约1.49万亿美元,市盈率约350倍,年内仍跌超16%,而支撑新叙事的实物就是45辆车。多头的抓手是它终于从演示走到载客,车主运营模式能让车队跳过资本开支;空头的抓手是规模与监管,45辆离盈利模型还很远,评估一旦转成调查,时间表就不由公司定了。你会按已落地的里程跟特斯拉,按付费城市数跟谷歌的Waymo,还是先等监管那一关?", title_en: "45 Cybercabs on the Road — Enough to Justify a $1.49 Trillion Autonomy Narrative?", body_en: "Tesla gained 5.42% during the session before going roughly flat after hours — the regular-session move priced in the launch, the after-hours move priced in the reality. Cybercab began carrying passengers in Austin with no steering wheel or pedals, operating on an invite-only basis with a fleet of 45 vehicles, prompting U.S. safety regulators to open an immediate review; Tesla is simultaneously surveying owners on their willingness to purchase and operate their own Cybercab fleets. The direct comparison landed on the same day: Waymo launched paid service in Denver, San Diego, and Tampa and closed its first $3 billion debt financing, while Google — up 1.59% — also escaped the worst-case outcome of an advertising business breakup. SpaceX gained 6.42%, reclaiming a $2 trillion valuation. The gap is plain: Tesla trades at ~$1.49 trillion market cap and ~350x earnings, still down more than 16% year-to-date, with 45 vehicles as the physical proof of concept for a new narrative. Bulls argue the move from demo to live passengers is the critical threshold, and an owner-operator model lets the fleet scale without heavy capex; bears focus on scale and regulation — 45 vehicles is far from any profitable model, and if the regulator review escalates to a formal investigation, the timeline is no longer Tesla's to set. Will you follow Tesla on miles already driven, follow Google's Waymo on paid cities, or wait for the regulatory hurdle first?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
