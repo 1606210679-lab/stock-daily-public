@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-10 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-10</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 7</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:14.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 7 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ", title_cn: "财政部把回购上限抬到60亿,长端利率为什么反而往上走?", body_cn: "QQQ当天收跌0.29%,拖它的是一份本该利好的公告:北京时间9日23点,财政部公布首轮扩容后的10至20年期国债回购至多60亿美元,高于此前至少40亿承诺,却被读成力度不足——10年期收益率短线拉升至4.85%,30年期升破5.30%。贝森特周二重申,他改变不了美债的“均衡”价格,只想减缓波动、防止有害叙事占上风,并承认回购不是QE,解决不了债务扩张。多头的抓手是财政部还有加码空间;空头的抓手是买盘相对赤字太小,油价还在涨,通胀数据随后就到。你会等下一轮加码再买长债,还是趁收益率上行减科技股?", title_en: "Treasury Lifts Buyback Cap to $6B — Why Are Long Yields Rising?", body_en: "The Treasury announced up to $6 billion in buybacks of 10-to-20-year bonds — above the prior $4 billion floor — yet markets read the move as insufficient, pushing the 10-year yield briefly to 4.85% and the 30-year above 5.30%, dragging QQQ down 0.29%. Secretary Bessent reiterated he cannot alter the 'equilibrium' price of Treasuries, only dampen volatility, and acknowledged buybacks are not QE and cannot address debt expansion. Bulls cite room for further Treasury action; bears point to buyback scale dwarfed by deficits, rising oil prices, and imminent inflation data. Will you wait for the next buyback increase before buying long-duration bonds, or trim tech on the yield spike?" },
+  { ticker: "META / GOOG / GOOGL", title_cn: "同一天一个靠AI智能体大涨一个无声下跌,资本开支的账谁认?", body_cn: "Meta当天收涨6.55%,催化是新AI智能体Muse发布,卖方对这款产品给出看多表态;同一天谷歌收跌2.09%、GOOGL收跌2.28%,查遍公开报道没有一条把这次下跌归到具体事件上。两个方向背后压着同一笔账:有分析拿亚马逊与Alphabet合计4200亿美元的资本开支发问,值不值;Wedbush的Dan Ives警告,美国10%至15%的数据中心项目可能因政治阻力被砍,并称这是当前最大威胁;俄亥俄州则在重新考虑数据中心的税收优惠,亚马逊、Meta和Alphabet都在受影响之列。分寸要留住:Meta这一涨是单日的,它年内仍跌0.79%,一年跌14.35%,两个口径都跑输标普500。多头的抓手是AI产品终于开始对应到股价,不再只是投入;空头的抓手是电费、地方税和政治阻力正在同时抬高这笔开支的门槛。你会买有产品落地的Meta,还是接无具名利空却先跌的谷歌?", title_en: "Same Day: One AI Agent Stock Surges, One Falls Silently — Who Owns the Capex Bill?", body_en: "Meta rose 6.55% on the launch of its new AI agent Muse, with sell-side analysts turning bullish on the product; Google fell 2.09% and GOOGL dropped 2.28% on the same day with no identifiable catalyst in public reports. Both moves sit under the same overhang: analysts are questioning whether Amazon and Alphabet's combined $420 billion capex commitment is justified; Wedbush's Dan Ives warned 10%–15% of U.S. data center projects could be cut due to political resistance, calling it the single biggest threat; Ohio is reconsidering data center tax incentives affecting Amazon, Meta, and Alphabet. Context: Meta's gain was a single session — the stock is still down 0.79% year-to-date and 14.35% over one year, underperforming the S&P 500 on both measures. Will you buy Meta on product-driven gains, or step into Google after an unnamed, catalyst-free selloff?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "存储涨的不再只是缺货,回购和股息把海力士推上历史新高?", body_cn: "存储这条线当天整排走强:SK海力士收涨7.05%,股价创下历史新高,美光收涨2.75%,闪迪收涨1.51%。这一轮的推力换了一种:除了行业仍处供不应求,标普全球市场情报预测,SK海力士有望在今年四季度宣布20万亿至40万亿韩元的新一轮股票回购计划,且仍有能力派发丰厚股息,这为韩国政府推进的“企业价值提升(Value-up)”和股东回报重构再添催化;需求侧则有OpenAI持续拉动AI内存。也就是说,买盘既在赌涨价,也在赌分红和回购。分寸要留:回购计划目前只是机构预测,尚未由公司宣布。多头的抓手是双重驱动,景气度之外多了一条股东回报的线,估值锚不必只靠现货价格;空头的抓手是股价已在历史新高,任何一次回购规模不及预期,少的就是刚给上去的那部分溢价。美光9月30日的季报被视作年内AI内存最重要的催化。你会追创新高的海力士,还是等美光交卷后再看美光和闪迪?", title_en: "Memory Rally Driven by More Than Supply — Did Buybacks Push SK Hynix to an All-Time High?", body_en: "The memory sector moved broadly higher: SK Hynix surged 7.05% to an all-time high, Micron gained 2.75%, and SanDisk rose 1.51%. Beyond persistent supply constraints, S&P Global Market Intelligence projects SK Hynix could announce a new ₩20–40 trillion share buyback program in Q4, while retaining capacity for substantial dividends — adding fresh momentum to South Korea's corporate 'Value-up' initiative; on the demand side, OpenAI continues to drive AI memory consumption. Note: the buyback program remains an institutional forecast, not a company announcement. Bulls cite a dual catalyst — cycle fundamentals plus shareholder returns — reducing reliance on spot pricing as the sole valuation anchor; bears note the stock is at all-time highs, where any buyback shortfall directly erodes the premium just priced in. Micron's upcoming earnings are seen as the most important AI memory catalyst of the year. Will you chase SK Hynix at record levels, or wait for Micron's results before revisiting Micron and SanDisk?" },
+  { ticker: "AMD / MRVL / INTC / NVDA", title_cn: "芯片股第二天继续涨英伟达第二天继续跌,轮动还是掉队?", body_cn: "芯片板块当天还是那张分化的表:Marvell收涨4.26%,AMD收涨3.04%,英特尔收涨1.69%,三倍做多半导体的SOXL收涨2.11%;而英伟达收跌0.91%,博通收跌1.13%,两只权重股连续第二个交易日没跟上。各家有各家的抓手:Marvell自去年12月以来已三次上调增长指引,但股价仍比高点低28%;英特尔与ASML把High-NA EUV推进量产,美国银行则在最新报告里同时点名美光和AMD。英伟达这一侧没有具名利空,只有连续两天的相对落后。多头的抓手是资金从最贵的一只扩散到二线设计与制造,估值差被主动收窄;空头的抓手是这类扩散通常由估值差驱动而非订单驱动,一旦板块回撤,补涨的那批跌得也最快。你会继续买上调指引却仍低于高点的Marvell,还是趁英伟达连跌两天去接权重股?", title_en: "Chip Stocks Rally a Second Day as Nvidia Lags Again — Rotation or Falling Behind?", body_en: "Semiconductor divergence persisted: Marvell rose 4.26%, AMD gained 3.04%, Intel climbed 1.69%, and 3x-leveraged SOXL advanced 2.11%, while Nvidia fell 0.91% and Broadcom dropped 1.13% — both heavyweights underperforming for a second consecutive session with no named catalyst. Marvell has raised its growth guidance three times since last December yet still trades 28% below its peak; Intel and ASML are advancing High-NA EUV toward volume production; Bank of America flagged both Micron and AMD in its latest note. Bulls argue capital is rotating from the most expensive name into second-tier design and manufacturing, actively compressing valuation gaps; bears caution that such broadening is typically valuation-driven rather than order-driven, meaning late-cycle gainers tend to sell off hardest in a pullback. Will you keep adding to Marvell — upgraded guidance, still 28% off highs — or buy Nvidia into a two-day slide?" },
+  { ticker: "ORCL / NBIS", title_cn: "甲骨文今夜盘后交卷,6380亿订单能兑成多少现金?", body_cn: "甲骨文当天收跌0.55%,主场在今晚盘后的2027财年第一财季,共识为每股收益1.78美元、营收195.3亿美元;Nebius当天收跌1.45%。被盯的是那份约6380亿美元的AI积压订单——能不能转成收入和现金,是这份财报的题眼。压力写在资产负债表上:有分析指出其资本预算已超业务产生现金的两倍;股价年内跌16.27%,一年跌32.31%,均跑输标普500,财报前已有分析师下调目标价,理由却是坏消息基本被消化。天平则在往运营商那边偏:据The Information报道,微软等云厂商急着让英伟达服务器机架尽快投运,CoreWeave这类数据中心运营商的议价筹码正在上升,合同条款开始向供给侧倾斜。多头的抓手是订单基数够大,转化率一给方向估值就有重定空间;空头的抓手是资本开支跑在现金流前面,转化越慢,融资压力越明显。你会在业绩出来前埋伏甲骨文,还是等转化率落地再选Nebius这类纯算力租赁?", title_en: "Oracle Reports After-Hours Tonight — Can $638B in Orders Convert to Cash?", body_en: "Oracle slipped 0.55% ahead of its fiscal first-quarter results due after the close tonight, with consensus at $1.78 EPS and $19.53 billion in revenue; Nebius fell 1.45% on the same day. The focal point is Oracle's roughly $638 billion AI backlog and whether it can be converted into revenue and cash flow — analysts note capital spending has already exceeded twice the cash the business generates, with the stock down 16.27% year-to-date and 32.31% over one year, both trailing the S&P 500. Meanwhile, The Information reports cloud operators including Microsoft are pressing to bring Nvidia server racks online faster, strengthening the negotiating hand of data center operators like CoreWeave and tilting contract terms toward the supply side. Bulls see the massive backlog as sufficient for a valuation re-rating once conversion rates become clear; bears flag capex running ahead of cash flow, where slower conversion amplifies financing pressure. Will you position in Oracle ahead of earnings, or wait for conversion data before choosing pure compute-leasing plays like Nebius?" },
+  { ticker: "AAPL", title_cn: "折叠屏比传闻便宜了400美元,苹果这一刀砍在谁身上?", body_cn: "苹果当天收跌0.28%,市值逼近5万亿美元;北京时间10日凌晨1点发布会上,搭2纳米A20 Pro的iPhone 18系列亮相,18 Pro起售1199美元、Pro Max 1299美元;首款折叠机iPhone Duo展开后是史上最薄iPhone,双摄,起售1999美元。此前报道指向2400美元,实际低400美元;叠加标准版iPhone 18或延后至2027年,高端门槛被主动压低。多头的抓手是价越低越能撑起换机周期;空头的抓手是这400美元得供应链吃掉。你会按换机周期买苹果,还是等首周备货再定?", title_en: "Foldable iPhone Priced $400 Below Leaks — Who Takes the Hit?", body_en: "Apple slipped 0.28%, with market cap approaching $5 trillion, as the iPhone 18 lineup debuted featuring the A20 Pro 2nm chip — iPhone 18 Pro starting at $1,199 and Pro Max at $1,299; the first foldable, iPhone Duo, opens at $1,999, the thinnest iPhone ever with a dual-camera system. Prior reports had pointed to $2,400, making the actual price $400 lower; combined with reports that the standard iPhone 18 may be pushed to 2027, Apple has actively lowered the premium entry point. Bulls argue a lower price better supports an upgrade cycle; bears say that $400 gap has to be absorbed somewhere in the supply chain. Will you buy Apple on the upgrade cycle thesis, or wait for first-week supply data before deciding?" },
+  { ticker: "SPCX / RKLB", title_cn: "472亿美元老股解禁砸在同一天,航天股的估值靠什么托住?", body_cn: "航天这一排当天集体收跌:SpaceX收跌3.86%,火箭实验室收跌4.25%。压力来自股份供给而不是基本面——一笔规模约472亿美元的内部人股份解禁落地,另有约3.19亿股被解锁,AST SpaceMobile同日跌约4%,整条线被同一件事带下去。这类下跌和订单、发射进度无关,是能卖的人变多了。基本面这一侧仍是老问题:火箭实验室的Neutron首飞日期至今没有落到具体时间,它上一次财报后股价已跌17.7%,近期能拿出来的进展是无锗空间太阳能电池完成发射验证。多头的抓手是解禁属于一次性冲击,卖压释放完估值就回到订单和发射节奏上;空头的抓手是解禁往往分批走,而航天这条线暂时没有能对冲卖压的兑现事件。你会趁解禁砸出的价格买SpaceX,还是等火箭实验室把Neutron的首飞日期定下来再动?", title_en: "$47.2B Share Unlock Hits Space Stocks on the Same Day — What Holds the Valuation Up?", body_en: "Space stocks fell broadly: SpaceX dropped 3.86% and Rocket Lab slid 4.25%, with pressure coming from supply rather than fundamentals — an insider share unlock valued at approximately $47.2 billion hit simultaneously alongside roughly 319 million newly unlocked shares; AST SpaceMobile fell roughly 4% on the same event. On fundamentals, Rocket Lab has yet to set a firm first-flight date for Neutron — its last earnings triggered a 17.7% post-report decline — with its most recent milestone being an in-orbit validation of germanium-free space solar cells. Bulls view the unlock as a one-time supply shock, with valuation reverting to launch cadence and order flow once selling pressure clears; bears note lockup expirations often play out in waves, and the space sector currently lacks a near-term catalyst strong enough to offset the added float. Will you buy SpaceX on the lockup-driven dip, or wait for Rocket Lab to set a firm Neutron launch date before acting?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
