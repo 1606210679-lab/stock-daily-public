@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-14 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-14</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SOXL / MRVL / INTC / AMD / NVDA", title_cn: "AI巨头齐喊放慢,芯片这一排能否扛住?", body_cn: "上周五芯片整排收涨:三倍做多半导体ETF(SOXL)收涨5.23%,Marvell收涨4.03%报236.10美元,英特尔收涨2.61%报102.94美元,AMD收涨2.49%,英伟达收跌0.03%。周末风向变了:Anthropic首席执行官阿莫迪公开呼吁放慢前沿模型能力的推进,OpenAI首席执行官奥尔特曼和马斯克相继表态支持,三方都赞成引入独立安全评估。周一开盘前这排全部回吐:SOXL跌6.94%,英特尔跌3.68%,Marvell跌3.49%;纳斯达克100期货一度跌约1%,日经225跌约2%,韩股SK海力士同步承压。分寸要清楚:到现在没有一方宣布停止训练或者削减资本开支,短线更像估值和需求预期被扰动,不是订单出问题。多头的抓手是安全评估和推理本身也要吃算力,需求只是换去处;空头的抓手是模型迭代真放缓,英伟达、HBM和服务器的需求增速最先被压下来。这种消息面砸出来的坑,你会去接吗?", title_en: "AI Giants Call for Slowdown — Can Chip Stocks Hold?", body_en: "Chip stocks rallied Friday, with SOXL surging 5.23%, Marvell up 4.03% to $236.10, Intel up 2.61% to $102.94, AMD gaining 2.49%, and Nvidia edging down 0.03%. The tone shifted over the weekend as Anthropic CEO Amodei publicly called for slowing frontier model development; OpenAI CEO Altman and Musk both voiced support, with all three backing independent safety evaluations. Pre-Monday open, the sector reversed: SOXL fell 6.94%, Intel dropped 3.68%, Marvell slid 3.49%, Nasdaq-100 futures shed ~1%, Nikkei 225 fell ~2%, and SK Hynix came under pressure — though no party has announced a halt to training or capex cuts, suggesting a demand-expectation shock rather than an order problem. Bulls point out that safety evaluations and inference consume compute of their own, so demand merely moves to a different place; bears counter that if model iteration really does slow, growth in demand for Nvidia, HBM and servers is the first thing to get squeezed. Would you buy into this news-driven dip?" },
+  { ticker: "AVGO / NVDA", title_cn: "AI竞赛转向筑防线,安全软件能否接棒算力?", body_cn: "博通上周五收涨0.32%报361.99美元,明显落后于同排的芯片股;英伟达收跌0.03%。周末那场“放慢前沿”的表态还给出了第二个方向:AI竞争可能从单纯追求模型能力,逐步转向安全、可控与合规。这条线此前有过铺垫,英伟达首席执行官黄仁勋指出过,AI加快代码生成的同时,漏洞被发现和被攻击的速度也在同步提升,网络安全可能成为下一个重要应用。真正决定资金挪不挪的是预算:企业如果开始加大模型监控、身份验证、云安全和自动化防御的投入,AI这条主线就有机会从GPU和服务器延伸到安全软件。眼下钱还没挪过去,上周五网络安全概念整体只涨0.44%,CrowdStrike收跌1.02%。高盛给的是另一把尺子:AI正在贡献标普500盈利增长的一半。多头的抓手是安全预算偏刚性,放慢反而催它落地;空头的抓手是这笔钱的量级远小于算力开支,接不住从算力上掉下来的市值。你手里配了安全软件吗,还是仓位全押在算力上?", title_en: "AI Race Pivots to Safety — Can Security Software Replace Compute?", body_en: "Broadcom closed up just 0.32% to $361.99 Friday, lagging peers, while Nvidia edged down 0.03%. The weekend's \"slow down frontier AI\" messaging opened a second narrative: competition may shift from raw model capability toward safety, controllability, and compliance. Nvidia CEO Jensen Huang has noted that AI-accelerated code generation simultaneously speeds up vulnerability discovery and exploitation, positioning cybersecurity as a key emerging application. What actually decides whether capital rotates is budget: if companies start spending more on model monitoring, identity verification, cloud security and automated defense, the AI theme has a path to extend from GPUs and servers into security software. Yet capital has not rotated yet — the cybersecurity sector rose only 0.44% Friday, with CrowdStrike falling 1.02%. Goldman Sachs notes AI is now driving half of S&P 500 earnings growth. Bulls point out that security budgets are relatively non-discretionary, so a slowdown may actually pull that spending forward; bears counter that this pool of money is far smaller than compute capex and cannot absorb the market value falling off compute. Do you hold cybersecurity exposure, or is your portfolio fully concentrated in compute?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "闪迪逆着板块跌3.5%,存储涨价能否续?", body_cn: "上周五存储这排是分化的:SK海力士收涨0.94%报190.07美元,美光收跌0.22%报975.26美元,闪迪收跌3.50%报1633.35美元。闪迪这一跌是逆着板块走的,当天科技设备板块整体涨1.46%,它盘中一度低见1616.80美元,成交约930万股,比前一个交易日缩量四成有余。查遍公开报道,上周五当天找不到属于闪迪自己的具名利空。周末出来的那条是广发证券的判断:NAND价格可能在今年晚些时候企稳。“企稳”这两个字对涨价故事是个变量,前一周把这排推上去的正是HBM短缺带来的报价上调。周一开盘前三只一起跳水:海力士跌4.10%,闪迪跌3.94%,美光跌3.34%,砸下来的是“放慢前沿”那条消息。多头的抓手是美光9月30日那份季报会把真实的报价和订单摆出来;空头的抓手是涨价预期一旦被“企稳”按住,估值给的那层溢价就得往回收。涨价故事被按住,你手里的存储仓位打算怎么办?", title_en: "SanDisk Bucks Sector With 3.5% Drop — Can Memory Prices Hold?", body_en: "Memory stocks diverged Friday: SK Hynix rose 0.94% to $190.07, while Micron slipped 0.22% to $975.26 and SanDisk fell 3.50% to $1,633.35, against a 1.46% gain in the broader tech-hardware sector. SanDisk touched an intraday low of $1,616.80 on volume of approximately 9.3 million shares, over 40% lighter than the prior session, with no identifiable company-specific catalyst for that day in public reporting. Over the weekend, GF Securities flagged that NAND prices may stabilize later this year, complicating the reflation thesis that had been driven by HBM supply constraints and rising quotes. Pre-Monday, all three sold off: SK Hynix -4.10%, SanDisk -3.94%, Micron -3.34%, triggered by the AI-slowdown headlines. Bulls point out that Micron's quarterly report on September 30 will put the real quotes and orders on the table; bears counter that once the price-increase expectation is pinned down by the word stabilize, the premium built into valuations has to come back in. With the pricing narrative under pressure, what's your plan for your memory positions?" },
+  { ticker: "QQQ / SPY / BTC.USD.CC", title_cn: "加息押注逼近九成,美股能否扛住本周决议?", body_cn: "上周五美股反弹:QQQ收涨0.87%报714.88美元,SPY收涨0.85%,比特币收涨0.17%报77401美元。下一关口在眼前,北京时间9月17日凌晨2点美联储公布利率决议,市场对本周加息25个基点的押注已接近九成。押注背后是8月物价:CPI同比3.4%符合预期,环比0.4%是今年6月以来新高,短期通胀在明显加速;汽油价格指数当月涨3.9%,占掉全部商品涨幅的三分之一。另一面是核心CPI同比降到2.4%,连续三个月走低,创2021年4月以来新低,前值2.5%。高盛已从按兵不动改成预测加息,摩根大通预计9月、12月各加一次。特朗普要求美国拥有全球最低利率,白宫经济顾问哈塞特说会接受决定,但认为当前没有加息理由。多头的抓手是押注已打到九成,落地就是靴子落地;空头的抓手是利率再往上,高估值AI股很难单靠估值扩张,订单、利润和现金流成分水岭。你更看好盈利确定的AI龙头,还是转去看黄金和比特币?", title_en: "Rate-Hike Bets Near 90% — Can U.S. Equities Weather This Week's Decision?", body_en: "U.S. equities rebounded Friday, with QQQ up 0.87% to $714.88, SPY gaining 0.85%, and Bitcoin edging up 0.17% to $77,401. Market odds for a 25 bps hike are approaching 90% ahead of the Fed's rate decision at 2 a.m. Beijing time on September 17, underpinned by August CPI data showing headline inflation at 3.4% year-over-year — in line with expectations — while the monthly reading of 0.4% marked the highest since June, with gasoline prices surging 3.9% and accounting for one-third of total goods inflation. Core CPI, however, fell to 2.4% year-over-year for a third consecutive month, hitting its lowest since April 2021, against a prior reading of 2.5%. Goldman Sachs shifted its call to a hike, JPMorgan forecasts one in September and one in December. From the political side, Trump has demanded that the U.S. have the lowest interest rates in the world, and White House economic adviser Hassett said he would accept the Fed's decision but sees no justification for a hike right now. Bulls point out that the bet is already priced to near 90%, so the decision landing is the other shoe dropping; bears counter that if rates keep climbing, richly valued AI names can no longer run on multiple expansion alone, and growth in orders, profit and cash flow becomes the dividing line. Do you favor high-conviction AI leaders on earnings, or are you rotating into gold and Bitcoin?" },
+  { ticker: "AAPL / GOOG / TSLA", title_cn: "苹果谷歌各涨超1.5%,能否躲开这轮回调?", body_cn: "上周五涨得稳的是非芯片的这几只大票:苹果收涨1.75%报332.27美元,谷歌收涨1.53%报335.45美元,特斯拉收涨0.52%报365.44美元。周一开盘前芯片整排在跳水的时候,这三只没有出现同等幅度的回吐。周末各自还有新消息。谷歌那条是绕开聊天机器人的跑分,从企业整合这一层去攻微软最扎实的大客户,依据是Gemini Enterprise已经被接近九成的财富100强企业使用,配套的是与埃森哲的合作,把顾问工程师放进这些客户内部。苹果这边卖方的态度要冷一些,有对比研究给SpaceX较强的上行空间,对苹果只维持中性。特斯拉的新款Roadster被点出用上了SpaceX的技术。多头的抓手是这几只的估值不完全押在模型迭代速度上,AI放慢对它们的伤害小一档;空头的抓手是真要加息,它们同样是高估值资产,躲得过消息躲不过利率。你会为了避开这轮回调换到大票,还是干脆先降仓位?", title_en: "Apple and Google Each Gain Over 1.5% — Can They Dodge This Pullback?", body_en: "The steadiest large-cap performers Friday were non-chip names: Apple rose 1.75% to $332.27, Alphabet gained 1.53% to $335.45, and Tesla added 0.52% to $365.44 — all showing notably smaller pre-Monday pullbacks than the chip complex. Google's latest move targets Microsoft's enterprise stronghold, leveraging Gemini Enterprise's adoption by nearly 90% of Fortune 100 companies alongside an Accenture partnership embedding consulting engineers inside those clients. Sell-side sentiment on Apple is more cautious, with at least one comparative study rating Apple only neutral while assigning stronger upside to SpaceX. Tesla's new Roadster was noted as using SpaceX technology. Bulls argue these names carry less exposure to model-iteration risk; bears counter that a rate hike hits all high-multiple assets equally. Would you rotate into mega-caps to avoid this pullback, or simply reduce overall exposure?" },
+  { ticker: "ORCL", title_cn: "埃里森撤回75亿减持,甲骨文能否止跌?", body_cn: "甲骨文上周五收跌1.74%报150.28美元,季报后第二个交易日续跌。同一天还披露了一份减持计划:埃里森原计划通过10b5-1减持最多5000万股,按当天收盘价约75亿美元,原定执行到10月24日。周六计划取消,公司确认一股未卖,也没有其他出售安排。撤回改的是内部人信号,改不了算术题:约6640亿美元积压订单要变成钱,得先掏钱或借钱建产能,资本预算已超业务产生现金的两倍。年内跌约22%。多头的抓手是创始人用不卖表态;空头的抓手是现金烧得比订单转化快,撤回减持解不了融资的压力。你敢在这位置建仓吗?", title_en: "Ellison Cancels $7.5B Stock Sale — Can Oracle Stem the Decline?", body_en: "Oracle fell 1.74% to $150.28 Friday, extending its post-earnings decline into a second session, as the company simultaneously disclosed that founder Larry Ellison had filed a 10b5-1 plan to sell up to 50 million shares — worth approximately $7.5 billion at Friday's close — originally set to run through October 24. By Saturday, the plan was cancelled; the company confirmed zero shares were sold and no other sale arrangements are in place. The withdrawal changes the direction of the insider signal but does not resolve the arithmetic: converting roughly $664 billion in backlog into revenue requires upfront capital expenditure that already exceeds twice the business's cash generation, and the stock is down approximately 22% year-to-date. Bulls point out that the founder is making his statement by not selling; bears counter that cash is burning faster than the backlog converts, and pulling the sale plan does nothing for the pressure on the financing side. Would you build a position at these levels?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
