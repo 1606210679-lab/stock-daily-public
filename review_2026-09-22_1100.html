@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-22 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-22</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / ARM / INTC / AMD / NVDA", title_cn: "纳指创新高,这轮芯片行情谁在掉队?", body_cn: "周一美股三大指数集体走高,纳斯达克综合指数收在历史新高,纳指100ETF(QQQ)收涨2.88%报741.47美元,标普500指数收涨1.49%报7764.70点。费城半导体指数已经连涨五个交易日,但把芯片股摆到一起看,涨幅的分布很不均匀:Arm收涨17.16%报322.90美元,英特尔收涨12.14%报121.78美元,AMD收涨9.95%报615.52美元,市值跻身万亿美元一档;另一头,英伟达只收涨2.30%报227.38美元,博通收涨1.60%报362.66美元。触发点是Meta的AI助手Muse,市场把它读成AI代理这类应用会更吃CPU和通用算力,而不是单纯堆GPU,资金因此往CPU和芯片架构这一侧挪,Arm首席执行官当天也说需求“好得离谱”。多头的抓手是这轮上涨还有宏观配合,油价和美债收益率同日走低,给高估值的科技股腾出了空间;空头的抓手是市值最大的两只反而涨得最少,主线如果真的在切换,过去两年带队的那两只能不能跟上就成了问题。GPU和CPU这次涨幅差出一大截,你会把它看成结构性的变化,还是一次消息驱动的轮动?", title_en: "Nasdaq Hits Record High — Which Chip Stocks Are Being Left Behind?", body_en: "U.S. equities rallied broadly Monday, with the Nasdaq Composite closing at an all-time high; the Nasdaq-100 ETF (QQQ) gained 2.88% to $741.47 and the S&P 500 rose 1.49% to 7,764.70. The Philadelphia Semiconductor Index extended its winning streak to five sessions, but gains were sharply uneven: Arm surged 17.16% to $322.90, Intel jumped 12.14% to $121.78, and AMD climbed 9.95% to $615.52, pushing its market cap into the trillion-dollar tier — while Nvidia added just 2.30% to $227.38 and Broadcom edged up 1.60% to $362.66. The catalyst was Meta's AI assistant Muse, which markets read as signaling that agentic AI applications favor CPUs and general-purpose compute over pure GPU stacking, rotating capital toward CPU and chip-architecture plays; Arm's CEO on the day called demand \"off the charts.\" Bulls point to macro tailwinds — oil prices and Treasury yields both fell on the day, creating room for high-multiple tech — while bears note the two largest-cap names lagged the most, raising the question of whether the leaders of the past two years can keep up if the cycle is truly rotating. With such a wide gap between GPU and CPU gains, do you see this as a structural shift or a news-driven rotation?" },
+  { ticker: "META", title_cn: "Meta单日收涨11.43%,一个AI助手能撑多久?", body_cn: "Meta周一收涨11.43%报741.25美元,是去年4月以来最大的单日涨幅。推力有两条:它的AI助手Muse上线六天下载量超过250万次,登顶美区App Store免费榜;富国银行同期上调了这只股票的目标价。公司的年度大会也在本周举行。把时间拉长看,过去一年Meta下跌4.38%,同期标普500上涨16.51%,这一天的11.43%只补回了其中一部分。多头的抓手是Muse说明它在消费端还能做出被真实使用的产品,这恰好是过去一年市场怀疑它的地方;空头的抓手是下载量到收入之间隔着一整段路,免费榜的名次变得很快,而年度大会如果拿不出新的东西,这一天的涨幅就没有接续。一个消费端产品的下载量,你会把它算进公司的估值里吗?", title_en: "Meta Surges 11.43% in a Single Day — How Long Can One AI Assistant Sustain It?", body_en: "Meta closed up 11.43% at $741.25 Monday, its largest single-day gain since April of last year, driven by two catalysts: its AI assistant Muse surpassed 2.5 million downloads in just six days and topped the U.S. App Store free chart, while Wells Fargo raised its price target on the stock. The company's annual conference is also scheduled this week. Zooming out, Meta is still down 4.38% over the past year versus a 16.51% gain for the S&P 500, meaning Monday's move only recoups a portion of that underperformance. Bulls argue Muse demonstrates Meta can still ship consumer products that achieve genuine adoption — exactly the capability markets have doubted over the past year — while bears counter that the gap between download counts and monetization is wide, free-chart rankings shift quickly, and without fresh announcements from the conference, the rally lacks follow-through. Would you factor a consumer app's download numbers into the company's valuation?" },
+  { ticker: "MRVL / NBIS", title_cn: "AI的瓶颈,从算力挪到网线上了吗?", body_cn: "Marvell周一收涨5.38%报257.38美元,当天它发布了面向AI网络的1.6T光互连技术,采用2纳米工艺。这件事指向数据中心里一个越来越明显的约束:芯片本身的算力还在往上加,但把这些芯片连起来的铜缆在带宽和功耗上已经接近极限,光互连是绕开这堵墙的路径。同属AI基建这条线的Nebius收涨4.14%报232.80美元。多头的抓手是互连和供电这类配套环节的支出会跟着算力一起增长,而且多是长约性质、可见度比较高的那一类;空头的抓手是新技术从发布到量产、再到进客户的采购清单有很长的间隔,当天的涨幅定价的是预期而不是订单。Marvell这种不做主芯片的公司,在AI这条链上你把它排在第几层?", title_en: "Is AI's Next Bottleneck Shifting From Compute to Connectivity?", body_en: "Marvell closed up 5.38% at $257.38 Monday after unveiling a 1.6T optical interconnect technology for AI networking built on a 2-nanometer process. The announcement highlights a growing constraint inside data centers: raw chip compute continues to scale, but the copper cabling linking those chips is approaching its limits in bandwidth and power efficiency, making optical interconnects a key path around that wall. Fellow AI-infrastructure play Nebius gained 4.14% to $232.80 on the day. Bulls argue that interconnect and power-delivery spending will grow in lockstep with compute, and that much of it comes in the form of long-term contracts with high visibility; bears note that the road from product announcement to volume production to customer procurement lists is long, and Monday's move prices in expectations, not orders. Where would you place a company like Marvell — one that doesn't make the main chips — in the AI stack?" },
+  { ticker: "SNDK / MU / SKHY", title_cn: "闪迪调入标普100当天反跌,存储换挡了吗?", body_cn: "标普100指数这次成分调整9月21日正式生效,闪迪当天收跌1.41%报1766.64美元。对比很直接:生效前的最后一个交易日它收涨10.99%,跟踪指数的基金在那一天完成换仓,生效当天没有新的买方接上。同一天存储板块其余几只反而是涨的,美光收涨2.77%报1043.96美元,SK海力士收涨0.73%报188.86美元。这一天推动存储的理由回到了产品和价格那一侧,指数事件带来的那一部分已经走完。多头的抓手是存储的基本面并没有跟着变,产能和价格都还在紧的一侧,美光和SK海力士当天都还在涨;空头的抓手是靠指数事件推上去的那段涨幅没有盈利做支撑,事件结束之后价格要重新找依据,而闪迪现在的位置并不低。存储这几只当天走出了不同方向,你更信哪一只给出的信号?", title_en: "SanDisk Drops on Its S&P 100 Inclusion Date — Is Memory Shifting Gears?", body_en: "The latest S&P 100 rebalancing took effect September 21, but SanDisk fell 1.41% to $1,766.64 on the effective date — a sharp contrast to its 10.99% gain on the final trading day before inclusion, when index-tracking funds completed their repositioning, leaving no new buyers on the day itself. The rest of the memory sector moved higher: Micron gained 2.77% to $1,043.96 and SK Hynix added 0.73% to $188.86. With the index-event tailwind fully spent, the sector's driver reverted to product fundamentals and pricing. Bulls argue the underlying thesis hasn't changed — capacity and prices are still tight, as Micron and SK Hynix's gains confirm — while bears contend the index-driven portion of SanDisk's rally lacked earnings support and, with the event now behind it, the stock must find a new fundamental anchor from an already elevated level. With these names moving in different directions on the same day, whose signal do you trust more?" },
+  { ticker: "RKLB / SPCX", title_cn: "火箭实验室收涨8.24%,对手位置坐得稳吗?", body_cn: "火箭实验室周一收涨8.24%报69.89美元,推动它的有两条。一条是收购铱星(Iridium)的资金安排落定,公司首席执行官把这笔交易描述成会让它变成一个能自己发射的“一级太空力量”;另一条是投行Cantor Fitzgerald重申122美元的目标价,理由是它的发射记录,并认为它有可能成为SpaceX之外唯一可行的选择。对照之下,同一条线上的SPCX收跌0.56%报151.85美元,这一天涨的是火箭实验室自己的事,不是整个板块。多头的抓手是收购把发射和卫星运营两端接在了一起,收入不再只来自一次次的发射合同;空头的抓手是这笔收购的价格和整合都还没有经过验证,而“唯一替代者”这个定位目前是卖方给的,不是市场份额给的。从发射服务做到自己运营卫星,你觉得难在哪一步?", title_en: "Rocket Lab Soars 8.24% — Is Its Position as SpaceX's Rival Secure?", body_en: "Rocket Lab closed up 8.24% at $69.89 Monday on two catalysts: financing for its Iridium acquisition was finalized, with the CEO describing the deal as transforming the company into a self-launching \"Tier 1 space power,\" and Cantor Fitzgerald reiterated a $122 price target, citing the company's launch track record and calling it potentially the only viable alternative to SpaceX. In contrast, sector peer SPCX slipped 0.56% to $151.85, underscoring that Monday's move was company-specific rather than a broad sector rally. Bulls argue the acquisition vertically integrates launch and satellite operations, reducing reliance on individual launch contracts; bears counter that the deal's price and integration have yet to be proven, and the \"sole alternative\" narrative is currently a sell-side designation rather than one validated by market share. Going from launch services to operating its own satellites — where do you think the hard part is?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
