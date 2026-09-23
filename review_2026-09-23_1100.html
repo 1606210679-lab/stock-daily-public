@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-23 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-23</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SNDK / MU / SKHY", title_cn: "明年三分之二的产能已经卖掉,谁还在做空存储?", body_cn: "存储周二带队上涨,闪迪收涨6.82%报1887.04美元,美光收涨5.00%报1096.16美元,SK海力士收涨3.45%报195.37美元,纳斯达克综合指数当天再收新高。推力先来自卖方给出的价:Rosenblatt以买入评级起评闪迪,目标价2400美元,理由是NAND闪存正在变成AI的基础设施;另有报道称,闪迪明年的产能已经有大约三分之二被提前签走。同期伯恩斯坦估算三星第三季度HBM收入环比增长72%,整个存储的景气还在往上走。空头当天也拿到了东西:迈克尔·伯里加大了对美光的做空,依据是宏碁提示存储供给正在增加;美光在台湾那座价值250亿美元的工厂面临罢工,股价当天照涨不误。多头的抓手是需求已经被合同锁住,涨价周期还没走完;空头的抓手是把明年的产能提前卖掉,等于连后面的弹性也一起卖掉了,而供给一旦跟上,现在的价格就是周期的高点。把明年的产能提前卖出去,你觉得这是锁定利润还是提前透支?", title_en: "Two-Thirds of Next Year's Capacity Already Sold — Who's Still Shorting Memory?", body_en: "Memory stocks led Tuesday's rally: SanDisk surged 6.82% to $1,887.04, Micron gained 5.00% to $1,096.16, and SK Hynix rose 3.45% to $195.37, as the Nasdaq Composite closed at a fresh record. Rosenblatt initiated SanDisk at Buy with a $2,400 target, citing NAND flash as emerging AI infrastructure, while reports indicate roughly two-thirds of SanDisk's capacity for next year has already been contracted. Bernstein estimates Samsung's third-quarter HBM revenue grew 72% quarter-on-quarter, with the memory cycle still trending higher. Bears got something the same day too: Michael Burry increased his Micron short citing Acer's warning on rising memory supply, and Micron's $25 billion Taiwan fab faces a potential strike — the stock closed higher regardless. Bulls argue demand is already locked in under contract and the pricing cycle still has room to run; bears argue that selling next year's capacity in advance sells away the upside that came with it, and that once supply catches up, today's price is the top of the cycle. Locking in next year's capacity now — is that securing profits or borrowing against future upside?" },
+  { ticker: "GOOG / NVDA", title_cn: "谷歌要把自研芯片卖给别的国家?", body_cn: "谷歌周二收跌0.99%报347.41美元,英伟达收涨0.66%报228.87美元,当天出现一条跟两家都有关的消息。韩国媒体报道,谷歌9月9日与韩国政府官员见面,商谈把自研的TPU芯片直接供给韩国的国家级AI算力建设,装在大学、研究机构和政府自己的机房里,而不是走谷歌云。这件事目前还停在洽谈阶段,没有签约。它的分量在于位置变了:各国建自己的AI算力,过去几乎只能买英伟达的GPU,谷歌的TPU一直只在自家云里用,谷歌给出的说法是TPU能明显压低算力成本。多头的抓手是国家级采购不愿意只绑一个外国供应商,只要出现第二个能用的架构,增量订单就会被分掉一部分;空头的抓手是英伟达真正的壁垒不在芯片而在软件,CUDA和配套的网络、系统软件是开发者已经用熟的一整套东西,换架构的代价不小,而且谷歌把TPU卖到外面,等于削掉自家云原本的一个卖点。谷歌把TPU卖出自家机房,你觉得先被分掉的会是英伟达的哪一块生意?", title_en: "Is Google Planning to Sell Its Custom Chips to Foreign Governments?", body_en: "Google fell 0.99% to $347.41 on Tuesday while Nvidia gained 0.66% to $228.87, as a development linked to both companies emerged. Korean media reported that on September 9, Google met with South Korean government officials to discuss supplying its proprietary TPU chips directly for national AI computing infrastructure — to be deployed in universities, research institutions, and government data centers outside of Google Cloud. The talks remain at a preliminary stage with no agreement signed. What matters is the change of venue: when countries build their own AI compute, buying Nvidia GPUs has been close to the only option, and Google's TPUs have until now run only inside Google's own cloud. Google's pitch is that TPUs bring compute costs down materially. Bulls argue that sovereign buyers prefer not to be locked into a single foreign vendor, meaning any viable second architecture could capture incremental orders; bears counter that Nvidia's true moat lies in software — CUDA and its surrounding ecosystem — making architecture switches costly, while Google selling TPUs externally would undercut one of its own cloud selling points. If Google brings TPUs outside its own data centers, which part of Nvidia's business do you think loses share first?" },
+  { ticker: "META", title_cn: "大会开幕前一天,Meta为什么反而跌了?", body_cn: "Meta周二收跌0.63%报736.60美元,前一个交易日它刚收涨11.43%。回吐发生在年度大会开幕前:Meta Connect 2026定在当地时间9月23日到24日,今年的看点是新一代智能眼镜、代号“Phoenix”的轻量化混合现实设备,以及AI助手Muse怎么接进这套可穿戴设备。涨的位置更值得看:Muse已经登上移动应用下载榜首位,超过ChatGPT、Grok和Claude;电商服务平台Shopify宣布接入Muse之后当天涨超7%,两个交易日累计涨了近15%。多头的抓手是Muse开始往外接,接的公司越多,它越像一个入口而不是一个应用;空头的抓手是这一天涨的是接入方不是Meta自己,而大会的看点仍然落在硬件上,Muse怎么收钱还没有给过答案。接入方比出品方先涨,这个顺序正常吗?", title_en: "Why Did Meta Fall the Day Before Its Annual Conference?", body_en: "Meta fell 0.63% to $736.60 on Tuesday, one session after surging 11.43%, with the pullback arriving on the eve of Meta Connect 2026, scheduled for September 23–24, where the focus is next-generation smart glasses, a lightweight mixed-reality device codenamed \"Phoenix,\" and AI assistant Muse's integration into the wearable lineup. Where the gains landed is worth a closer look: Muse has topped mobile app download charts above ChatGPT, Grok, and Claude; Shopify jumped over 7% after announcing Muse integration, gaining nearly 15% across two sessions. Bulls see Muse's expanding third-party integrations as a sign it is becoming a platform rather than a single app; bears note that Tuesday's gainers were partners, not Meta itself, the conference spotlight remains on hardware, and Muse's monetization model has yet to be defined. Is it normal for integrators to rally before the platform creator does?" },
+  { ticker: "GRAB", title_cn: "股价刚创52周新低,内部人却在加仓?", body_cn: "Grab周二收涨8.93%报3.17美元,这个涨幅出现在股价刚创出52周新低之后,低点附近有公司内部人在买入。时间线是这样的:9月16日它宣布以14.9亿美元收购东南亚金融科技公司Atome Financial 60%的股权,同时上调了2028年的增长目标;此后股价一路走到52周新低,估值被压到历史区间的下沿。多头的抓手是内部人用自己的钱在低位买进,这笔钱的方向和公司对外讲的增长目标是一致的;空头的抓手是卖方对Superbank和Atome这两块资产分歧明显,已经有机构因此下调了对它的公允价值判断,而一笔14.9亿美元的收购要多久才能在报表上看出效果,现在没有人给得出时间表。内部人在低位买自家股票,你会在多大程度上把它当回事?", title_en: "Stock Just Hit 52-Week Low — So Why Are Insiders Buying?", body_en: "Grab surged 8.93% to $3.17 on Tuesday, rebounding after shares touched a 52-week low, with company insiders purchasing near the trough. On September 16, Grab announced a $1.49 billion acquisition of a 60% stake in Southeast Asian fintech Atome Financial and raised its 2028 growth targets; the stock subsequently declined to the bottom of its historical valuation range. Bulls point to insiders committing personal capital at lows in alignment with the company's stated growth outlook; bears note significant sell-side disagreement over the Superbank and Atome assets — with at least one institution cutting its fair value estimate — and no clear timeline for the $1.49 billion deal to show up meaningfully in financials. When insiders buy their own stock at the lows, how much weight would you actually give it?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
