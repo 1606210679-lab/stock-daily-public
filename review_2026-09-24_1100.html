@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-09-24 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-09-24</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ", title_cn: "财政部连着买了两轮长债,收益率还是创了新高?", body_cn: "美国财政部周三又出手买长债,上限至多60亿美元,范围是20年到30年期国债,这已经是两周内的第二轮加码;两周前那一轮的上限同样是60亿美元,最后实际只买到52亿美元。买盘加上去了,长端收益率还是没下来:10年期美债收益率收报5.11%,单日上行15个基点,是2007年以来最高;30年期同样触及2007年以来的高位。股票这边全线收跌,纳斯达克综合指数收跌1.13%报26936.04点,抹掉了前一个交易日刚创出的历史新高,纳指100ETF(QQQ)收跌0.84%报741.21美元;标普500指数收跌0.75%报7706.03点,道琼斯工业平均指数收跌0.68%报51511.59点。推着收益率往上走的是加息预期,市场对美联储10月加息的押注当天升到69.7%。多头的抓手是收益率上行的起点是经济数据偏强,不是需求塌了;空头的抓手是财政部连着买了两轮,长端收益率还是创了新高,说明这点买盘接不住眼下的供给量,而5%以上的无风险利率摆在那里,股票的每一份估值都要重新和它比一次。收益率要走到什么位置,才会让你重新算一遍股票的账?", title_en: "Two Rounds of Treasury Buybacks, and Long-End Yields Still Hit a New High?", body_en: "The U.S. Treasury stepped in to buy long-dated debt again on Wednesday, capped at $6 billion and covering 20- to 30-year issues — the second round in two weeks. The round two weeks ago carried the same $6 billion cap and ended up purchasing only $5.2 billion. The bid went up, and long-end yields still did not come down: the 10-year yield closed at 5.11%, up 15 basis points on the day and the highest since 2007, while the 30-year likewise touched its highest level since 2007. Equities sold off broadly: the Nasdaq Composite fell 1.13% to 26,936.04, erasing the record close set the prior session; QQQ lost 0.84% to $741.21; the S&P 500 dropped 0.75% to 7,706.03; the Dow shed 0.68% to 51,511.59. What is pushing yields higher is rate-hike expectations — odds of a Fed hike in October rose to 69.7% that day. The bull case is that yields are climbing because the economic data is firm, not because demand has collapsed. The bear case is that the Treasury has now bought twice and long-end yields still set a new high, which says this much of a bid cannot absorb the supply on offer — and with a risk-free rate above 5% sitting there, every dollar of equity valuation has to be measured against it again. At what yield level would you redo the math on equities?" },
+  { ticker: "SNDK / MU / SKHY", title_cn: "领涨的变成领跌,存储在等美光的财报?", body_cn: "存储在周三还了前一天的涨幅:闪迪收跌3.73%报1816.57美元,SK海力士收跌3.12%报189.28美元,美光收跌2.22%报1071.88美元。压下来的是同一件事:收益率上行先动的是高估值资产,存储前一天涨得最猛,这一天跌得也最狠。真正的检验点排在下周,美光将于美东时间9月30日盘后公布财季业绩,要看的是上一财季的营收和毛利率能不能超预期,以及HBM4的出货、订单覆盖和2027年的供需展望还强不强。多头的抓手是涨价和订单锁定都发生在报表之前,财报只是把已经发生的事确认一遍;空头的抓手是现在的价格里已经算进了对2027年供需的乐观假设,一旦订单覆盖或者供需展望比市场想的软一档,回撤的空间就不只是一天3%。要是美光交出一份好数字,这一轮回调在你眼里就翻篇了吗?", title_en: "From Leaders to Laggards — Are Memory Stocks Waiting on Micron?", body_en: "Memory gave back Wednesday what it had gained the day before: SanDisk fell 3.73% to $1,816.57, SK Hynix lost 3.12% to $189.28, and Micron declined 2.22% to $1,071.88. The same force was behind it: rising yields hit high-valuation assets first, and because memory had run hardest the prior day, it fell hardest here too. The real test comes next week — Micron reports quarterly results after the close on September 30 U.S. Eastern time, and what matters is whether last quarter's revenue and gross margin beat expectations, and whether HBM4 shipments, order coverage and the 2027 supply-demand outlook still look strong. The bull case is that the price increases and the locked-in orders all happened before the report, so earnings only confirm what has already taken place. The bear case is that current prices already embed an optimistic assumption about 2027 supply and demand — if order coverage or that outlook comes in one notch softer than expected, the room to fall is more than 3% in a day. If Micron delivers a strong print, would that put this pullback behind you?" },
+  { ticker: "META / GOOG / AAPL", title_cn: "Muse开始按交易抽成,动到的是谁的入口?", body_cn: "Meta Connect 2026周三开幕,会上发布了售价1299美元的VR眼镜和一款不带摄像头的智能眼镜,Meta首席执行官扎克伯格还给AI助手Muse定了收钱的方式:从它促成的每一笔交易里抽一小笔费用。Meta当天收涨1.02%报744.10美元,是三大指数全线收跌这天少数还在涨的大盘股。抽成成立的前提是用户不再自己打开网站下单,而是让Muse去订机票、下购物单,被这句话直接点到的是Expedia、Instacart和亚马逊这类平台。谷歌当天收跌3.58%报334.98美元,跌幅是纳指的三倍多,Muse要替用户完成的搜索加下单这一步,踩的正是谷歌的入口;苹果收跌0.80%报337.02美元,跌得比大盘少,但这次的VR眼镜对着的正是它的地盘。多头的抓手是抽成意味着Muse开始自己挣钱,而不只是拉活跃;空头的抓手是抽多少还没有说,被绕开的平台也不会不还手,搜索和下单这两个入口向来不是让出去的。Expedia、亚马逊、谷歌,你觉得哪一家最先感到压力?", title_en: "Muse Takes a Cut Per Transaction — Whose Entry Point Does It Touch?", body_en: "Meta Connect 2026 opened Wednesday with the unveiling of $1,299 VR glasses, a camera-free smart glasses model, and — from Meta CEO Mark Zuckerberg — a way for AI assistant Muse to make money: a small fee on every transaction it facilitates. Meta rose 1.02% to $744.10, one of the few large-caps in the green on a day when all three major indexes closed lower. That fee only works if users stop opening websites to place orders themselves and instead let Muse book the flight or fill the shopping cart — the platforms named directly by that setup are Expedia, Instacart and Amazon. Alphabet closed down 3.58% at $334.98, more than triple the Nasdaq's decline; the search-plus-checkout step Muse wants to handle sits exactly on Google's entry point. Apple slipped 0.80% to $337.02, less than the broader market, but the new VR glasses are aimed squarely at its territory. The bull case is that charging a fee means Muse is starting to earn money of its own rather than just driving engagement. The bear case is that how much it takes has not been disclosed, the platforms being bypassed will not simply stand by, and search and checkout are not entry points anyone hands over. Between Expedia, Amazon and Alphabet, which one do you think feels it first?" },
+  { ticker: "BABA", title_cn: "刚靠新芯片涨上去,一条监管消息就够了?", body_cn: "阿里巴巴周三收跌4.74%报110.80美元。当天有报道称北京方面正在对DeepSeek、月之暗面等AI公司展开调查,中概AI股跟着一起回落,百度、京东同向下跌。这轮下跌打断的是一段涨势:此前阿里发布新的AI芯片、宣布在欧洲和中东加建数据中心,股价靠这两件事往上走过一段。同一天还有另一股力量压着它,美债收益率飙升,在美上市的中国科技股和芯片股当天普遍承压。多头的抓手是花旗重申买入,依据是阿里2026到2033财年的收入复合增速能到40%左右,云和芯片是两条还在加码的线;空头的抓手是这件事没办法提前算进价格里,调查目前只是报道,既没有范围也没有时间表,而这类消息过去几年反复出现过。监管消息隔一阵就来一次,你还会当它是意外吗?", title_en: "Is One Regulatory Report Enough to Halt a Chip-Driven Rally?", body_en: "Alibaba closed down 4.74% at $110.80 on Wednesday after reports emerged that Beijing has opened investigations into AI companies including DeepSeek and Moonshot AI, pulling Chinese AI names lower alongside Baidu and JD.com. The selloff interrupted a run-up driven by Alibaba's recent AI chip launch and its announced data center expansions in Europe and the Middle East. A separate force pressed on it the same day: the spike in U.S. Treasury yields weighed broadly on U.S.-listed Chinese tech and chip names. The bull case is that Citi reiterated its buy rating, citing roughly 40% compound revenue growth from financial year 2026 through 2033, with cloud and chips as two lines still being added to. The bear case is that there is no way to price this in ahead of time — the investigation is so far only a report, with neither a defined scope nor a timeline — and this kind of news has come around repeatedly over the past few years. Regulatory headlines like this come around every so often — do you still treat them as a surprise?" },
+  { ticker: "SPCX", title_cn: "拿到NASA的9.46亿美元合同,股价为什么还跌4%?", body_cn: "NASA给SpaceX的一份合同周三落地,金额9.46亿美元,把载人龙飞船的服务延长到2030年,这是一笔期限明确、付款方明确的收入。但股价当天收跌4.11%报148.36美元,往下走的原因在另一侧,又一批限售股临近解禁,可流通的股份还要变多,而这已经不是第一次;同时它在2027年6月之前都没有进入标普500的资格,持续亏损还可能把这个时间继续往后推。多头的抓手是政府订单能看到的年限正在变长,一份签到2030年的合同能把几年后的收入先钉住一部分;空头的抓手是解禁的节奏还没走完,每多一批股份出来,同样的买盘要面对更多的卖盘,而在真正盈利之前,它也拿不到被动资金这一块的增量。一份延到2030年的政府合同,能不能抵掉解禁带来的压力?", title_en: "SpaceX Lands $946M NASA Contract — So Why Did Shares Fall 4%?", body_en: "A NASA contract for SpaceX landed Wednesday: $946 million, extending Crew Dragon services through 2030 — a defined revenue stream with a clear counterparty. The shares still closed down 4.11% at $148.36, and the reason sits on the other side: another tranche of lock-up shares is approaching expiration, further expanding the float — not for the first time — while ongoing losses keep the company ineligible for S&P 500 inclusion until at least June 2027, potentially longer. Bulls point to government orders now running further out, with a contract stretching to 2030 pinning down part of the revenue several years ahead; bears note the unlock cycle is unfinished — each new batch of shares means the same buyer base absorbs more supply — and that until it is genuinely profitable, it cannot pick up the incremental passive flows either. Can a government contract running to 2030 offset the continued pressure from share unlocks?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
