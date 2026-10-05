@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-05 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-05</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ", title_cn: "非农只增2.9万,加息这一页翻过去了吗?", body_cn: "9月的就业报告上周五出炉,新增就业只有2.9万人,远低于市场预期的8.9万人,前值13.3万人;失业率从8月的4.1%升到4.2%,预期本来是持平。数据出来之后,市场对美联储10月继续加息的押注明显回落,一周前还在60%以上,上周五已经掉到不足四分之一,年内剩余两次会议的累计加息预期降到约21个基点。股票当天全线收涨,纳斯达克综合指数盘中刷新历史新高、最高到27353.68点,收盘回落到27190.86点、收涨1.19%,纳指100ETF(QQQ)收涨1.02%报749.58美元;标普500指数收涨0.73%报7722.72点,道琼斯工业平均指数收涨0.49%报51176.96点。债券这边没有跟着走:10年期美债收益率上周四刚升到2002年以来的最高水平,上周五又上行4个基点收报5.28%,英国30年期国债收益率同期升到6%,是1998年3月以来第一次。多头的抓手是就业转弱把加息这条线按了下去,股票少了一个压制;空头的抓手是加息押注塌下来了,长端收益率反而更高,说明压住估值的那股力量并不来自美联储,而美国财政部长贝森特已经出面把这轮债市调整说成并非美国独有,本身也说明它已经大到需要被解释。长端收益率停在2002年以来的最高位,你觉得美股眼下最该担心的是什么?", title_en: "Nonfarm Payrolls Add Only 29K — Is the Rate-Hike Cycle Over?", body_en: "The September employment report landed on Friday: payrolls grew by only 29,000, far short of the 89,000 consensus and the prior reading of 133,000, while unemployment ticked up to 4.2% from 4.1%, where it had been expected to hold. Fed rate-hike bets for October collapsed from above 60% a week ago to under one-quarter, with cumulative tightening expectations for the remaining two meetings falling to roughly 21 basis points. Equities rallied across the board: the Nasdaq Composite hit an intraday record high of 27,353.68 before closing up 1.19% at 27,190.86; the Invesco QQQ Trust (QQQ) rose 1.02% to $749.58; the S&P 500 gained 0.73% to 7,722.72 and the Dow rose 0.49% to 51,176.96. Bonds did not follow: the 10-year Treasury yield had reached its highest level since 2002 on Thursday, then climbed a further 4 basis points to 5.28% on Friday, while the UK 30-year gilt yield hit 6%, a level last seen in March 1998. The bull case is that a weakening labour market has taken the rate-hike question off the table, removing one source of pressure on equities. The bear case is that hike bets collapsed and yet long-end yields went higher still, which says the force weighing on valuations is not coming from the Fed; and the fact that Treasury Secretary Bessent has since publicly framed the bond selloff as a global rather than U.S.-specific phenomenon is itself an acknowledgment that the move has grown large enough to require explaining. With the long end parked at its highest level since 2002, how much weight do you put on that risk?" },
+  { ticker: "NVDA / AMD / AVGO / INTC", title_cn: "英伟达把回购额度加到2350亿,这波新高谁在买?", body_cn: "英伟达上周五收涨1.34%报233.95美元,盘中最高到237.88美元,刷新历史新高,市值逼近6万亿美元。推着它的不是当天的新消息,是此前就摆在那里的一笔钱:英伟达表示董事会已批准把回购计划额度增加1500亿美元,到2028年1月之前最多可以投入2350亿美元回购自家股票。同一天半导体整体走强,AMD收涨2.95%报633.91美元,市值首次站上1万亿美元,年内累计上涨196%;博通收涨3.35%报355.14美元。掉队的是英特尔,收跌0.56%报119.33美元,是这几只里唯一收绿的。多头的抓手是2350亿美元是一个可以持续买的量,它不挑时点也不看估值,等于在股价下面垫了一层;空头的抓手是回购买的是股份不是需求,它能把每股收益抬上去,却回答不了数据中心的订单明年还剩多少,而接近6万亿美元的市值,本身就是按这个问题的乐观答案定出来的。2350亿的回购,在你眼里能顶多大的事?", title_en: "Nvidia Lifts Buyback Authorization to $235B — Who's Buying the New High?", body_en: "Nvidia closed up 1.34% at $233.95 on Friday, touching an intraday record of $237.88 as its market cap approached $6 trillion. What is pushing it is not fresh news from the day but money already sitting on the table: the board has approved a $150 billion increase to its repurchase program, bringing the total authorization to $235 billion available through January 2028. Semiconductors broadly surged: AMD climbed 2.95% to $633.91, crossing a $1 trillion market cap for the first time and up 196% year-to-date; Broadcom added 3.35% to $355.14. Intel was the only one of the four to close lower, slipping 0.56% to $119.33. Bulls argue $235 billion in committed buying puts a cushion under the share price regardless of valuation or timing; bears counter that buybacks lift EPS but cannot answer how much data-center order volume remains next year — and a market cap of nearly $6 trillion is itself priced off an optimistic answer to that question. What would make you stop counting the buyback as support?" },
+  { ticker: "STX / WDC / SNDK / MU", title_cn: "东芝要把硬盘产能翻倍,希捷西数为何一天跌10%?", body_cn: "上周五硬盘和存储被单独拉出来砸了一轮:希捷收跌10.21%报848.99美元,西部数据收跌10.22%报415.29美元,两只同日跌超一成。触发点是一则关于东芝的报道,称其计划把面向AI的硬盘产能翻一倍。消息顺着往下传,闪迪收跌3.79%报1719.99美元,美光收跌2.05%报1074.89美元,只有SK海力士勉强收涨0.84%报195.13美元。同一天的另一边却是反的:英伟达、AMD、博通全线走高,纳斯达克综合指数盘中还创了历史新高。砸下来的不是风险偏好,是供给这一侧的假设——过去一年硬盘和存储的涨价逻辑,建立在产能扩不动、紧缺要持续的前提上,东芝这则报道直接动了这个前提。多头的抓手是有分析师当天就认为这一跌反应过度,翻倍是计划不是产能,从宣布到真正出货,中间还隔着建厂和爬坡;空头的抓手是这类股票的估值里原本没有给供给留位置,只要紧缺能撑的年限被往回缩一年,前面涨上去的那部分就要重新算一遍。东芝这一条消息,够把存储的紧缺叙事掀掉吗?", title_en: "Toshiba Plans to Double HDD Capacity — Why Did Seagate and WD Drop 10%?", body_en: "Hard-disk and memory stocks were singled out for a sharp selloff Friday after reports that Toshiba plans to double its AI-focused HDD capacity: Seagate fell 10.21% to $848.99 and Western Digital dropped 10.22% to $415.29, both losing more than 10% on the day. SanDisk fell 3.79% to $1,719.99 and Micron declined 2.05% to $1,074.89, while SK Hynix managed a slim gain of 0.84% to $195.13 — all while Nvidia, AMD, and Broadcom rallied and the Nasdaq Composite set a fresh intraday record. The selloff targeted the supply-side assumption underpinning the trade: the past year's pricing strength in HDDs and memory was built on the premise that capacity was constrained and shortages would persist — Toshiba's announcement directly challenged that premise. Bulls note analysts on the day called the reaction overdone, arguing a plan to double capacity is not the same as doubled output, with factory construction and ramp-up still to come; bears say these stocks were priced with no room for supply upside, and shaving even one year off the expected shortage timeline forces a full re-rating of the gains already booked. Is one Toshiba headline enough to unravel the memory scarcity narrative?" },
+  { ticker: "TSLA", title_cn: "特斯拉卖得比造得多2.2万辆,这波反弹能走多远?", body_cn: "特斯拉三季度交付数据刚公布,交付量超过市场预期,而且比同期产量多出22141辆,这一季卖出去的车多于造出来的车,库存在往下走,股价上周五收涨4.65%报370.59美元。按目前进度,特斯拉全年交付量有望实现2023年以来第一次同比增长。另一侧的账同样摆着:即便上周五涨了近5%,它年内仍累计下跌17.60%,同期标普500指数上涨12.81%。多头的抓手是交付超预期和去库存同时出现,说明需求端是真的在好转,不是靠压库换来的数字;空头的抓手是年内这17.60%的跌幅主要来自估值而不是销量,交付回暖能不能换回估值,是另一道题。年内还跌着17.60%,特斯拉这波反弹你给几分?", title_en: "Tesla Delivered 22K More Cars Than It Built — How Far Can This Rally Run?", body_en: "Tesla has just reported third-quarter deliveries that beat market expectations and exceeded production by 22,141 units, meaning the company sold more vehicles than it manufactured in the period and drew down inventory; the stock closed up 4.65% at $370.59 on Friday. At the current pace, Tesla is on track to post its first year-over-year delivery growth since 2023. Even after Friday's near-5% gain, the stock remains down 17.60% year-to-date, versus a 12.81% advance for the S&P 500. Bulls point to the simultaneous delivery beat and inventory drawdown as evidence of genuine demand improvement rather than a channel-stuffing mirage; bears note that most of the year-to-date decline reflects multiple compression rather than deteriorating sales, making it an open question whether a delivery recovery is enough to restore valuation. Still down 17.60% on the year, how would you score this rebound?" },
+  { ticker: "RKLB / SPCX", title_cn: "火箭实验室签下20发Electron,积压破百还差什么?", body_cn: "火箭实验室拿下日本卫星公司Synspective的20次Electron发射订单,这是Electron迄今最大的一笔商业合同,股价上周五收涨4.91%报73.92美元,签完之后它的发射积压订单超过100次,合同金额没有披露。同属发射这条线的SpaceX上周五收涨7.35%报158.96美元,涨幅比火箭实验室还大,但当天并没有对得上这个幅度的公开消息。两家公司眼下的区别正落在订单簿上:火箭实验室靠小型运载的高频次把积压做厚,SpaceX则在Starlink这类自营业务上收现金。多头的抓手是积压订单过百意味着未来几年的收入有了一个看得见的下限,这类数字比单次发射成功更能说明问题;空头的抓手是积压不等于收入,Electron一年能发多少次受制于产能和发射场窗口,订单签得越多,交付跟不上的风险反而越大,而这条赛道的对手还在变多,已经有人把蓝色起源摆到SpaceX前面,当成火箭实验室更该防的那一个。一张创纪录的订单,值不值得把火箭实验室重新放回观察位?", title_en: "Rocket Lab Signs 20 Electron Launches — What's Still Missing Once the Backlog Tops 100?", body_en: "Rocket Lab has secured a 20-launch Electron contract with Japanese satellite operator Synspective, the largest commercial Electron deal to date, pushing its launch backlog above 100 missions; contract value was not disclosed, and the stock closed up 4.91% at $73.92 on Friday. Fellow launch operator SpaceX rose 7.35% to $158.96 on the day, outpacing Rocket Lab without a corresponding public announcement. The two companies' business models are diverging at the order book: Rocket Lab builds backlog depth through high-frequency small-lift launches, while SpaceX generates cash from in-house businesses such as Starlink. Bulls argue a backlog exceeding 100 launches establishes a visible multi-year revenue floor more meaningful than any single mission success; bears caution that backlog is not revenue — annual Electron launch cadence is constrained by manufacturing capacity and range availability, and the more it signs, the greater the risk of falling behind on delivery, even as competition intensifies with Blue Origin increasingly cited as the more immediate threat to Rocket Lab than SpaceX. Does a record-breaking contract put Rocket Lab back on your watchlist?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
