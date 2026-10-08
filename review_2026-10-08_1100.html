@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-08 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-08</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / QQQ / SPY", title_cn: "纪要说年内还要加,长债为何先创了新高?", body_cn: "三大指数周三全线收跌,道琼斯工业平均指数收跌0.66%报51179.87点领跌,标普500指数收跌0.22%报7801.77点,纳斯达克综合指数收跌0.22%报27538.69点,纳指100ETF(QQQ)收跌0.25%报757.73美元。压力来自债券那一头:10年期美债收益率盘中最高升到5.366%,30年期盘中最高到5.728%,两个期限双双刷新2002年以来的高点。同一天公布的美联储9月会议纪要显示,全部19名决策者都投票支持了那次25个基点的加息,但对这一步到底算预防性举措还是转向更紧缩,内部存在分歧;多数官员预计年内还会再加一次,纪要没有给出具体是哪一次会议。多头的抓手是纪要里没有比市场预期更鹰的新东西,加息这件事已经被反复定价过,指数当天的回落幅度也很有限;空头的抓手是长端收益率这轮上行并不完全由加息预期推动,财政压力和美债供需失衡这些中长期的东西还没化解,期限溢价才是把长债推上去的那股力量,这意味着就算美联储停手,压在估值头上的这只手也不会跟着松。年内还剩10月和12月两次会议,你觉得加息更可能落在哪一次?", title_en: "Fed Minutes Signal Another Hike, Yet Long-End Yields Hit New Highs First?", body_en: "All three major U.S. indices fell Wednesday, with the Dow dropping 0.66% to 51,179.87, the S&P 500 off 0.22% to 7,801.77, and the Nasdaq Composite down 0.22% to 27,538.69; QQQ shed 0.25% to $757.73. The 10-year Treasury yield hit an intraday high of 5.366% and the 30-year reached 5.728%, both the highest since 2002. Minutes from the Fed's September meeting showed all 19 policymakers backed the 25-basis-point hike, though they were divided over whether the move was precautionary or a shift toward tighter policy; most expect one more hike this year, with no indication of which meeting. Bulls say the minutes held nothing more hawkish than the market had already priced, and the day's pullback was slight; bears say the long-end move is not driven by rate expectations alone — fiscal pressure and Treasury supply-demand imbalances remain unresolved, and term premium is what is pushing long yields up, meaning that even if the Fed stops, the weight on valuations will not lift. With only the October and December meetings remaining, does the long end stay elevated even if the Fed stands pat?" },
+  { ticker: "MU / SNDK / SKHY / WDC", title_cn: "三星利润暴增782%,存储股还没来得及反应?", body_cn: "三星电子今天早上公布了三季度初步业绩:营业利润约107.40万亿韩元,同比增长782.5%,销售额约195万亿韩元。这是它第一次单季营业利润突破100万亿韩元,折合约800亿美元,超过了英伟达此前保持的全球大型科技公司单季营业利润纪录,拉动它的是AI带来的高带宽内存需求,完整财报和电话会定在10月29日。需要说清楚的是,这份数字出来的时候美股已经收盘了,所以周三存储股的表现还没把它算进去。周三收盘这边是分化的:美光收涨4.06%报1088.00美元,闪迪收涨1.92%报1692.42美元,SK海力士收跌2.36%报178.25美元,西部数据收跌1.37%报405.42美元。高盛测算下周开始的三季报季里,美光一家会贡献标普500三季度盈利增长的19%,英伟达约15%,两家加起来接近三分之一。多头的抓手是三星这份初步业绩把“存储荒”从一个预期变成了已经落到利润表上的事实,而美光的盈利贡献度也说明这轮涨价是真金白银;空头的抓手是利润增长接近九倍本身就说明现在是周期的高位,而周三板块内部已经在分化,涨的跌的各有一半,资金在挑标的而不是整体往里买。三星的利润翻了近九倍,你觉得存储这轮行情走到哪个阶段了?", title_en: "Samsung Profit Surges 782% — Have Memory Stocks Even Priced It In?", body_en: "Samsung Electronics reported preliminary third-quarter operating profit of approximately 107.40 trillion Korean won, up 782.5% year-on-year, with revenue of roughly 195 trillion won — the first time its quarterly operating profit has topped 100 trillion won, or roughly $80 billion, surpassing Nvidia's prior record among major global tech firms; the full earnings release and call are scheduled for October 29. The numbers landed after U.S. markets had already closed, so Wednesday's memory stock moves did not reflect them: Micron rose 4.06% to $1,088.00, SanDisk gained 1.92% to $1,692.42, SK Hynix fell 2.36% to $178.25, and Western Digital dropped 1.37% to $405.42. Goldman Sachs estimates that in the third-quarter reporting season starting next week, Micron alone will contribute 19% of S&P 500 earnings growth, with Nvidia adding roughly 15% — together accounting for nearly one-third. Bulls say Samsungs preliminary result turns the memory shortage from an expectation into something already showing up on the income statement, and Microns earnings share shows this pricing round is real money; bears say profit growth of nearly nine times is itself a sign the cycle is at a peak, and the sector already split on Wednesday with gainers and decliners evenly divided, meaning money is picking names rather than buying the group. With Samsung's profit nearly nine times higher, is this cycle different from past memory booms?" },
+  { ticker: "SKHY / INTC", title_cn: "当年卖掉的NAND业务,要回美国上市了?", body_cn: "据彭博报道,SK海力士旗下的存储部门Solidigm已经选定了赴美上市的主承销商,计划明年挂牌,具体承销商名单和估值目前都没有披露。Solidigm的前身是英特尔的NAND闪存业务,SK海力士在2021年把这块资产买了下来。周三收盘,SK海力士收跌2.36%报178.25美元,英特尔收涨0.55%报113.12美元。多头的抓手是在存储周期的高位把这块资产单独拿出来定价,是能卖出好价钱的时点,募到的钱可以回流去投高带宽内存这条更赚钱的线;空头的抓手是选定承销商离真正挂牌还隔着很长的流程,时间定在明年等于要赌一年以后周期还在高位,而把一块资产分拆出去融资,本身也可能说明母公司在别处需要现金。这块当年从英特尔手里买来的资产要单独上市,你觉得SK海力士图的是什么?", title_en: "The NAND Business Sold Years Ago — Is It Coming Back to U.S. Markets?", body_en: "Reports indicate that Solidigm, the NAND memory unit under SK Hynix, has selected lead underwriters for a U.S. IPO and plans to list next year, though the specific banks and valuation have not been disclosed. Solidigm originated as Intel's NAND flash business, which SK Hynix acquired in 2021. Wednesday's close: SK Hynix fell 2.36% to $178.25; Intel rose 0.55% to $113.12. Bulls say that spinning out the asset at the top of the memory cycle maximizes valuation, freeing capital to reinvest in the higher-margin HBM business; bears say that selecting underwriters is still far from an actual listing, timing the IPO for next year is a bet the cycle remains elevated, and the need to raise external capital may signal cash pressure elsewhere at the parent. SK Hynix is floating the asset it bought from Intel — does that strengthen or weaken the story?" },
+  { ticker: "AVGO / SPCX", title_cn: "三家同时借钱买芯片,这回的钱从哪来?", body_cn: "据华尔街日报报道,博通、甲骨文和SpaceX三家公司正同时推进大额债务融资,用途都指向AI硬件的采购,而这轮融资找的是私募信贷,不是传统的公开债市。周三收盘,博通收涨0.19%报376.51美元,SpaceX收跌2.51%报167.60美元。多头的抓手是买算力这件事的规模已经大到经营现金流覆盖不住,能从私募信贷拿到钱说明资金供给这一侧还很充裕,项目不会因为缺钱停下来;空头的抓手是私募信贷的定价、期限和条款都不公开,三家公司同时去同一个池子里取水,这件事本身就说明传统渠道的容量不够用了,而这些债务对应的资产是会快速折旧的芯片,不是能用几十年的厂房。用私募信贷去买会快速折旧的芯片,你放心吗?", title_en: "Three Giants Borrowing at Once for Chips — Where Is the Money Coming From?", body_en: "According to the Wall Street Journal, Broadcom, Oracle, and SpaceX are simultaneously pursuing large debt financings to fund AI hardware procurement, all turning to private credit rather than public bond markets. Wednesday's close: Broadcom rose 0.19% to $376.51; SpaceX fell 2.51% to $167.60. Bulls say that the scale of compute spending has simply outgrown operating cash flows, and the ability to tap private credit signals ample capital supply keeping projects funded; bears say that private credit terms and pricing are opaque, three major borrowers drawing from the same pool simultaneously suggests traditional market capacity is stretched, and the underlying assets are chips that depreciate rapidly — not long-lived infrastructure. Private credit is now funding AI hardware — where does that go next?" },
+  { ticker: "NBIS", title_cn: "197倍估值上高管减持,市场该当回事吗?", body_cn: "Nebius Group周三收跌5.09%报237.15美元。压力来自内部人减持的消息,有报道说这家公司的首席运营官减持了自己的持股,而它目前的市盈率已经接近197倍。多头的抓手是单个高管卖股票不改变业务本身,公司前一天刚因为一份推理业务的订单大涨,需求这一侧没有出现变化;空头的抓手是在197倍的估值上,任何一个内部人用脚投票都会被放大,而减持的人恰好是公司里最了解日常经营状况的那一批,这种信号没办法用“个人财务安排”完全解释过去。这样的估值水平上,你会给它多少容错空间?", title_en: "Insider Selling at a 197x Valuation — Should the Market Take Notice?", body_en: "Nebius Group fell 5.09% to $237.15 on Wednesday, pressured by reports that the company's COO reduced their stake while the stock trades at nearly 197 times earnings. Bulls say that a single executive's share sale does not alter underlying business fundamentals, especially after the stock surged the prior session on an inference workload contract win. bears say that at a 197x multiple any insider selling gets amplified, and the seller is precisely the person with the closest view of day-to-day operations — a signal that cannot be fully dismissed as routine personal financial planning. What would it take for you to treat this insider sale as a genuine red flag?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
