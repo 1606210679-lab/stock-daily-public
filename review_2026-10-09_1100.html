@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-09 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-09</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / QQQ / SPY", title_cn: "一条营收口径的消息,为何能砸动整条AI链?", body_cn: "周四美股走出了少见的分化:纳斯达克综合指数收跌1.25%报27193.34点,标普500指数收跌0.47%报7765.36点,纳指100ETF(QQQ)收跌1.34%报747.58美元,道琼斯工业平均指数却收涨0.10%报51231.64点。砸盘的是一则关于口径的消息。据英国金融时报报道,OpenAI向投资者披露截至9月底的年化营收接近500亿美元,低于此前媒体报道的700亿美元,差额约200亿。差异不在业务本身,而在怎么算:和Anthropic比较时两家的统计口径不同,Anthropic把客户通过亚马逊云、谷歌云等云合作伙伴支付的钱全额计入,OpenAI只计入扣除合作伙伴分成之后自己实际拿到的部分,投资者此前按前一种口径把数字调上去,才推算出700亿。OpenAI拒绝置评。多头的抓手是这件事从头到尾没有一个客户流失、没有一笔订单取消,变的只是会计口径,而道指当天还收涨,说明被重新定价的是AI这条线而不是整个市场;空头的抓手是一条口径消息就能让整条链回调,恰恰说明这些股价里装的是对增速的想象而不是已经兑现的收入,而行业的风向标自己把参照系改小了一截。同样一家公司,换个算法差出200亿美元,你更信哪个口径?", title_en: "One Revenue Accounting Change Just Dragged Down the Entire AI Trade — Why?", body_en: "U.S. equities split sharply Thursday: the Nasdaq Composite fell 1.25% to 27,193.34, the S&P 500 dropped 0.47% to 7,765.36, QQQ slid 1.34% to $747.58, while the Dow edged up 0.10% to 51,231.64. The catalyst was an accounting discrepancy — the Financial Times reported OpenAI disclosed annualized revenue of nearly $50 billion through late September, well below the $70 billion figure previously circulated; the $20 billion gap reflects differing methodologies, with OpenAI counting only its net share after partner revenue splits rather than gross billings. Bulls say not a single customer was lost and not one order was cancelled — only the accounting changed — and the Dow still closed higher, so what got repriced was the AI trade, not the whole market; bears say a $20 billion swing from one definitional change exposes how much AI valuations rest on growth expectations rather than realized revenue. How much does a definitional change like this actually matter?" },
+  { ticker: "NVDA / AVGO / AMD / INTC", title_cn: "芯片股集体回调,但AMD说的是供不应求?", body_cn: "周四芯片股跟着AI这条线一起回调:英特尔收跌5.34%报107.08美元,博通收跌4.35%报360.14美元,AMD收跌3.90%报620.68美元,英伟达收跌2.94%报230.48美元。有意思的是公司这一侧的表态和股价是反的。AMD首席执行官苏姿丰本周在台北对记者说,即便公司2026年已经增加了产量,AI芯片的需求仍然超过供给,她预计未来几年需求都会维持在很高的水平,公司明年打算大幅增加产能;她还提到约束不只在晶圆,高带宽内存和封装这几样要同时到位才行。同一周,英特尔首席执行官陈立武表示公司会继续推进Terafab项目。多头的抓手是掌握真实订单的人说的是供不应求,这跟当天那条营收口径的消息完全不在一个层面,一个是算法一个是产能;空头的抓手是产能要到明年才大幅增加,而需求的强弱最终要由下游客户的预算来验证,当下游的参照系被调小一截时,再强的供给侧表态也压不住估值的重估。产能方说供不应求,股价却在跌,这种时候你会加仓吗?", title_en: "Chip Stocks Sell Off, Yet AMD Says Demand Still Outstrips Supply?", body_en: "Chip stocks retreated Thursday alongside the broader AI trade: Intel fell 5.34% to $107.08, Broadcom dropped 4.35% to $360.14, AMD lost 3.90% to $620.68, and Nvidia declined 2.94% to $230.48. AMD CEO Lisa Su told reporters in Taipei this week that AI chip demand continues to exceed supply even as the company expands output, with constraints spanning wafers, HBM memory, and advanced packaging; she added AMD plans a significant capacity ramp next year. Intel CEO Lip-Bu Tan separately confirmed the company will continue advancing its Terafab initiative. Bulls say the people holding real order books are signaling supply tightness — a different issue entirely from an accounting definition; bears say that demand ultimately depends on downstream customer budgets, and when the reference baseline shrinks, even the strongest supply-side signals cannot halt a valuation reset. If order books are this tight, what would have to break for the selloff to be right?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "三星刚创纪录,存储股为何反而跌了一轮?", body_cn: "存储是周四跌得比较重的一块:闪迪收跌4.90%报1609.46美元,美光收跌4.79%报1035.84美元,SK海力士收跌4.35%报170.50美元。这个方向和基本面看起来是拧着的——三星电子前一天公布的三季度初步业绩创了纪录,营业利润约107.40万亿韩元、折合约800亿美元,是它第一次单季突破100万亿韩元。市场的解读落在了增速上:有分析认为这份创纪录的业绩同时显示增长正在放缓,而存储价格的涨幅也在收窄。多头的抓手是存储的绝对盈利水平仍然摆在那里,一个季度800亿美元的营业利润不是靠情绪撑出来的,下周开始的三季报季里美光还会贡献标普500三季度盈利增长的相当一块;空头的抓手是周期股的定价看的是增速的二阶导而不是利润的绝对值,当创纪录和放缓同时出现,市场会先按后者定价,何况这轮上涨前面已经积累了可观的涨幅。创纪录的利润配上放缓的增速,存储这轮是见顶了吗?", title_en: "Samsung Just Posted a Record Quarter — So Why Did Memory Stocks Drop?", body_en: "Memory stocks were among Thursday's hardest hit: SanDisk fell 4.90% to $1,609.46, Micron dropped 4.79% to $1,035.84, and SK Hynix declined 4.35% to $170.50. The moves came a day after Samsung Electronics reported preliminary third-quarter operating profit of approximately 107.40 trillion won — roughly $80 billion — marking the first time the company has exceeded 100 trillion won in a single quarter. Markets focused on the trajectory rather than the level: analysts noted the record result also signals decelerating growth, with memory price appreciation beginning to narrow. Bulls say $80 billion in quarterly operating profit stands as a fundamentals-driven figure, not sentiment; bears say cyclical stocks are priced on the second derivative of growth, and when a record high and a slowdown arrive simultaneously, markets reprice the slowdown first. Record profit, slowing growth — is this cycle turning, or just catching its breath?" },
+  { ticker: "AVGO / NBIS", title_cn: "借钱买算力的账,债券市场开始算了?", body_cn: "周四有一条容易被股价盖过去的线索:交易员正在给AI相关的科技债重新定价。背景是这轮AI基建大量靠发债支撑,据先锋领航的测算,2026年AI相关的债务发行规模在3000亿到5700亿美元之间,而微软、Meta、谷歌、甲骨文、亚马逊、英伟达这几家超大规模厂商的美元债务规模已经翻倍到超过3600亿美元。压力最集中的是甲骨文,10月初它的五年期信用违约互换定价一度隐含超过20%的违约概率。同一天Nebius收跌7.35%报219.71美元,博通收跌4.35%报360.14美元。多头的抓手是能持续借到钱本身说明资金供给还在,而这些债务对应的是真实的算力交付,不是空转;空头的抓手是信用违约互换的价格是专门做风险定价的人用钱投出来的票,它先于股价反应,而债务的成本会随着长端收益率一起往上走,当借钱的人越来越多、利率又居高不下,这笔账迟早要摊到利润表上。信用市场已经在要更高的补偿,这件事你看得有多重?", title_en: "Is the Bond Market Starting to Price the Cost of Borrowing for AI Computing?", body_en: "A thread Thursday that equity moves may have overshadowed: traders are repricing AI-related corporate debt. Vanguard estimates AI-linked debt issuance will reach $300 billion to $570 billion in 2026, while dollar-denominated debt across Microsoft, Meta, Google, Oracle, Amazon, and Nvidia has already doubled to over $360 billion. Pressure is most acute at Oracle, whose five-year credit default swap spread briefly implied a default probability exceeding 20% in early October; Nebius fell 7.35% to $219.71 and Broadcom dropped 4.35% to $360.14 on the same day. Bulls say continued access to capital markets confirms funding supply remains intact and the debt funds real compute delivery; bears say CDS spreads represent real money pricing real risk, they tend to lead equities, and rising long-end yields make the math increasingly difficult to keep off the income statement. Credit is repricing ahead of equities — what would you watch to know it has gone too far?" },
+  { ticker: "SPCX", title_cn: "买下一张全国频谱,星链要动谁的蛋糕?", body_cn: "SpaceX周四日间收跌4.19%报160.57美元,跟着AI这条线一起回调。但当天真正的消息出在收盘之后:公司宣布达成协议,收购Grain Management持有的全部全国性800兆赫兹频谱,涉及最多14兆赫兹的成对频谱,交易金额没有披露,还需要美国联邦通信委员会批准。这意味着星链的手机直连业务拿到了一张全国性的地面频谱牌照,消息出来后三大运营商在盘后都明显走低。多头的抓手是卫星直连此前最大的短板就是没有地面频谱,这笔交易把它从一个补充方案推向了可以独立组网的位置,而频谱是稀缺的、买一张少一张;空头的抓手是交易还要过联邦通信委员会这一关,金额也没有披露,而运营商手里的基站和用户关系不是一张频谱牌照就能替代的,从拿到频谱到真正抢到用户中间还隔着很长的路。星链拿到了地面频谱,运营商该担心的是什么?", title_en: "SpaceX Buys a Nationwide Spectrum License — Whose Market Share Is at Risk?", body_en: "SpaceX shares fell 4.19% to $160.57 intraday Thursday alongside the broader AI selloff, but the day's real news came after the close: the company announced an agreement to acquire all nationwide 800 MHz spectrum licenses held by Grain Management, covering up to 14 MHz of paired spectrum; financial terms were not disclosed and the deal requires FCC approval. The transaction would give Starlink's direct-to-cell service a nationwide terrestrial spectrum license, and all three major U.S. carriers moved meaningfully lower in after-hours trading on the news. Bulls say the absence of terrestrial spectrum was Starlink's biggest structural constraint, and this deal elevates it from a supplementary option to a standalone network candidate — with spectrum being inherently scarce; bears say the deal still faces regulatory review, terms remain undisclosed, and carriers' tower infrastructure and customer relationships cannot be displaced by a spectrum license alone. With spectrum now in hand, would you still want to own the carriers?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
