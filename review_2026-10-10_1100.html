@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-10 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-10</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / QQQ / SPY", title_cn: "一周震荡收涨，三季报季的第一张牌谁来翻？", body_cn: "美股周五（10月9日）三大指数集体收涨，收复了周四OpenAI营收口径消息砸下的大部分跌幅：纳斯达克综合指数收涨0.64%报27366.17点，标普500指数收涨0.59%报7811.54点，道琼斯工业平均指数收涨0.83%报51654.95点，纳指100ETF（QQQ）收涨0.49%报751.27美元，标普500ETF（SPY）收涨0.60%报778.57美元。反弹的背面也有阻力：密歇根大学消费者信心指数初值滑落至5个月低点，显示高利率环境正在侵蚀家庭预期。接下来的一周，市场的目光会从宏观语境转向公司基本面——台积电、微软、Netflix等将率先拉开三季报季的帷幕。多头的抓手是周四的大跌本质上是一次口径消息引发的情绪出清，不是基本面变化，指数当天就快速收复说明资金并没有真正撤退；空头的抓手是消费者信心下滑和长端利率高企还没有消化完，而三季报季一旦有一家核心公司给出保守指引，周四那种性质的下跌可能更难收复。三季报季第一张牌，你更担心哪条线的指引？", title_en: "Wall Street Ends Volatile Week Higher — Who Kicks Off Earnings Season?", body_en: "U.S. equities rebounded Friday, Oct. 9, recovering most of Thursday's OpenAI revenue-reporting-metric-driven losses: the Nasdaq Composite rose 0.64% to 27,366.17, the S&P 500 gained 0.59% to 7,811.54, and the Dow added 0.83% to 51,654.95; QQQ closed up 0.49% at $751.27 and SPY up 0.60% at $778.57. The University of Michigan consumer sentiment preliminary reading slid to a five-month low, signaling that the high-rate environment is eroding household expectations. Attention now shifts from macro to fundamentals as TSMC, Microsoft, Netflix and others prepare to open earnings season. Bulls say Thursday's drop was purely an emotion-driven clearing event — not a fundamental shift — and the swift index recovery signals capital hasn't actually retreated; Bears say consumer confidence has slipped and long-end rates haven't been fully digested, meaning any conservative guidance from a core company could trigger a harder-to-recover-from selloff. Heading into earnings season — what would TSMC need to say in its quarterly report to put AI semiconductor sentiment back on track?" },
+  { ticker: "MRNA", title_cn: "一年涨了五倍多，Moderna这次的底气是什么？", body_cn: "Moderna周五大涨14.21%，报225.00美元，刷新52周新高。这轮上涨有两个来源同时打开。一是纳斯达克100成分股调整正式生效，Moderna重新纳入，替换华纳兄弟探索，被动基金和ETF在调仓期间被迫买入。二是《纽约时报》报道，美国国立卫生研究院计划在全国范围内推动癌症疫苗项目，Moderna与默克共同开发的个性化癌症疫苗被重点提及，BioNTech和Novavax同日也跟涨。Moderna年初至今已累计上涨逾550%，当前市值约750亿美元。多头的抓手是纳指纳入代表被动资金的持续流入，而癌症疫苗管线一旦进一步推进，这条商业化路径跟COVID疫苗时期的逻辑高度相似，市场愿意提前给溢价；空头的抓手是花旗分析师目标价仅80美元，而股价已到225美元，两者之间的缺口说明现在的估值要求未来几年持续兑现，一旦管线数据或政策推进节奏不达预期，跌幅空间也足够大。Nasdaq-100重新纳入加上NIH推癌症疫苗，Moderna的这次上涨你觉得站得住吗？", title_en: "Up More Than 5x in a Year — What's Driving Moderna's Conviction?", body_en: "Moderna surged 14.21% Friday to $225.00, hitting a new 52-week high, on two simultaneous catalysts: its reinstatement into the Nasdaq 100 — replacing Warner Bros. Discovery — forced passive funds and ETFs to buy during the rebalancing period, while The New York Times reported the NIH plans to advance a national cancer vaccine initiative, specifically citing Moderna's personalized cancer vaccine co-developed with Merck; BioNTech and Novavax also rose on the day. Moderna is now up over 550% year-to-date with a market cap of approximately $75 billion. Bulls say the Nasdaq 100 reinstatement locks in sustained passive inflows, and if the cancer vaccine pipeline advances, the commercial trajectory mirrors the COVID vaccine playbook — the market is willing to pay an early premium; Bears say Citi's analyst target stands at just $80 against the current $225, and the gap demands years of flawless execution — any pipeline setback, any slowdown in the policy rollout, leaves substantial downside. Moderna's personalized cancer vaccine with Merck — what clinical milestone would make you more confident the market is pricing this correctly?" },
+  { ticker: "PLTR", title_cn: "高盛换了方向，Palantir的政府AI故事估值怎么算？", body_cn: "Palantir周五收涨5.17%，报209.05美元。推动这波的是两家大行同日升级：高盛将评级从中性上调至买入，给出230美元目标价，核心论点是\"主权AI需求\"——各国政府正在把AI部署当作国家战略优先项，而Palantir的政府合同基础比消费AI公司更难被替代；巴克莱同日也上调评级，两家都提到公司有望在2027年之前进入新一轮超额表现阶段。多头的抓手是政府预算有财政支撑，不会随季度情绪波动，这让Palantir的营收能见度在AI公司里相对偏高；空头的抓手是两家大行的升级时间点明显滞后，股价已经先走了一段，当所有人都看到同一个故事的时候，超额的空间还剩多少是个问题。主权AI这个逻辑你认可吗，还是觉得政府合同的成长天花板比商业市场低？", title_en: "Goldman Flips Bullish on Palantir — How Do You Value a Sovereign AI Story?", body_en: "Palantir closed up 5.17% Friday at $209.05 after Goldman Sachs upgraded the stock from Neutral to Buy with a $230 price target, arguing that \"sovereign AI demand\" — governments treating AI deployment as a national strategic priority — makes Palantir's government contract base harder to displace than consumer AI peers; Barclays issued a simultaneous upgrade, with both firms suggesting the company is positioned for a new outperformance cycle before 2027. Bulls say fiscally backed government budgets that don't fluctuate with quarterly sentiment, giving Palantir relatively high revenue visibility among AI names; Bears say both upgrades came well after the stock had already moved significantly. Goldman upgraded Palantir well after the stock had already run — what does a late-arriving upgrade like this actually signal about analyst timing?" },
+  { ticker: "LITE / AAOI", title_cn: "光学零件卖到2029年，AI对带宽的渴求到底有多烈？", body_cn: "光学板块周五集体上涨：Lumentum收涨5.22%报1103.36美元，Applied Optoelectronics收涨3.53%报109.64美元。催化剂来自Lumentum首席执行官的最新表态：公司光学零部件的订单已经排满，到2029年初都属于完全售罄状态。背景是AI数据中心内部的带宽需求在过去两年里出现了超线性增长，每一代加速卡的算力翻倍都会对片间互联的光学速率提出更高要求，光纤收发器和光学引擎从来不是AI题材的主角，但它是算力基础设施里最难被绕过的那段瓶颈。多头的抓手是能见度能锁到2029年的供应商在制造业里属于极少数，这给了公司在资本开支和定价上的主动权；空头的抓手是这个逻辑几乎不带任何悬念，当首席执行官主动出来喊售罄，往往也是股价已经完全消化了预期的节点，何况供给侧最终会响应价格信号。光学零件卖到2029，你觉得这条链的瓶颈比芯片那条更难解开，还是最终还是会被供给追上？", title_en: "Optical Components Sold Out Through 2029 — How Fierce Is AI's Bandwidth Hunger?", body_en: "Optical sector stocks rallied broadly Friday — Lumentum rose 5.22% to $1,103.36 and Applied Optoelectronics gained 3.53% to $109.64 — after Lumentum's CEO stated the company's optical component order book is fully sold out through early 2029. AI data center interconnect bandwidth has grown super-linearly over the past two years, with each new generation of accelerator doubling compute and raising the bar on chip-to-chip optical speeds, making fiber transceivers and optical engines an unavoidable bottleneck in AI infrastructure. Bulls say suppliers with visibility locked to 2029 are exceptionally rare in manufacturing, granting pricing power and capex flexibility; Bears say when a CEO publicly declares a sellout, the stock has often already fully priced in expectations — and supply will eventually respond to price signals. Lumentum says sold out through 2029 — at what point does multi-year forward visibility start raising questions about customers over-ordering?" },
+  { ticker: "ASTS / SPCX", title_cn: "SpaceX拿到全国性频谱，卫星直连格局变了多少？", body_cn: "周四收盘后SpaceX宣布收购Grain Management持有的全国性800兆赫兹频谱资产，周五市场给出了方向性很清晰的定价：AST SpaceMobile收跌10.48%报50.97美元，成为今日跌幅最大的标的；SpaceX收涨1.25%报162.57美元。800MHz是卫星直连业务最稀缺的频段之一——穿透能力强、覆盖范围广，此前卫星直连最大的结构性短板正是没有地面授权频谱，这笔交易把星链的手机直连从依赖运营商共享变成可以独立组网的路径。ASTS的跌幅说明市场认为SpaceX进入这个赛道的成本降低了，而ASTS本身的竞争优势受到直接压缩。多头的抓手是AST SpaceMobile的卫星已经在轨，实际的网络交付能力和卫星数量仍然领先，频谱不等于用户；空头的抓手是频谱是稀缺且不可复制的基础资源，SpaceX补上这块之后，ASTS的护城河里少了一块砖，而SpaceX在成本和发射节奏上的优势本来就不对称。星链直连和ASTS直连，你会更信任哪边的技术路径？", title_en: "SpaceX Secures Nationwide Spectrum — How Much Has Satellite Direct-to-Cell Shifted?", body_en: "After Thursday's close, SpaceX announced the acquisition of Grain Management's nationwide 800 MHz spectrum assets, triggering a sharp market reaction Friday: AST SpaceMobile dropped 10.48% to $50.97, the session's biggest decliner, while SpaceX rose 1.25% to $162.57. The 800 MHz band is among the most coveted for satellite direct-to-cell service — offering strong penetration and broad coverage — and the deal transforms Starlink's mobile connectivity from a carrier-dependent model to an independent network path, directly compressing ASTS's competitive moat. Bulls say ASTS satellites are already in orbit with a leading network delivery capability; Bears say spectrum is a scarce, non-replicable foundational resource, and with SpaceX closing this gap, ASTS's moat loses a critical brick against a rival with inherently asymmetric cost and launch advantages. The spectrum is secured but FCC approval still pending — does regulatory risk change how soon you think Starlink direct-to-cell becomes mainstream?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
