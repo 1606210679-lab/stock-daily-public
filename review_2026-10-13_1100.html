@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-13 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-13</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / QQQ", title_cn: "半导体全线撤退，大盘守住，CPI明晚能给出方向吗？", body_cn: "美股周一三大指数分化：标普500收跌0.06%报7807.24点，纳斯达克100（QQQ）收跌0.70%报746.04美元，大盘基本持平。但半导体板块承压明显——SOXL三倍做多ETF收跌8.13%，SOXS三倍做空ETF反弹8.14%，做空力量集中释放。主要导火索是长鑫存储总裁于周末会议宣布4F² DRAM架构取得关键突破，市场担忧国产DRAM长期竞争压力，引发存储相关标的集中抛售。明日北京时间20:30，美国9月CPI数据公布；本周五，美联储官员沃什将在IMF年会发言。市场目前预期10月不加息概率达69%。多头的抓手是通胀继续降温将打开利率回落空间，股债双受益；空头的抓手是若CPI超预期，利率预期将再度收紧，风险资产承压。大盘和半导体走出了截然不同的方向，你觉得这种分化能撑到CPI之后吗？", title_en: "Semis Retreat Broadly as Broader Market Holds; Can CPI Provide Direction?", body_en: "U.S. equities diverged Monday: the S&P 500 slipped 0.06% to 7,807.24, while the Nasdaq 100 (QQQ) fell 0.70% to $746.04. Semiconductors bore the brunt — SOXL tumbled 8.13% and SOXS surged 8.14% — after CXMT's president announced a key breakthrough in next-generation 4F² DRAM architecture at a weekend conference, stoking fears of long-term pricing pressure from domestic Chinese DRAM. September CPI drops tomorrow at 8:30 PM Beijing time; Fed official Warsh speaks at the IMF annual meeting Friday, as markets price a 69% probability of no October rate hike. With the broader market and semis moving in sharply opposite directions, do you think this divergence holds past the CPI print?" },
+  { ticker: "META", title_cn: "Meta发Muse Wonder挑战企业AI，Zuckerberg的路线和OpenAI不一样？", body_cn: "Meta周一收涨3.38%报742.96美元，为当日大型科技股中表现最突出的一只。驱动因素是Meta发布新企业AI模型Muse Wonder，据测试在部分基准上超越GPT-6 Astra与Claude Opus 5.5，主打合同解读、金融与健康信息分析等复杂企业任务。Meta首席执行官扎克伯格明确表示将持续重金投入AI，反对全行业减速，并将Meta路线定义为\"个人超级智能\"AI助手——与OpenAI、Anthropic以AGI为终点的方向存在明显分歧。多头的抓手是企业AI市场可计量的商业空间足够大，Muse Wonder若能在标准任务上稳定落地将带来可见收益；空头的抓手是基准测试分数不等于企业采购决策，实际落地周期与部署成本仍是变量。扎克伯格说Meta走\"个人超级智能\"而非AGI路线，你觉得这条路走得通吗？", title_en: "Meta Launches Muse Wonder to Challenge Enterprise AI — Is Zuckerberg's Path Different From OpenAI's?", body_en: "Meta surged 3.38% to $742.96 Monday, the standout performer among large-cap tech, driven by the launch of its new enterprise AI model Muse Wonder, which reportedly outperforms GPT-6 Astra and Claude Opus 5.5 on select benchmarks across contract analysis, financial, and healthcare tasks. CEO Zuckerberg reaffirmed aggressive AI investment and positioned Meta's approach around \"personal superintelligence\" assistants — a clear divergence from OpenAI and Anthropic's AGI-centric roadmaps. Bulls say there is a large, measurable commercial opportunity in enterprise AI if Muse Wonder delivers reliably; Bears say benchmark scores don't translate directly into enterprise procurement decisions. Zuckerberg says Meta is pursuing \"personal superintelligence\" rather than AGI — do you think that path is viable?" },
+  { ticker: "MU / SNDK / SKHY / LITE", title_cn: "长鑫DRAM技术突破，存储和光通信股单日重挫，这是恐慌还是重估？", body_cn: "周一AI硬件板块集体遭遇重挫：闪迪收跌5.97%，Lumentum收跌9.78%，美光跌3.88%，SK海力士跌4.02%。导火索是长鑫存储总裁在周末行业会议宣布公司已在下一代4F² DRAM存储架构实现关键突破，计划2026年底推出基于该架构的服务器内存产品，市场随即担忧国产DRAM带来的长期定价压力。与此同时，博通首席执行官Hock Tan警告：制约AI发展的首要瓶颈已不是芯片或存储，而是资本，大多数AI投资者对底层技术认知不足，行为上更像赌场赌徒。多头的抓手是长鑫从技术突破到量产仍有良率与制程成熟度的巨大距离；空头的抓手是资本市场对国产半导体竞争的恐慌情绪一旦形成，短期内难靠基本面逻辑单独扭转。国产DRAM竞争的叙事出现后，你持有存储股的信心有变化吗？", title_en: "CXMT DRAM Breakthrough Hammers Memory and Optical Stocks — Panic or Repricing?", body_en: "AI hardware sold off hard Monday: SanDisk -5.97%, Lumentum -9.78%, Micron -3.88%, SK Hynix -4.02%. The trigger: CXMT's president announced a 4F² DRAM architecture breakthrough at a weekend conference, targeting server memory products by end-2026 — reviving fears of Chinese competition on memory pricing. Broadcom CEO Hock Tan warned that capital, not chips, is now AI's primary bottleneck. Bulls say CXMT still faces major yield hurdles before any volume ramp; Bears say once markets price in Chinese DRAM competition, fundamentals can't stop the re-rating. Has this changed your conviction in memory stocks?" },
+  { ticker: "ASML / TSM", title_cn: "台积电和阿斯麦本周放榜，AI资本支出要交出怎样的成绩单？", body_cn: "本周半导体财报迎来两场压轴：阿斯麦将于美东时间10月14日早间公布业绩，台积电紧随其后于10月15日早间放榜。两张财报关注的不止是单季营收，更是AI资本支出这条核心叙事能否继续兑现。对阿斯麦，关键数据是EUV设备新增订单量与订单能见度，这直接反映芯片厂对未来12至18个月先进制程扩产的信心；对台积电，焦点在CoWoS先进封装产能是否继续供不应求，以及AI芯片全年需求与毛利率的最新指引。多头的抓手是两家公司此前均未发出需求降温信号，若指引维持将为整个AI板块提供重要支撑；空头的抓手是周一半导体ETF遭遇重挫，市场已在放榜前抢跑减仓，若财报没有超预期亮点，反弹空间有限。阿斯麦和台积电这两张财报，你更想先看哪家的指引？", title_en: "TSMC and ASML Report This Week — What Must AI Capex Deliver?", body_en: "Two marquee semiconductor earnings arrive this week: ASML reports before the U.S. open on October 14, followed by TSMC on October 15. Beyond single-quarter revenue, the critical question is whether the AI capital expenditure narrative continues to hold — for ASML, the focus is on new EUV equipment order intake and order visibility as a proxy for chipmakers' advanced-node expansion confidence over the next 12–18 months; for TSMC, attention centers on whether CoWoS advanced packaging capacity remains supply-constrained and on the latest full-year AI chip demand and gross margin guidance. Bulls say neither company has signaled demand cooling; Bears say the sharp Monday selloff in semiconductor ETFs reflects pre-earnings de-risking that limits upside unless results genuinely surprise. Between ASML and TSMC earnings this week, which company's guidance do you want to see first?" },
+  { ticker: "PLTR", title_cn: "半导体全面溃退，Palantir为什么在这个时候创了新高？", body_cn: "Palantir周一几乎收平报209.00美元，在半导体与存储股普遍大跌的背景下，公司刚刚创下历史新高，在同期走势中显得格外突出。背景是Palantir近期持续拿下政府与企业AI合同，AIP平台的商业化规模持续扩大；与此同时公司宣布将在首尔开设快闪店并推出韩国专属周边产品——这在AI基础设施公司中颇为少见，映射出差异化的品牌策略。多头的抓手是政府端AI合同具备长期可见性，Palantir不直接依赖存储与封装供应链，对本轮国产DRAM恐慌天然绝缘；空头的抓手是当前估值已对未来数年的强增长充分定价，任何执行层面的失误都会被放大惩罚。Palantir靠政府合同构建的护城河，你觉得比半导体的技术护城河更稳吗？", title_en: "Semis Collapse — Why Did Palantir Hit an All-Time High Now?", body_en: "Palantir closed nearly flat at $209.00 Monday, having just set a new all-time high — a stark contrast to broad-based losses across semiconductor and memory stocks. The company has been steadily winning government and enterprise AI contracts, with commercial scaling of its AIP platform continuing to expand; it also announced plans to open a pop-up store in Seoul alongside Korea-exclusive merchandise, an unusual brand move for an AI infrastructure company. Bulls say government AI contracts offer long-term revenue visibility and that Palantir has no direct exposure to memory or packaging supply chains, insulating it from domestic DRAM fears; Bears say that the current valuation already prices in years of strong growth, leaving little room for execution missteps. Semis are selling off hard — how long can Palantir hold its new high?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
