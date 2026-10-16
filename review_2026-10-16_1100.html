@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-16 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-16</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "TSM / NVDA", title_cn: "台积电利润连创新高，AI扩产为何仍遭减仓？", body_cn: "台积电（TSM）今日跌1.80%，英伟达（NVDA）跌1.84%，市场在台积电交出超预期财报后仍削减AI硬件仓位。台积电季度营收1.49万亿新台币，高于市场预期的1.47万亿；净利润7631亿，高于预期的7463.4亿；营业利润率58.7%，也超过公司指引上限58%。多头的抓手是第四季度营收指引523亿至543亿美元，且2纳米量产与先进制程需求继续支撑增长；空头的抓手是公司预计2026至2028年资本开支显著高于过去三年，市场开始追问客户融资能力和AI投资回报。下一步更值得跟踪台积电产能兑现、英伟达订单，还是先等资本开支回报更清晰？", title_en: "TSMC Profits Hit Record Highs — Why Is AI Hardware Still Being Sold?", body_en: "TSMC (TSM) fell 1.80% and Nvidia (NVDA) dropped 1.84% as markets trimmed AI hardware exposure despite TSMC's beat on quarterly results. Revenue came in at NT$1.49 trillion versus the NT$1.47 trillion consensus; net profit reached NT$763.1 billion against the NT$746.34 billion estimate, with operating margin at 58.7%, topping the company's 58% guidance ceiling. Bulls point to Q4 revenue guidance of $52.3 billion to $54.3 billion and sustained advanced-node demand, while bears flag that capex from 2026 to 2028 is projected to run significantly above the prior three years, raising questions over customer financing capacity and AI ROI. Should investors track TSMC capacity execution and Nvidia order flow next — or wait for clearer returns on that capex?" },
+  { ticker: "QQQ / SPY", title_cn: "PPI环比飙1.3%，美股轮动能撑住吗？", body_cn: "QQQ今日跌0.13%，SPY涨0.28%，科技股与大盘出现分化，直接催化是9月PPI环比升1.3%，不仅高于市场预期的0.6%，也明显快于8月的0.4%；能源价格是主要推手，批发通胀同比升至6.3%。资金一边担忧AI资本开支过热，一边转向金融、消费等非科技板块，令道指取得一个多月来最佳表现。这说明指数上涨更多依靠风格切换，而非科技股重新领涨。多头的抓手是行情宽度扩大可降低指数对少数AI龙头的依赖；空头的抓手是上游价格压力可能压缩企业利润，并让降息预期继续后移。接下来应侧重SPY价值板块、继续持有QQQ，还是降低仓位等待通胀重新定价？", title_en: "PPI Surges 1.3% MoM — Can the U.S. Equity Rotation Hold?", body_en: "QQQ slipped 0.13% while SPY gained 0.28%, signaling a tech-versus-broad-market divergence driven by September PPI rising 1.3% month-on-month — well above the 0.6% consensus and the prior month's 0.4% — as energy prices lifted wholesale inflation 6.3% year-on-year. Capital rotated into financials and consumer sectors, away from AI-heavy tech, handing the Dow its best session in over a month. Bulls see broadening breadth reducing index dependence on a handful of AI leaders; bears warn upstream price pressure could compress margins and push rate-cut expectations further out. Should investors tilt toward SPY value sectors, hold QQQ, or reduce exposure and wait for inflation to reprice?" },
+  { ticker: "CRWV / NBIS", title_cn: "CoreWeave信用成本创新高，反弹站得住吗？", body_cn: "CoreWeave（CRWV）今日涨5.94%，Nebius（NBIS）涨1.29%，两只neocloud标的在债务担忧扩散后出现反弹，但CoreWeave的债务保险成本仍创纪录。股价反弹与信用价格恶化正在给出两套相反信号。多头的抓手是模型公司对GPU算力的需求并未消失，股价急跌后只要合同交付保持稳定，估值就有修复空间；空头的抓手是高融资成本、设备折旧和持续扩建需求会共同消耗现金，信用市场的警报比单日反弹更难忽视。当前更应验证CoreWeave的融资能力、Nebius的合同兑现，还是转向现金流更稳的微软等云平台？", title_en: "CoreWeave Credit Costs Hit Record Highs — Can the Rebound Hold?", body_en: "CoreWeave (CRWV) gained 5.94% and Nebius (NBIS) rose 1.29% as both neocloud names rebounded after a spread of debt concerns, yet CoreWeave's credit insurance costs remain at record levels — a direct contradiction between equity price action and credit market signals. Bulls argue that model-company demand for GPU compute is intact, and stable contract delivery leaves room for valuation recovery after the sharp selloff. Bears counter that high financing costs, equipment depreciation, and ongoing expansion needs will collectively drain cash, making the credit market's warning harder to dismiss than a single day's rebound. Should investors now verify CoreWeave's financing capacity and Nebius's contract execution — or rotate toward cash-flow-stable cloud platforms like Microsoft?" },
+  { ticker: "RKLB", title_cn: "Neutron推迟至2027，RKLB还能抄底吗？", body_cn: "Rocket Lab（RKLB）今日跌6.64%，直接催化是公司把Neutron火箭首次发射推迟至2027年，股价连续第七个交易日走弱。多头的抓手是ARK在回调中增持，Rocket Lab也在强调火星任务记录，说明投资者仍认可其发射与航天系统能力；空头的抓手是Neutron是公司打开更大运载市场和改善估值的重要节点，延期会推后收入兑现并增加研发成本。下一阶段更应跟踪Neutron的新时间表、Rocket Lab现有小型火箭业务，还是SpaceX的发射效率？", title_en: "Neutron Delayed to 2027 — Is RKLB a Buy on the Dip?", body_en: "Rocket Lab (RKLB) fell 6.64% after the company pushed the Neutron rocket's inaugural launch to 2027, marking the stock's seventh consecutive down session. Bulls note that ARK added to its position during the pullback and Rocket Lab continues to highlight its Mars mission track record, signaling ongoing investor confidence in its launch and space-systems capabilities. Bears argue that Neutron is a critical milestone for unlocking larger payload markets and improving the valuation case, and that the delay pushes out revenue recognition while adding R&D costs. Should investors focus next on Neutron's revised timeline and Rocket Lab's existing small-launch business — or monitor SpaceX's launch cadence efficiency?" },
+  { ticker: "AAPL", title_cn: "iPhone Duo周五预售，苹果新品能否破局？", body_cn: "苹果（AAPL）今日跌0.28%，最新催化是首款折叠手机iPhone Duo于周五开启预售，市场开始检验新品能否形成新的换机理由。多头的抓手是折叠形态可提高高端产品均价，并把Apple Intelligence、硬件设计与生态服务放进同一升级周期；空头的抓手是新品定价、耐用性和应用适配仍需消费者验证，单一形态创新也未必能扭转成熟市场的换机放缓。苹果下一阶段更值得看iPhone Duo订单、Apple Intelligence使用率，还是服务收入增长？", title_en: "iPhone Duo Pre-Orders Open Friday — Can Apple's New Hardware Break Through?", body_en: "Apple (AAPL) dipped 0.28% as the market turns its attention to Friday's pre-order launch of the iPhone Duo, the company's first foldable, testing whether the new form factor can generate a fresh upgrade cycle. Bulls contend the foldable design lifts average selling prices at the high end and bundles Apple Intelligence, hardware innovation, and ecosystem services into a single upgrade story. Bears note that pricing, durability, and app optimization still require consumer validation, and a single form-factor innovation may not be enough to reverse slowing upgrade rates in mature markets. Should the next phase of Apple's story be tracked through iPhone Duo order volumes, Apple Intelligence adoption rates, or services revenue growth?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
