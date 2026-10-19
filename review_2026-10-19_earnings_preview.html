@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-19 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-19</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "SPCX / META / TSLA", title_cn: "SpaceX率先交卷，AI交易能否止跌？", body_cn: "SpaceX将于周二公布业绩，Meta与Tesla均在周三盘后接棒，三家公司将连续检验AI投入能否转化为利润。市场对SpaceX的共识是EPS 0.139美元、营收129.6亿美元，焦点在Starlink用户、发射效率与AI业务现金流；Meta的共识是EPS 6.3122美元、营收645.7亿美元，核心矛盾是广告变现能否覆盖AI资本开支；Tesla的共识是EPS 0.4459美元、营收284.2亿美元，毛利率与自动驾驶进展决定增长预期。多头的抓手是三家公司均掌握稀缺平台与数据入口；空头的抓手是高估值已经放大指引不及预期的惩罚。SpaceX、Meta还是Tesla更可能率先证明投入回报？", title_en: "SpaceX Reports First — Can AI Trade Arrest the Slide?", body_en: "SpaceX reports Tuesday, with Meta and Tesla following Wednesday after-hours, as all three face consecutive tests of whether AI spending translates into profit. Consensus expects SpaceX at EPS $0.139 and revenue $12.96B, with focus on Starlink subscribers, launch efficiency, and AI cash flow; Meta at EPS $6.3122 and revenue $64.57B, with ad monetization vs. AI capex as the core tension; Tesla at EPS $0.4459 and revenue $28.42B, where gross margin and autonomous driving progress drive growth expectations. Bulls cite scarce platform and data assets; bears warn elevated valuations amplify any guidance miss. Which company — SpaceX, Meta, or Tesla — is most likely to prove AI returns first?" },
+  { ticker: "NFLX", title_cn: "Netflix周二放榜，广告变现能否接棒订阅？", body_cn: "Netflix将在周二盘后公布业绩，是本周大型科技与消费平台的重要前哨。最大看点是付费用户增长能否延续，以及广告支持会员层的变现速度是否足以抬高单用户收入。多头的抓手是内容规模、密码共享整改与广告产品共同提供增长路径；空头的抓手是市场已为持续增长支付较高估值，一旦用户增速、利润率或下季指引低于预期，股价反应可能被放大。投资者更应看订阅净增、广告ARPU，还是利润率指引？", title_en: "Netflix Reports Tuesday — Can Ads Replace Subscription Growth?", body_en: "Netflix (NFLX) reports after-hours Tuesday, serving as a key bellwether for the week's major tech and consumer platform earnings. The primary focus is whether paid subscriber growth can sustain momentum and whether ad-supported tier monetization is accelerating fast enough to lift average revenue per user. Bulls point to content scale, password-sharing crackdowns, and ad products as converging growth drivers; bears note the market already prices in sustained expansion, meaning any miss on subscriber adds, margins, or forward guidance could trigger an outsized stock reaction. Should investors focus more on net subscriber adds, ad ARPU, or margin guidance?" },
+  { ticker: "LRCX / WDC", title_cn: "LRCX与WDC接力，AI硬件需求还强吗？", body_cn: "半导体设备商LRCX周三盘后交卷，西部数据（WDC）周四盘后接棒，两张财报将从设备投资和存储需求两端验证AI硬件周期。分析师预期LRCX的EPS为2.2189美元、营收83.1亿美元，重点看先进制程与存储设备订单；分析师预期WDC的EPS为4.1122美元、营收41.7亿美元，重点看云端存储需求、价格与毛利率。两者结果也会影响英伟达、AMD与存储股的风险偏好。多头的抓手是AI数据中心仍需要更多制程设备与高容量存储；空头的抓手是存储股近期大跌，说明市场担忧资本开支回报和传统产品供给。LRCX订单还是WDC毛利率更能给硬件链定方向？", title_en: "LRCX and WDC in Focus — Is AI Hardware Demand Still Strong?", body_en: "Semiconductor equipment maker Lam Research (LRCX) reports Wednesday after-hours, followed by Western Digital (WDC) on Thursday after-hours, with both results set to test the AI hardware cycle from the equipment-investment and memory-demand sides. Consensus puts LRCX at EPS $2.2189 and revenue $8.31B, with attention on advanced-process and memory equipment orders; WDC consensus stands at EPS $4.1122 and revenue $4.17B, with focus on cloud memory demand, pricing, and gross margin. Outcomes will also shape risk appetite for Nvidia, AMD, and memory stocks broadly. Bulls argue AI data centers still require more process equipment and high-capacity memory; bears note the recent sharp selloff in memory stocks signals market concern over capex returns and oversupply in legacy products. Will LRCX order trends or WDC gross margins prove more directional for the hardware supply chain?" },
+  { ticker: "NBIS", title_cn: "Nebius周四交卷，亏损能否换来规模？", body_cn: "Nebius预计周四公布业绩，分析师预期每股亏损0.8017美元、营收9.2亿美元。最大看点不是短期盈利，而是新增合同、机房交付和资本开支能否证明neocloud模式正在形成规模效应。多头的抓手是大模型公司仍需要外部GPU算力，只要合同兑现，收入增长可摊薄固定成本；空头的抓手是高利率、设备折旧与持续融资会同时消耗现金，客户集中度也可能放大波动。Nebius更需要证明营收增长、合同质量，还是融资能力？", title_en: "Nebius Reports Thursday — Can Losses Buy Scale?", body_en: "Nebius is expected to report Thursday, with consensus calling for a loss per share of $0.8017 and revenue of $920M. The key focus is not near-term profitability but whether new contract wins, data center deliveries, and capital expenditure can demonstrate that the neocloud model is achieving meaningful scale. Bulls argue large AI model developers still need external GPU compute, and if contracts are fulfilled, revenue growth can dilute fixed costs; bears counter that high interest rates, equipment depreciation, and ongoing financing needs simultaneously drain cash, while customer concentration may amplify volatility. Does Nebius need to prove revenue growth, contract quality, or financing capacity most urgently?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
