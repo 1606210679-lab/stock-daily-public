@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-21 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-21</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: ".SPX / QQQ", title_cn: "大盘昨日窄幅收平，Meta和特斯拉今晚放榜能否给出方向？", body_cn: "美股周二窄幅震荡：标普500收涨0.28%报7712.57点，纳斯达克100（QQQ）收跌0.10%报717.63美元，科技与大盘出现分化。奈飞Q4营收指引低于预期，盘后一度跌超5%，给今晚财报季带来额外压力。美东时间今日盘后，Meta与特斯拉将相继放榜，两家合计代表了AI广告变现与智能驾驶两条最主流的AI落地叙事。多头的抓手是SpaceX昨晚AI业务大超预期点燃情绪，若Meta和特斯拉指引同样强劲，科技股有望打破本周的窄幅区间；空头的抓手是奈飞指引已经给出不及预期的先例，市场对AI资本开支回报的质疑还没消散。今晚这两份财报，你认为哪一家更有可能超出市场预期？", title_en: "Indexes Flat Tuesday — Meta and Tesla Report Tonight. Which One Holds the Key?", body_en: "U.S. equities oscillated narrowly Tuesday: the S&P 500 edged up 0.28% to 7,712.57, while the Nasdaq 100 (QQQ) slipped 0.10% to $717.63, with tech diverging from the broader market. Netflix's Q4 revenue guidance missed expectations, sending the stock down more than 5% after hours and adding pressure to tonight's earnings slate. Meta and Tesla report after the U.S. close today, representing the two most prominent AI monetization narratives — digital advertising and autonomous driving. Between Meta's ad revenue growth rate and Tesla's automotive gross margin, which metric will you be tracking most closely when results drop tonight?" },
+  { ticker: "SPCX", title_cn: "SpaceX AI业务同比暴增830%，估值逻辑要重写了吗？", body_cn: "SpaceX昨日盘后交出三季报：营收145.8亿美元（同比+161%），净利润44亿美元，调整后EBITDA达88.1亿美元。最关键的拐点是AI超级智能（SI）业务收入达75.6亿美元，同比暴增830%，首次超过航天和星链成为第一大收入板块。SpaceX周二收跌0.11%报147.79美元，三季报数字盘后已推动AI算力链普涨。同日Anthropic在IPO文件中披露上半年营收163亿美元，长期算力承诺规模最高可达7500亿美元，印证AI基础设施需求并未降温。多头的抓手是AI业务成为第一大收入来源，彻底改变市场对SpaceX的估值框架；空头的抓手是SI业务快速增长的可持续性与利润率尚未充分验证，现有估值对增速已有相当程度的提前定价。SpaceX这份三季报，你认为AI业务能否撑住下一轮估值扩张？", title_en: "SpaceX AI Revenue Surges 830% YoY — Does the Valuation Framework Need Rewriting?", body_en: "SpaceX reported quarterly results after hours Tuesday: revenue of $14.58 billion (+161% YoY), net income of $4.4 billion, and adjusted EBITDA of $8.81 billion. The pivotal development was its AI Superintelligence (SI) unit posting $7.56 billion in revenue — up 830% year-over-year — surpassing aerospace and Starlink to become the company's largest segment for the first time. On the same day, Anthropic disclosed $16.3 billion in first-half revenue in its IPO filing, with long-term compute commitments of up to $750 billion, reinforcing that AI infrastructure demand remains robust. SpaceX closed Tuesday down 0.11% at $147.79, though the after-hours results lifted the broader AI compute chain. Do you think SpaceX's AI business can sustain the growth needed to support a further valuation re-rating?" },
+  { ticker: "META / TSLA", title_cn: "Meta广告与特斯拉毛利率，今晚放榜谁更值得看？", body_cn: "美东时间今日盘后，Meta与特斯拉将同步披露三季报。Meta周二收跌1.59%报694.25美元，市场关注两点：广告收入增速能否维持双位数，以及AI资本开支规模与回报路径；特斯拉周二收涨1.54%报373.71美元，焦点在三季度汽车毛利率能否企稳，以及Robotaxi商业化进展是否超出预期。多头的抓手是两家公司均拥有清晰的收入护城河，若财报指引上调，可为AI交易提供基本面支撑；空头的抓手是Meta估值已处历史高位，特斯拉毛利率压力尚未完全消化，任何不及预期都可能触发即时抛售。Meta的AI资本开支效率和特斯拉的毛利率，你今晚更看哪个数字？", title_en: "Meta Ad Growth vs. Tesla Gross Margin — Which Number Matters More Tonight?", body_en: "Meta and Tesla will both report quarterly results after the U.S. close today. Meta fell 1.59% Tuesday to $694.25, with investors focused on whether advertising revenue growth can sustain double-digit rates and on the scale and return trajectory of AI capital expenditure. Tesla rose 1.54% to $373.71, with attention on whether automotive gross margin can stabilize and whether Robotaxi commercialization progress exceeds expectations. Bulls say both companies possess durable revenue moats and that raised guidance could underpin the AI trade; Bears say Meta's valuation is near historical highs while Tesla's margin pressure has not fully cleared, leaving both names vulnerable to any miss. If one of these two misses badly tonight, which do you think causes a larger ripple across the broader AI trade — Meta or Tesla?" },
+  { ticker: "NVDA", title_cn: "英伟达GTC柏林今日开幕，黄仁勋演讲能给AI交易充电吗？", body_cn: "英伟达周二收跌0.29%报216.47美元。当地时间10月20至22日，英伟达在柏林举办GTC大会，英伟达首席执行官黄仁勋将于北京时间今日17:00发表主题演讲，聚焦加速计算、AI基础设施、开源模型、AI Agent与物理AI。瑞银认为上周AI板块大幅回调主要反映杠杆仓位的去化，并非基本面恶化。市场将把GTC作为获取算力需求与客户部署新线索的窗口。多头的抓手是SpaceX财报已印证AI应用层需求仍在加速，GTC若带出新部署案例或产品路线图，可为英伟达提供新的上涨叙事；空头的抓手是上周英伟达已遭砸盘，技术面仍偏弱，演讲若未带出实质新信息，反弹持续性有限。黄仁勋今天的演讲，你认为最值得关注哪个方向？", title_en: "Nvidia GTC Berlin Opens Today — Can Jensen Huang's Keynote Recharge the AI Trade?", body_en: "Nvidia fell 0.29% Tuesday to $216.47 ahead of GTC Berlin, running October 20–22, where CEO Jensen Huang will deliver a keynote at 17:00 Beijing time today covering accelerated computing, AI infrastructure, open-source models, AI agents, and physical AI. UBS attributed last week's sharp AI sector pullback primarily to leveraged-position unwinding rather than fundamental deterioration. Bulls say SpaceX's results confirming accelerating AI application-layer demand, arguing new deployment cases or a product roadmap at GTC could supply fresh upside narrative; Bears say Nvidia's technical picture remains weak following last week's selloff, limiting any rally if the keynote lacks substantive new information. After last week's selloff, does a GTC keynote change your conviction on Nvidia — or do you need actual earnings numbers before re-entering?" },
+  { ticker: "NFLX", title_cn: "奈飞Q4指引低于预期，盘后急跌流媒体叙事能守住吗？", body_cn: "奈飞周二收跌1.66%报68.69美元，盘后因Q4营收指引低于市场预期而一度跌超5%。Q3实际业绩未见明显亮点，而Q4收入展望的保守令市场担忧增长动能是否已经趋缓。多头的抓手是奈飞过去四个季度持续兑现订阅增长，广告支持会员层的货币化尚处于早期，单用户收入仍有上升空间；空头的抓手是Q4指引走弱是具体数字给出的信号，无论归因于季节性还是竞争加剧，市场会优先反映，而非等待解释。奈飞这次Q4指引落空，你认为是暂时的节奏问题，还是增长已触到阶段性天花板？", title_en: "Netflix Q4 Guidance Misses — Can the Streaming Narrative Hold After the After-Hours Drop?", body_en: "Netflix closed Tuesday down 1.66% at $68.69, then fell more than 5% after hours after its Q4 revenue guidance came in below market expectations. Actual Q3 results offered no notable upside surprises, and the cautious Q4 revenue outlook raised concerns over whether growth momentum is slowing. Bulls say Netflix has consistently delivered subscriber growth over the past four quarters and that its ad-supported tier monetization remains early-stage with room for average revenue per user expansion; Bears say the Q4 guidance shortfall is a concrete data-point the market will price first and explain later, whether the cause is seasonal or competitive. Given Netflix's Q4 guidance miss, do you still see the ad-tier monetization story as a credible growth driver, or has the thesis changed?" },
+  { ticker: "MU / SNDK / SKHY / SMCI", title_cn: "超微指引暴升、AI链条夜盘回暖，存储能否接棒？", body_cn: "超微电脑（SMCI）周二盘后上调2027财年一季度指引：营收预期185至195亿美元，显著高于原指引145至155亿美元；毛利率预期12.0%至12.5%，同样高于原目标10.4%至10.8%。叠加SpaceX AI业务放量，AI算力链盘后普涨：美光、英伟达、SK海力士、英特尔、闪迪涨超1%。周二日盘：美光收跌0.98%报896.07美元，闪迪收跌0.42%报1365.38美元，SK海力士收跌2.16%报139.79美元。多头的抓手是SMCI指引大幅上修说明AI服务器订单仍在加速，存储作为算力基础设施的直接组件，需求端并未转弱；空头的抓手是存储股已连续多日承压，长鑫DRAM竞争压力仍在，短线反弹能否持续还需等美光等公司自己的财报验证。SMCI这份超预期指引，你认为能让存储股的调整就此止步吗？", title_en: "Super Micro Guidance Surges, AI Chain Rebounds After Hours — Can Memory Stocks Follow?", body_en: "Super Micro Computer (SMCI) raised its Q1 FY2027 guidance after hours Tuesday, projecting revenue of $18.5–$19.5 billion versus prior guidance of $14.5–$15.5 billion, and gross margin of 12.0%–12.5% versus the prior target of 10.4%–10.8%. Combined with SpaceX's AI revenue surge, the broader AI compute chain rallied after hours, with Micron, Nvidia, SK Hynix, Intel, and SanDisk each gaining more than 1%. In the regular Tuesday session, Micron closed down 0.98% at $896.07, SanDisk fell 0.42% to $1,365.38, and SK Hynix dropped 2.16% to $139.79. Bulls say SMCI's sharp upward revision signals AI server orders continue to accelerate, sustaining demand for memory as a core infrastructure component; Bears say memory stocks have faced sustained selling pressure with CXMT DRAM competition still a headwind, and question whether any near-term bounce can hold ahead of Micron's own results. Do you think SMCI's beat-and-raise guidance is enough to put a floor under the memory stock selloff?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
