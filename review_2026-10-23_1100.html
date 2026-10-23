@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-23 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-23</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / SPY", title_cn: "油价冲高叠加AI焦虑，QQQ还会继续跌吗？", body_cn: "QQQ今日跌2.86%，SPY跌1.18%，纳斯达克综合指数跌2.60%，直接压力来自Meta财报后的AI投入担忧、中东风险推高油价，以及高贝塔科技仓位集中降杠杆。英伟达跌4.40%、AMD跌8.10%、谷歌跌3.08%，说明抛售已从单一财报扩散到算力与平台龙头；与此同时，美债收益率回落、债券买盘增强，反映资金一面担忧增长，一面又担心油价重新抬高通胀。多头的抓手是利率下行可缓解科技股估值压力，现金流稳定的防御资产也在承接资金；空头的抓手是AI资本开支回报和能源成本同时受质疑。接下来更值得跟踪QQQ反弹、SPY防御，还是IEF债券修复？", title_en: "Oil Up, Yields Down: Is This a Growth Scare or an Inflation Shock?", body_en: "QQQ fell 2.86%, SPY dropped 1.18%, and the Nasdaq Composite declined 2.60%, pressured by AI spending concerns following Meta's earnings, Middle East risks driving oil higher, and deleveraging in high-beta tech positions. Nvidia slid 4.40%, AMD tumbled 8.10%, and Alphabet lost 3.08%, signaling the selloff has broadened beyond a single earnings report to computing and platform leaders. Treasury yields retreated as bond demand rose, reflecting simultaneous growth fears and concern that higher oil prices could reignite inflation. What would confirm that lower yields are cushioning tech valuations rather than signaling deeper growth risk?" },
+  { ticker: "META", title_cn: "Meta暴跌近7%，AI烧钱为何压过营收？", body_cn: "Meta今日跌6.98%，最新价格反应说明市场没有继续奖励营收超预期，而是把焦点转向AI投入与现金流。公司三季度营收646.0亿美元，高于市场预期633.34亿美元，同比增长26%；四季度营收指引730亿至760亿美元，中值也略高于736亿美元预期。但本季自由现金流为负62.2亿美元，资本开支达到349.1亿美元，公司还预计2027年费用和资本开支将明显增加，并计划新设无投票权股票。多头的抓手是广告展示量与单价均增长11%，核心业务仍能提供资金；空头的抓手是投入节奏快于现金回收，治理结构也增添折价。Meta广告、谷歌搜索和亚马逊云中，哪条AI变现路径会先恢复市场信心？", title_en: "Meta's Ad Engine Is Working—So Why Is Cash Flow Negative?", body_en: "Meta fell 6.98%, as markets shifted focus from a revenue beat to AI spending and cash flow dynamics. Quarterly revenue came in at $64.60 billion, topping the $63.334 billion consensus and rising 26% year-over-year; next-quarter revenue guidance of $73 billion to $76 billion also edged above the $73.6 billion estimate. Ad impressions and average price per ad both rose 11%, giving bulls evidence that the core business can fund AI investment. Bears focus on negative free cash flow of $6.22 billion, capital expenditure of $34.91 billion, meaningfully higher 2027 expenses and capex, and the planned non-voting shares. Google Search and Amazon's cloud remain competing AI monetization benchmarks. Can advertising cash generation catch up before spending and governance become a lasting valuation discount?" },
+  { ticker: "MRNA", title_cn: "癌症疫苗数据泄露，Moderna暴跌是错杀吗？", body_cn: "Moderna今日跌17.57%，直接催化是与默沙东合作的个性化癌症疫苗三期数据被提前泄露，市场在正式学术报告前迅速重定价。完整结果显示，intismeran联合Keytruda相较Keytruda单药，把黑色素瘤复发或死亡风险降低42%，并把远端转移或死亡风险降低38%，达到统计学和临床意义。多头的抓手是超过1100人的三期试验验证了个性化mRNA疗法，且未出现新的安全信号；空头的抓手是股价此前已计入接近最佳情形，42%的结果虽为正面，却不足以满足更高预期，向其他癌种扩展也尚未得到证明。接下来更值得跟踪Moderna、默沙东，还是等待整体生存数据再判断平台价值？", title_en: "Phase 3 Leak Hits Moderna: Did Expectations Get Ahead of the Science?", body_en: "Moderna plunged 17.57% after preliminary Phase 3 data from its personalized cancer vaccine partnership with Merck leaked ahead of the official academic release, triggering a rapid repricing. Full results showed intismeran combined with Keytruda reduced the risk of melanoma recurrence or death by 42% and distant metastasis or death by 38% versus Keytruda alone, meeting both statistical and clinical significance thresholds. Bulls point to the validated personalized mRNA platform in a trial of over 1,100 patients with no new safety signals; bears note the stock had priced in a near-best-case scenario and the 42% result, while positive, falls short of higher expectations, with expansion to other tumor types still unproven. What evidence would distinguish genuine platform validation from a reset of overly optimistic expectations?" },
+  { ticker: "BE", title_cn: "Bloom财报创新高，股价为何反跌近9%？", body_cn: "Bloom Energy今日跌8.70%，这一日间跌幅发生在盘后财报公布前；结果出炉后股价仍承压。公司三季度营收12.358亿美元，高于10.9亿美元预期，同比增长138.1%；非GAAP每股收益0.94美元，也高于0.7016美元预期。管理层把全年营收指引上调至44亿至46亿美元，非GAAP毛利率升至34.5%。多头的抓手是AI数据中心现场供电需求推动产品收入首次超过10亿美元，利润率同步改善；空头的抓手是本季自由现金流净流出1.81亿美元，扩产和营运资金仍会吞噬现金，强劲增长也已反映在高估值中。Bloom、GE Vernova和Vertiv中，谁更能把AI电力需求转化为现金流？", title_en: "Bloom Beats on Revenue—Can It Stop Burning Cash?", body_en: "Bloom Energy fell 8.70% during regular trading ahead of its after-hours earnings release, with shares remaining under pressure after results were published. Quarterly revenue of $1.2358 billion beat the $1.09 billion consensus, rising 138.1% year-over-year, while non-GAAP EPS of $0.94 topped the $0.7016 estimate. Management raised full-year revenue guidance to $4.4 billion to $4.6 billion and lifted non-GAAP gross margin to 34.5%. Bulls point to AI data-center demand pushing product revenue above $1 billion for the first time and improving margins; bears focus on negative free cash flow of $181 million as capacity expansion and working capital consume cash, while strong growth is already reflected in the valuation. Can margin expansion outpace the cash required to fund the next stage of capacity growth?" },
+  { ticker: "CRWV / NBIS", title_cn: "CoreWeave再跌10%，AI债务警报会扩散吗？", body_cn: "CoreWeave今日跌10.06%，Nebius跌7.23%，直接催化是AI资本开支回报担忧继续向neocloud扩散，Bernstein把CoreWeave目标价从74美元下调至51美元并维持跑输大盘评级。CoreWeave部分无抵押债券的市场收益率已升至15%以上，信用违约掉期价差也处于困境区间，说明债券投资者要求更高回报来承担公司扩建与偿债风险；若现金流不足，偿付责任仍由CoreWeave承担。多头的抓手是GPU算力需求仍强，长期合同可为收入提供可见度；空头的抓手是新数据中心需要持续融资，利息成本上升会让订单增长与股东现金回报脱节。CoreWeave、Nebius和英伟达中，哪一种AI基础设施敞口更能穿越融资压力？", title_en: "CoreWeave Debt Yields Top 15%—Is Growth Still Bankable?", body_en: "CoreWeave fell 10.06% and Nebius declined 7.23%, as concerns over AI capex returns continued to spread across neocloud names; Bernstein cut its CoreWeave price target from $74 to $51 while maintaining an underperform rating. Yields on some of CoreWeave's unsecured bonds have risen above 15% and credit default swap spreads are in distressed territory. Bond investors are demanding higher compensation for expansion and debt-service risk, and CoreWeave remains responsible for repayment if cash flow falls short. Bulls cite resilient GPU compute demand and long-term contracts providing revenue visibility; bears warn that ongoing data-center financing needs and rising interest costs could decouple order growth from shareholder cash returns. Against Nebius and Nvidia, can CoreWeave's long-term contracts offset a double-digit market cost of debt?" },
+  { ticker: "SPCX / TSLA", title_cn: "SpaceX急跌9%，合并故事为何一天失效？", body_cn: "SpaceX今日跌9.14%，特斯拉跌3.08%，直接催化是市场从昨日的合并想象转向交易执行障碍。有关特斯拉首席执行官埃隆·马斯克推动两家公司合并的说法尚未得到公司确认，前特斯拉董事等市场人士进一步指出，治理结构、换股比例和监管审查都可能令交易复杂化。多头的抓手是SpaceX三季度营收145.8亿美元、AI业务收入75.6亿美元，Starlink、算力、储能与自动驾驶若整合，确有共享资本平台的想象空间；空头的抓手是特斯拉股东可能承受估值稀释，关联交易和控制权问题也难以绕开。直接持有SPCX、通过TSLA押注，还是等待交易条款明确，哪条路径更合理？", title_en: "Merger Hype Reverses: Who Would Really Pay for a Tesla-SpaceX Deal?", body_en: "SpaceX fell 9.14% and Tesla slid 3.08%, as markets pivoted from yesterday's merger speculation to the practical obstacles of executing such a deal. Reports that Tesla CEO Elon Musk is pushing to combine the two companies remain unconfirmed by either firm, and market observers including a former Tesla board member have flagged that governance structure, share-exchange ratios, and regulatory scrutiny could all complicate any transaction. Bulls note SpaceX posted quarterly revenue of $14.58 billion and AI-segment revenue of $7.56 billion, with potential synergies across Starlink, compute, energy storage, and autonomous driving on a shared capital platform; bears argue Tesla shareholders face valuation dilution, with related-party transaction and control issues difficult to resolve. Before any terms emerge, is dilution rather than synergy the variable that should dominate valuation?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
