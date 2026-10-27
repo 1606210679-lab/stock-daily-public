@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-27 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-27</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / SPY / NQmain", title_cn: "Anthropic递表推高纳指，反弹能撑到美联储吗？", body_cn: "QQQ周一涨1.11%，SPY涨0.71%，纳指100期货主连涨1.14%，科技股反弹的直接催化来自Anthropic公开递交IPO注册文件，计划以ANT为代码登陆纳斯达克。不过，本轮买盘更集中在半导体和高弹性成长股，Alphabet、苹果与Meta没有同步走强，说明风险偏好仍有选择。多头的抓手是大型AI公司的IPO进程为算力、云服务和半导体需求提供了新的估值锚；空头的抓手是指数尾盘未能维持盘中全部涨幅，而且美联储决议仍可能通过利率与收益率重新压缩科技股估值。接下来要验证的不是AI热度本身，而是IPO风险偏好和政策定价能否同时支持QQQ跑赢SPY。", title_en: "Anthropic Files for IPO — Is AI Risk Appetite Broadening Beyond Chips?", body_en: "QQQ rose 1.11% Monday, SPY gained 0.71%, and Nasdaq 100 futures (NQmain) advanced 1.14%, with Anthropic's public IPO registration filing — targeting a Nasdaq listing under ticker ANT — serving as the immediate catalyst. Buying was concentrated in semiconductors and higher-beta growth, while Alphabet, Apple, and Meta failed to rise with the broader tech trade, showing that risk appetite remained selective. Bulls argue major AI IPOs provide a new valuation anchor for compute, cloud, and semiconductor demand; bears note indexes surrendered part of intraday gains into the close and the Fed decision could re-compress tech valuations through rates and yields. What yield response after the Fed would confirm that AI-led risk appetite is durable?" },
+  { ticker: "TSLA / SPCX", title_cn: "Tesla涨5%，4400美元目标靠什么兑现？", body_cn: "Tesla周一涨5.21%，而SPCX跌0.40%，资金明显更愿意先交易Tesla的高弹性。ARK最新长期模型给出2031年约4400美元的预期股价，其中约80%的企业价值来自Robotaxi；市场同时继续讨论Tesla与SpaceX在AI、轨道数据中心和融资能力上的协同。多头的抓手是Robotaxi现金流若能形成规模，可能反过来支撑Optimus和AI基础设施投入；空头的抓手是远期模型对商业化速度、监管和资本开支高度敏感。Tesla要守住这轮上涨，需要怎样的Robotaxi运营数据和AI收入来验证与SpaceX的协同价值？", title_en: "Tesla Rallies While SPCX Slips — Is Robotaxi Doing the Heavy Lifting?", body_en: "Tesla (TSLA) rose 5.21% Monday while SPCX fell 0.40%, with capital clearly preferring Tesla's higher-beta profile. ARK's latest long-term model targets roughly $4,400 per share by 2031, with approximately 80% of enterprise value attributed to Robotaxi; markets also continue to debate synergies between Tesla and SpaceX across AI, orbital data centers, and financing capacity. Bulls argue scaled Robotaxi cash flow could help fund Optimus and AI infrastructure; bears note the long-term model is highly sensitive to commercialization speed, regulation, and capital expenditure. What operating milestone would justify treating Robotaxi as an earnings asset rather than a distant option?" },
+  { ticker: "INTC", title_cn: "英特尔收购Classiq，量子软件能补估值吗？", body_cn: "英特尔周一涨4.04%，公司宣布达成收购量子软件企业Classiq的最终协议，交易金额尚未披露。Classiq的算法综合平台将补入英特尔的硅自旋量子硬件与制造体系，使量子业务从芯片进一步延伸到软件开发层。多头的抓手是全栈平台有机会提高开发者黏性，并为英特尔建立不同于传统CPU和代工的新增长选项；空头的抓手是量子商业化周期仍长，短期盈利仍由服务器产品、代工亏损和资本开支决定。周四财报中，哪些毛利率与现金流信号能证明新并购没有分散转型资源？", title_en: "Intel Adds Quantum Software Ahead of Earnings — Strategic Fit or Distraction?", body_en: "Intel (INTC) rose 4.04% Monday after announcing a definitive agreement to acquire quantum software firm Classiq; financial terms were not disclosed. Classiq's algorithm synthesis platform will be integrated into Intel's silicon-spin quantum hardware and manufacturing ecosystem, extending its quantum business from chips into the software development layer. Bulls see a full-stack platform boosting developer stickiness and creating a growth option distinct from legacy CPU and foundry; bears note quantum commercialization timelines remain long and near-term earnings are still driven by server products, foundry losses, and capex. Does Classiq strengthen Intel's platform strategy, or is it still too remote from current earnings?" },
+  { ticker: "SKHY", title_cn: "海力士拟派120亿美元股息，还能追吗？", body_cn: "SK海力士周一涨4.09%，最新消息称公司可能利用出售铠侠相关持股所得，发放约120亿美元特别股息。若方案落地，这会显著提高一次性股东回报，也解释了股价在存储财报周前的相对强势。多头的抓手是资产变现与HBM景气可以同时改善资本回报；空头的抓手是特别股息主要来自投资收益，不能直接证明DRAM、NAND或HBM的经营现金流能够长期维持同样水平。财报后，市场会如何区分一次性分红、HBM利润率和下一轮资本开支？", title_en: "SK Hynix Turns Kioxia Gains Into Cash — Windfall or Better Capital Returns?", body_en: "SK Hynix (SKHY) rose 4.09% Monday amid reports the company may use proceeds from divesting its Kioxia-related stake to distribute a special dividend of approximately $12 billion. If approved, the payout would substantially boost one-time shareholder returns and help explain the stock's relative strength ahead of memory earnings. Bulls see asset monetization and HBM demand simultaneously improving capital returns; bears caution that a special dividend funded by investment gains does not validate the durability of DRAM, NAND, or HBM operating cash flows. Would a special dividend make the stock more attractive if operating cash flow stops improving?" },
+  { ticker: "STX / TER / MU / SNDK", title_cn: "希捷泰瑞达周二交卷，AI订单能继续扩散吗？", body_cn: "希捷与泰瑞达定于周二美股收盘后发布业绩，市场预期希捷营收约41.8亿美元，泰瑞达每股收益约2.06美元、营收约12.8亿美元。两家公司分别验证高容量硬盘和半导体测试设备需求，可以检查AI数据中心扩建是否已从GPU、HBM继续扩展到存储与测试环节。美光周一涨2.98%，闪迪涨1.42%，市场已经提前计入部分供应链扩散预期。多头的抓手是新增服务器需要更多容量硬盘、企业级SSD和测试产能；空头的抓手是订单增长不等于毛利率改善，客户集中与扩产成本也可能吞噬收入增量。哪些订单、价格和利润率信号会让美光、闪迪与半导体ETF获得新的重估依据？", title_en: "Storage and Test Earnings Arrive — Is AI Hardware Demand Broadening?", body_en: "Seagate (STX) and Teradyne (TER) are set to report after the U.S. market close Tuesday; consensus expects Seagate revenue of approximately $4.18 billion and Teradyne EPS of approximately $2.06 on revenue of approximately $1.28 billion. The two companies test whether AI data center expansion has moved beyond GPUs and HBM into high-capacity hard drives and semiconductor test equipment. Micron (MU) rose 2.98% Monday and SanDisk (SNDK) gained 1.42%, showing markets have already priced in some supply-chain broadening. Bulls expect new server deployments to drive demand for higher-capacity drives, enterprise SSDs, and test capacity; bears warn order growth does not automatically translate into margin improvement, with customer concentration and expansion costs potentially absorbing incremental revenue. Does strength in storage and test equipment confirm a broad AI hardware cycle, or only a temporary order surge?" },
+  { ticker: "GOOG / MSFT", title_cn: "谷歌微软周三交卷，云增长能接住估值吗？", body_cn: "Alphabet周一跌0.97%，未跟随QQQ反弹，市场在周三财报前提前收紧了对云巨头的要求。Alphabet相对大盘的弱势，也让这次财报更偏向防守性验证。市场预期Alphabet营收约1320.2亿美元、微软约924.9亿美元；结果不仅要比较Google Cloud与Azure增速，还要检查AI产品变现、剩余履约义务、资本开支和自由现金流。多头的抓手是Anthropic的IPO进程再次确认企业AI需求仍在扩张；空头的抓手是需求增长若需要更快的数据中心投入，利润达标也未必带来现金回报改善。哪些指标能证明两家公司正在把AI使用量转成更高质量的云收入？", title_en: "Alphabet Lags the Rally Before Earnings — Can Microsoft Show Better Cash Conversion?", body_en: "Alphabet (GOOG) fell 0.97% Monday, failing to follow QQQ higher, as markets tightened expectations for cloud giants ahead of Wednesday's earnings. Alphabet's relative weakness makes this report a more defensive test. Consensus calls for Alphabet revenue of approximately $132.02 billion and Microsoft (MSFT) revenue of approximately $92.49 billion; results must address not just Google Cloud versus Azure growth rates, but also AI product monetization, remaining performance obligations, capex, and free cash flow. Bulls point to Anthropic's IPO process as fresh confirmation that enterprise AI demand remains expansionary; bears warn that accelerating data center investment requirements may mean profit targets are met without a corresponding improvement in cash returns. Which company has more room to fund AI expansion without sacrificing free cash flow?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
