@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-10-29 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-10-29</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .SPX / NVDA / AMD", title_cn: "美联储10比2按兵不动，科技估值能稳住吗？", body_cn: "QQQ周三涨0.60%、标普500涨0.28%，美联储以10票对2票把利率维持在3.75%-4.00%，决议后的指数反应仍然克制。科技内部继续分化：AMD涨3.24%，英伟达跌1.17%，说明资金没有在高估值板块里全面加仓。多头的抓手是利率没有进一步上升，盈利强的公司仍能靠业绩消化估值；空头的抓手是通胀压力让降息时点继续后移，再叠加Alphabet财报后的股价下跌，长久期资产仍容易被收益率和资本开支双重压制。下一阶段更值得跟踪QQQ的盈利广度、AMD的相对强势，还是现金和短债的防守价值？", title_en: "Fed Holds Rates 10-2; Can Tech Valuations Hold?", body_en: "QQQ rose 0.60% and the S&P 500 added 0.28% Wednesday, with index reaction restrained after the Fed held rates at 3.75%-4.00% on a 10-2 vote. Tech kept diverging: AMD gained 3.24%, Nvidia fell 1.17%, signaling no broad adding to high-multiple names. Bulls point to steady rates and earnings that can grow into valuations; bears to inflation delaying cuts and, with Alphabet sliding post-earnings, long-duration assets squeezed by yields and capex. What would most convincingly show that tech valuations can withstand the next rate move?" },
+  { ticker: "GOOGL / MSFT", title_cn: "微软谷歌业绩分叉，AI投入谁先兑现？", body_cn: "Alphabet周三收涨1.34%，微软收跌0.06%；财报公布后，Alphabet跌9.93%，微软反而涨3.45%，市场用价格直接区分了两种AI投入回报。微软季度营收923亿美元、调整后每股收益4.89美元，均高于约912亿美元和4.72美元预期，Azure收入增长48%；Alphabet营收1275.8亿美元，略低于约1279.7亿美元预期，每股收益2.12美元也低于约3.01美元预期。多头看到云需求仍强，微软的利润和现金流更快承接资本开支；空头担心Alphabet的支出、折旧和投资损失会继续放大波动。下一轮财报里，亚马逊、英特尔还是闪迪最能验证AI投入能否转成现金？", title_en: "Microsoft, Alphabet Earnings Diverge: Whose AI Spend Pays Off First?", body_en: "Alphabet closed up 1.34% and Microsoft down 0.06% Wednesday; post-earnings, Alphabet fell 9.93% while Microsoft rose 3.45%, prices separating two returns on AI spending. Microsoft's $92.3 billion quarterly revenue and $4.89 adjusted EPS beat roughly $91.2 billion and $4.72, with Azure up 48%; Alphabet's $127.58 billion lagged the ~$127.97 billion estimate, and EPS of $2.12 missed ~$3.01. Bulls see cloud demand holding and Microsoft's profit and cash flow absorbing capex faster; bears fear Alphabet's spending, depreciation and investment losses amplify swings. What result from Amazon, Intel and SanDisk would prove that AI spending is turning into cash?" },
+  { ticker: "FTNT / CRWD / PANW", title_cn: "飞塔强业绩仍暴跌，网安估值要重算吗？", body_cn: "飞塔信息周三收跌5.90%；财报公布后，飞塔再跌25.16%，CrowdStrike和Palo Alto Networks也分别跌6.90%和6.37%。飞塔季度营收20.8亿美元，高于约19.5亿美元预期，非GAAP每股收益0.91美元，也超过约0.72美元预期，账单额达到23.4亿美元，并上调全年展望。多头认为账单和安全订阅需求仍在增长，谷歌新发布的Gemini 4 Carbon也可能扩大整个安全自动化市场；空头担心利好已经被高估值提前定价，生成式AI还会压低部分安全软件的差异化溢价。现在更值得看飞塔的估值修复、CrowdStrike的平台扩张，还是Palo Alto的现金流？", title_en: "Fortinet Slumps Despite Strong Results: Time to Rerate Cybersecurity?", body_en: "Fortinet fell 5.90% Wednesday and another 25.16% after results, with CrowdStrike and Palo Alto Networks down 6.90% and 6.37%. Fortinet's quarterly revenue of $2.08 billion beat roughly $1.95 billion, non-GAAP EPS of $0.91 topped ~$0.72, billings reached $2.34 billion and it raised its full-year outlook. Bulls cite growing billings and security subscription demand, plus Google's new Gemini 4 Carbon potentially widening security automation; bears say high valuations pre-priced the good news and generative AI erodes differentiation premiums. Which evidence would show that cybersecurity valuations have reset enough to reward execution?" },
+  { ticker: "MRVL / LITE", title_cn: "迈威尔洽购Lumentum，光互连能否再估值？", body_cn: "Lumentum周三收涨5.52%、迈威尔涨3.32%，收盘后双方走势明显分化，直接催化是正在就收购进行高级谈判。交易尚未达成最终协议，价格和时间安排仍可能变化；如果完成，迈威尔可以把交换芯片、DSP和激光器件整合进更完整的AI数据中心光互连方案。多头看好供应链缩短和客户订单协同，空头担心高溢价、融资压力和产品整合先侵蚀利润，Lumentum消息公布后的涨幅收窄也说明市场没有把成交当成确定事件。接下来更应跟踪迈威尔的收购报价、Lumentum的订单质量，还是Coherent的竞争受益？", title_en: "Marvell in Talks to Buy Lumentum: Can Optical Interconnect Rerate?", body_en: "Lumentum rose 5.52% and Marvell 3.32% Wednesday, diverging after the close on news the two are in advanced talks over an acquisition. No final agreement is in place and price and timing may change; if completed, Marvell could fold switch chips, DSPs and laser components into a fuller AI data center optical interconnect offering. Bulls like a shorter supply chain and customer order synergies; bears worry a rich premium, financing strain and integration erode margins first, and Lumentum's narrowed post-news gain shows the deal is not treated as certain. What deal term would show the acquisition creates more optical-interconnect value than integration risk?" },
+  { ticker: "SKHY / MU / SNDK", title_cn: "三星利润指引翻倍，闪迪今晚能接棒吗？", body_cn: "SK海力士周三涨13.30%、美光涨5.86%、闪迪涨7.66%，海力士创纪录业绩和三星第三季度业绩指引继续推高存储景气预期。海力士营收104.6万亿韩元、营业利润83.3万亿韩元；三星预计营收约195万亿韩元、营业利润约107.4万亿韩元，但这仍是指引而非完整财报。闪迪将在北京时间周五凌晨交卷，市场预期营收约108.5亿美元、每股收益约47.15美元，已高于公司此前103亿至108亿美元和44至46美元的指引区间上沿。多头押注AI把HBM、NAND和企业级存储同时带入涨价周期；空头担心高预期已经挤压容错空间。下一棒更值得选择海力士、美光还是闪迪？", title_en: "Samsung Profit Guidance Doubles: Can SanDisk Take the Baton Tonight?", body_en: "SK Hynix rose 13.30%, Micron 5.86% and SanDisk 7.66% Wednesday as Hynix's record results and Samsung's third-quarter guidance lifted memory-cycle expectations. Hynix posted revenue of KRW 104.6 trillion and operating profit of KRW 83.3 trillion; Samsung guided to about KRW 195 trillion and KRW 107.4 trillion, still guidance rather than full results. SanDisk reports early Friday Beijing time, with consensus at about $10.85 billion revenue and $47.15 EPS, above the top end of its $10.3-$10.8 billion and $44-$46 guidance. Bulls are betting AI puts HBM, NAND and enterprise storage into a synchronized pricing cycle; bears warn elevated expectations leave little room for execution misses. What would confirm that the memory pricing cycle still has room to run after SanDisk reports?" },
+  { ticker: "ORCL", title_cn: "Oracle上调2030目标，10%涨势还能追吗？", body_cn: "Oracle周三涨10.73%，直接催化是公司在投资者日把FY2030营收目标提高到2250亿美元以上，并预计FY2029自由现金流超过300亿美元。公司还承诺到FY2030前新增融资不超过200亿美元，试图回应市场对AI数据中心建设、债务和现金消耗的担忧。多头的抓手是长期云合同可以把算力需求转成可见收入，规模扩大后现金流有望加速；空头的抓手是服务器、电力和折旧先于收入发生，远期目标仍需要连续多年高执行力。接下来更值得跟踪Oracle的剩余履约义务、CoreWeave的融资成本，还是微软的云现金流？", title_en: "Oracle Lifts 2030 Targets: Can the 10% Rally Run Further?", body_en: "Oracle rose 10.73% Wednesday after raising its FY2030 revenue target above $225 billion at investor day and projecting FY2029 free cash flow above $30 billion. It also pledged no more than $20 billion of new financing through FY2030, aiming to answer concerns over AI data center buildout, debt and cash burn. Bulls say long-term cloud contracts turn compute demand into visible revenue and cash flow accelerates with scale; bears note servers, power and depreciation precede revenue, leaving long-range targets dependent on years of execution. What evidence would prove Oracle's long-range targets can outrun financing costs and depreciation?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
