@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-03 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-03</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .SPX", title_cn: "中期选举开票前，科技股该避险吗？", body_cn: "QQQ在美股周一（11月2日）跌1.37%、标普500跌0.52%，科技股在美国中期选举投票日前继续承压。当地时间11月3日将改选全部435个众议院席位和35个参议院席位，结果会改变市场对税收、AI数据中心审批、科技监管和财政支出的预期。多头的抓手是分裂国会可能降低激进政策落地概率，空头的抓手是结果胶着会放大波动，且AI资本开支担忧尚未消退。选举结果公布后，QQQ盈利广度、标普500防守板块与短债需求中，哪个会先给出风险偏好方向？", title_en: "Should Tech Stocks Hedge Risk Before Midterm Votes Are Counted?", body_en: "QQQ fell 1.37% and the S&P 500 fell 0.52% in the Monday, November 2 U.S. session as tech stocks stayed under pressure ahead of U.S. midterm voting. All 435 House seats and 35 Senate seats are up for election on November 3, with the outcome set to shift expectations on taxes, AI data-centre permitting, tech regulation and fiscal spending. Bulls point to a divided Congress lowering the odds of aggressive policy; bears say a contested result magnifies volatility while AI capex worries linger. Which of QQQ earnings breadth, S&P 500 defensives and short-term bill demand will signal risk appetite first?" },
+  { ticker: "MRVL", title_cn: "迈威尔跌12.72%，并购代价太高吗？", body_cn: "迈威尔在美股周一（11月2日）跌12.72%，直接催化是公司正式宣布以全股票方式收购Lumentum，市场先交易稀释和执行风险。每股Lumentum将换取4.5股迈威尔，交易隐含企业价值约1150亿美元；交割后原迈威尔股东持股约67%，公司预计年化成本协同超过10亿美元，但交易要到2028年上半年才完成。多头看好交换芯片、DSP与激光器件形成完整AI光互连平台，空头担心长交割期、监管和换股稀释先压低每股价值。融资纪律、协同兑现和客户留存中，哪个指标最能决定迈威尔估值能否修复？", title_en: "Synergy Promise Meets Dilution — Can Marvell Rebuild Trust?", body_en: "Marvell fell 12.72% in the Monday, November 2 U.S. session after formally announcing an all-stock acquisition of Lumentum, with the market trading dilution and execution risk first. Each Lumentum share converts into 4.5 Marvell shares, implying an enterprise value of about $115 billion; existing Marvell holders would own roughly 67% after closing, and the company expects more than $1 billion in annualised cost synergies, though the deal is not due to complete until the first half of 2028. Bulls favour the prospect of combining switching chips, DSPs and laser components into a complete AI optical-interconnect platform; bears worry that the long closing period, regulatory risk and share dilution will depress per-share value first. Which of financing discipline, synergy delivery and customer retention will decide whether Marvell re-rates?" },
+  { ticker: "LITE", title_cn: "Lumentum跌18.62%，溢价去哪了？", body_cn: "Lumentum在美股周一（11月2日）跌18.62%，即使并购条款按10月28日未受影响收盘价计算包含约23.9%溢价，股价仍被固定换股比例拖累。每股Lumentum换取4.5股迈威尔，买方股价下跌会同步压低实际对价；同时交易需股东与监管批准，预计2028年上半年才交割。Lumentum本季营收12.626亿美元、同比增长136.5%，非GAAP每股收益4.57美元，并预计下一季营收15.75亿至16.25亿美元。多头有强劲光模块需求，空头则面对浮动对价和时间折价。换股价值、独立业绩与交易获批概率中，哪个最能解释这次反常下跌？", title_en: "Strong Results, Vanishing Premium — What Is Lumentum Worth Now?", body_en: "Lumentum slid 18.62% in the Monday, November 2 U.S. session even though the terms carry a roughly 23.9% premium to its unaffected October 28 close, as the fixed exchange ratio tied the stock to Marvell. Each Lumentum share converts into 4.5 Marvell shares, so a weaker buyer drags the effective consideration; the deal needs shareholder and regulatory approval and is not expected to close until the first half of 2028. Quarterly revenue was $1.2626 billion, up 136.5%, non-GAAP EPS was $4.57, and next-quarter revenue was guided to $1.575 billion to $1.625 billion. Bulls have strong optical-module demand on their side; bears face floating consideration and a substantial time discount. Which of exchange value, standalone results and approval odds best explains the anomalous drop?" },
+  { ticker: "AAPL", title_cn: "苹果营收创新高，盘后为何仍跌？", body_cn: "苹果在美股周一（11月2日）正式收盘跌1.88%，财报公布后再跌2.78%，市场没有因总量超预期而放松对中国与利润质量的要求。季度营收1145亿美元，高于约1134.6亿美元预期，同比增长12%；每股收益2.10美元，也高于约2.00美元预期，但其中包含每股0.05美元关税退款利好，毛利率47.9%也受退款提高约1个百分点。大中华区收入约175.4亿美元，低于约187.5亿美元预期。多头看到iPhone季度纪录和服务收入新高，空头担心供应约束、中国需求和高估值。iPhone供给、服务收入和中国市场中，哪个变量最能推动苹果再创新高？", title_en: "Headline Beat, China Miss — What Will Apple Trade On Next?", body_en: "Apple closed down 1.88% in the Monday, November 2 U.S. session and fell another 2.78% after reporting, as the market kept its demands on China and profit quality despite the headline beat. Quarterly revenue was $114.5 billion versus about $113.46 billion expected, up 12%, and EPS came in at $2.10 against roughly $2.00, though that included a $0.05 per-share tariff refund benefit; gross margin of 47.9% was lifted about 1 percentage point by the refund. Greater China revenue was about $17.54 billion, below the roughly $18.75 billion expected. Bulls see a quarterly iPhone revenue record and an all-time high in Services revenue; bears worry about supply constraints, Chinese demand and the premium valuation. Which of iPhone supply, Services revenue and China will matter most for Apple's next high?" },
+  { ticker: "AMD", title_cn: "AMD财报今晚交卷，芯片能止跌吗？", body_cn: "AMD在美股周一（11月2日）跌7.59%，但公司将在美股周二盘后发布业绩，当前波动应按财报前瞻而不是普通下跌处理。公司此前预计第三季度营收约130亿美元、上下浮动3亿美元，非GAAP毛利率约54.5%；市场一致预期已提高到营收约132.2亿美元、每股收益约1.97美元。多头的抓手是MI450与Helios机柜可能推动数据中心收入继续扩张，空头的抓手是高预期、供应爬坡和毛利率容错空间有限。AMD数据中心增速、英伟达份额与Arm、高通的终端需求中，哪个会成为芯片板块下一轮定价核心？", title_en: "MI450 Meets a Higher Bar — Can AMD Reset the Chip Trade?", body_en: "AMD fell 7.59% in the Monday, November 2 U.S. session but reports after Tuesday's close, so the move should be read as earnings positioning rather than an ordinary decline. The company had guided third-quarter revenue to about $13 billion, plus or minus $300 million, with non-GAAP gross margin near 54.5%; consensus has since risen to about $13.22 billion in revenue and roughly $1.97 in EPS. Bulls point to MI450 and Helios racks extending data-centre growth; bears cite high expectations, the supply ramp and a thin gross-margin cushion. Which of AMD data-centre growth, Nvidia's share and Arm-Qualcomm device demand will become the chip sector's next pricing anchor?" },
+  { ticker: "PLTR", title_cn: "Palantir营收翻倍，盘后为何还跌？", body_cn: "Palantir在美股周一（11月2日）正式收盘跌3.13%，财报公布后再跌2.99%，强劲增长仍未满足市场对高估值的要求。第三季度营收23.13亿美元、同比增长96%，高于约19.4亿美元预期；调整后每股收益0.44美元，也超过约0.36美元预期。美国商业收入增长148%至9.84亿美元，调整后自由现金流12.2亿美元、利润率53%，公司把全年营收指引提高到85.30亿至85.34亿美元。多头看到商业收入和现金流同时加速，空头担心极高估值已提前计入多年增长。美国商业业务、政府合同和自由现金流中，哪个指标最能证明Palantir仍有上行空间？", title_en: "Revenue Nearly Doubles, Yet Shares Slip — Has Palantir Priced It All In?", body_en: "Palantir closed down 3.13% in the Monday, November 2 U.S. session and fell another 2.99% after reporting, with strong growth still falling short of what its high valuation demands. Third-quarter revenue was $2.313 billion, up 96%, above the roughly $1.94 billion expected, and adjusted EPS of $0.44 beat about $0.36. U.S. commercial revenue rose 148% to $984 million, adjusted free cash flow was $1.22 billion at a 53% margin, and full-year revenue guidance was raised to $8.530 billion to $8.534 billion. Bulls see commercial revenue and cash flow accelerating together; bears worry that the extreme valuation already prices in years of growth. Which of U.S. commercial growth, government contracts and free cash flow best supports further upside?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
