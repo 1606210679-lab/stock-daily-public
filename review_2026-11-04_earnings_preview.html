@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-04 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-04</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "UBER", title_cn: "Uber周三盘前交卷，增长能否守住利润？", body_cn: "Uber将在美股周三（11月4日）开市前公布第三季度业绩，市场预期营收约150亿美元、每股收益约0.98美元。核心不只是出行和外卖订单能否增长，还要检查总预订额、调整后EBITDA、自由现金流，以及自动驾驶合作投入是否拖累利润率。多头的抓手是平台规模和广告业务可以继续提高变现率，空头担心司机激励、保险成本和无人驾驶竞争抬高费用。订单增速、利润率与自动驾驶合作的资本回报中，哪个会成为财报后的定价核心？", title_en: "Bookings Meet Robotaxis — What Sets Uber's Next Margin?", body_en: "Uber reports third-quarter results before the U.S. market opens on Wednesday, November 4, with consensus near $15 billion in revenue and $0.98 EPS. The focus is not just ride and delivery order growth but gross bookings, adjusted EBITDA, free cash flow and whether self-driving partnership spending is weighing on margins. Bulls cite platform scale and advertising lifting monetisation, while bears worry driver incentives, insurance costs and autonomous competition are raising expenses. Which of order growth, margins and capital returns from autonomous-driving partnerships will become the post-earnings pricing anchor?" },
+  { ticker: "NVO", title_cn: "诺和诺德周三盘前交卷，减重药还能加速吗？", body_cn: "诺和诺德将在美股周三（11月4日）开市前发布业绩，市场预计营收约110.7亿美元、每股收益约0.73美元。最大看点是Wegovy和Ozempic销量、美国处方增速与产能扩张能否抵消价格折让及竞争压力，同时公司是否维持全年销售和利润增长指引。多头看好GLP-1需求仍大于供应，空头担心礼来竞争、保险覆盖和高基数压低增长。销量、净售价和产能利用率中，哪个指标最能证明减重药需求仍未见顶？", title_en: "GLP-1 Demand Is Strong — Can Novo Protect Pricing?", body_en: "Novo Nordisk reports before the U.S. market opens on Wednesday, November 4, with consensus at about $11.07 billion in revenue and $0.73 EPS. The key question is whether Wegovy and Ozempic volumes, U.S. prescription growth and capacity expansion can offset price concessions and competitive pressure — and whether the company maintains its full-year sales and profit-growth guidance. Bulls say GLP-1 demand still exceeds supply; bears cite Eli Lilly competition, insurance coverage and a high base. Of volumes, net price and capacity utilisation, which best proves demand for weight-loss drugs has not peaked?" },
+  { ticker: "ARM / QCOM", title_cn: "Arm高通周三盘后交卷，端侧AI谁先兑现？", body_cn: "Arm与高通将在美股周三（11月4日）收盘后发布业绩，市场对Arm的预期为营收约13.9亿美元、每股收益约0.48美元，对高通的预期为营收约103.2亿美元、每股收益约2.20美元。Arm要验证数据中心授权、版税率和AI芯片设计需求，高通则要验证手机复苏、端侧AI与汽车业务增长。多头希望AI从云端扩散到终端设备，空头担心智能手机需求、客户自研芯片与中国市场波动。财报后，Arm版税率、高通手机芯片和汽车订单中，哪个会成为端侧AI的新锚？", title_en: "Cloud AI Is Proven — Can Arm and Qualcomm Win at the Edge?", body_en: "Arm and Qualcomm report after the U.S. market closes on Wednesday, November 4, with consensus at roughly $1.39 billion in revenue and $0.48 EPS for Arm and $10.32 billion in revenue with $2.20 EPS for Qualcomm. Arm must validate data-centre licensing, royalty rates and AI chip-design demand, while Qualcomm must show handset recovery, on-device AI and automotive growth. Bulls expect AI to spread from cloud to devices; bears worry about smartphone demand, customer in-house chips and China volatility. Which of Arm's royalty rate, Qualcomm's handset chips and automotive orders will become on-device AI's new anchor?" },
+  { ticker: "COHR", title_cn: "Coherent周三盘后交卷，光模块需求能接棒吗？", body_cn: "Coherent将在美股周三（11月4日）收盘后披露业绩，市场预期营收约23.5亿美元、每股收益约2.01美元。迈威尔收购Lumentum已经重估光互连产业结构，这次财报要验证800G与1.6T模块订单、客户集中度、制造良率和毛利率，判断AI数据中心需求能否转化为稳定利润。多头看好高速光模块供不应求和产品升级，空头担心扩产成本、并购竞争与估值波动。订单积压、毛利率和1.6T出货中，哪个指标最能推动Coherent重估？", title_en: "800G to 1.6T — Can Coherent Protect Margins?", body_en: "Coherent reports after the U.S. market closes on Wednesday, November 4, with consensus at about $2.35 billion in revenue and $2.01 EPS. Marvell's acquisition of Lumentum has repriced the optical-interconnect landscape, so the print must validate 800G and 1.6T module orders, customer concentration, manufacturing yields and gross margin to show AI data-centre demand converts into stable profit. Bulls cite tight high-speed module supply and product upgrades; bears flag expansion costs, M&A competition and valuation swings. Of backlog, gross margin and 1.6T shipments, which best drives a Coherent re-rating?" },
+  { ticker: "NET / IREN", title_cn: "Cloudflare与IREN周四交卷，AI投入回报如何？", body_cn: "Cloudflare与IREN将在美股周四（11月5日）收盘后公布业绩，市场预期Cloudflare营收约7.46亿美元、每股收益约0.35美元，IREN营收约2.28亿美元、每股亏损约0.68美元。Cloudflare要验证AI推理流量、开发者平台和大客户扩张，IREN则要验证数据中心建设、算力合同与融资成本。多头看好AI需求从软件边缘网络延伸到算力基础设施，空头担心资本开支先于现金回报。Cloudflare的大客户增长、IREN的算力利用率和融资纪律中，哪个更能证明AI投入有效？", title_en: "AI Traffic Meets AI Capex — Which Model Converts Faster?", body_en: "Cloudflare and IREN report after the U.S. market closes on Thursday, November 5, with consensus at about $746 million in revenue and $0.35 EPS for Cloudflare, and $228 million in revenue with a $0.68 loss per share for IREN. Cloudflare must validate AI inference traffic, its developer platform and large-customer expansion, while IREN must show data-centre buildout, compute contracts and financing costs. Bulls see AI demand stretching from the software edge into compute infrastructure; bears worry capital spending precedes cash returns. Which of Cloudflare's large-customer growth, IREN's compute utilisation and financing discipline best proves the AI spending is working?" },
+  { ticker: "OKLO / VST", title_cn: "Oklo与Vistra周五交卷，电力交易能否延续？", body_cn: "Oklo与Vistra将在美股周五（11月6日）开市前发布业绩，市场预期Oklo每股亏损约0.25美元、仍处商业化前期，Vistra营收约60.8亿美元、每股收益约2.99美元。Oklo的关键是核燃料、监管审批和首个项目时间表，Vistra则要验证电价、发电资产现金流与数据中心长期购电需求。多头看好AI用电把核能和独立电力商带入多年景气，空头担心审批、建设周期与电价回落。项目里程碑、购电合同和自由现金流中，哪个最能支撑电力股估值？", title_en: "Nuclear Promise Meets Power Cash Flow — What Will AI Reward?", body_en: "Oklo and Vistra report before the U.S. market opens on Friday, November 6, with consensus at a $0.25 loss per share for Oklo, still pre-commercial, and $6.08 billion in revenue with $2.99 EPS for Vistra. The key for Oklo is nuclear fuel, regulatory approvals and first-project timelines, while Vistra must validate power prices, generation-asset cash flow and long-term data-centre offtake demand. Bulls see AI power demand driving a multi-year upcycle for nuclear and independent power producers; bears flag approvals, construction timelines and falling power prices. Of project milestones, power-purchase contracts and free cash flow, which best supports power-sector valuations?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
