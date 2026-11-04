@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-04 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-04</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .SPX / CLmain", title_cn: "中期选举未决，科技反弹能守住吗？", body_cn: "QQQ在美股周二（11月3日）涨0.61%、标普500涨0.35%，科技股在中期选举投票日从前一日抛售中反弹，但国会控制权仍待最终确认。政策分歧之外，美伊谈判围绕伊朗提出的七项条件与霍尔木兹海峡通航仍未弥合；WTI原油跌1.56%、布伦特跌1.82%，说明市场暂未交易供应中断升级。多头的抓手是选举悬念消退和芯片业绩回暖，空头的抓手是争议结果、科技监管与地缘事件仍可能重新抬高波动。QQQ盈利广度、油价和短债需求中，哪个会先确认风险偏好方向？", title_en: "Election Relief Meets Hormuz Risk — What Drives QQQ Next?", body_en: "QQQ rose 0.61% and the S&P 500 gained 0.35% in the Tuesday, November 3 U.S. session as tech stocks rebounded from the prior session's selloff on midterm Election Day, though congressional control remains unconfirmed. U.S.-Iran talks over seven Iranian conditions and Strait of Hormuz transit remain unresolved; WTI fell 1.56% and Brent dropped 1.82%, signalling markets are not yet pricing an escalating supply disruption. Bulls are anchored to fading election suspense and improving chip earnings, while bears cite contested results, tech regulation and geopolitical risk that could reignite volatility. Among QQQ earnings breadth, oil prices and short-duration bond demand, which will first confirm risk-appetite direction?" },
+  { ticker: "AMD", title_cn: "AMD财报双超预期，盘后5%还能追吗？", body_cn: "AMD在美股周二（11月3日）正式收盘涨3.68%，财报公布后再涨约5.02%，直接催化是第三季度业绩与第四季度指引均高于市场预期。季度营收133.8亿美元，高于约132.2亿美元预期；调整后每股收益2.09美元，也超过约1.97美元预期。数据中心收入达到创纪录的85亿美元、同比增长97%，公司预计第四季度营收约170亿美元、上下浮动3%，非GAAP毛利率约55%；这份指引是公司预测，不等于已签客户订单。多头看到MI450与EPYC需求继续加速，空头担心高预期、供应爬坡和估值已压缩容错空间。数据中心增速、毛利率和MI450交付中，哪个最能决定AMD下一段行情？", title_en: "Record Data Center Sales — Can AMD Turn Guidance Into Delivery?", body_en: "AMD closed up 3.68% in the Tuesday, November 3 U.S. session before gaining an additional 5.02% after hours, directly catalysed by quarterly results and forward guidance both exceeding consensus. Revenue came in at $13.38 billion versus the roughly $13.22 billion estimate, while adjusted EPS of $2.09 topped the roughly $1.97 consensus. Data-centre revenue hit a record $8.5 billion, up 97% year over year; the company guided next-quarter revenue to roughly $17.0 billion, plus or minus 3%, with non-GAAP gross margin of about 55% — a company forecast, not confirmed customer orders. Bulls see accelerating MI450 and EPYC demand; bears flag elevated expectations, supply-ramp risks and compressed valuation tolerance. Among data-centre growth, gross margin and MI450 delivery cadence, which will matter most for AMD's next leg?" },
+  { ticker: "SNDK / MU / NVDA", title_cn: "闪迪涨4.79%，芯片反弹会扩散吗？", body_cn: "闪迪在美股周二（11月3日）涨4.79%、美光涨2.65%、英伟达涨2.22%，板块修复的直接催化来自AMD财报前对AI算力需求的乐观预期，盘后公布的强劲数据又进一步确认数据中心支出仍在增长。多头的抓手是AMD数据中心收入增长97%，需求可以从GPU扩散到HBM、企业级SSD和互连；空头的抓手是存储价格、客户库存与各家公司毛利率并不同步，单一财报不能证明整个周期重新加速。闪迪的企业级SSD、美光的HBM和英伟达的GPU订单中，哪一项最能延续这轮芯片修复？", title_en: "AMD Delivers, Memory Rallies — Is This More Than a One-Day Bounce?", body_en: "SanDisk jumped 4.79%, Micron gained 2.65% and Nvidia rose 2.22% in the Tuesday, November 3 U.S. session. The sector recovery was initially catalysed by optimism over AI compute demand ahead of AMD's report, then reinforced after hours by strong results confirming continued data-centre spending growth. Bulls point to AMD's 97% data-centre revenue growth as evidence that demand can extend from GPUs into HBM, enterprise SSDs and interconnects; bears note that memory prices, customer inventories and gross margins are not moving in sync, and a single earnings print does not confirm a full-cycle reacceleration. Among SanDisk's enterprise SSDs, Micron's HBM and Nvidia's GPU order book, which will best sustain this chip-sector recovery?" },
+  { ticker: "GRAB", title_cn: "Grab涨8.71%，盈利拐点能延续吗？", body_cn: "Grab在美股周二（11月3日）涨8.71%，直接催化是季度营收超预期、盈利改善并上调全年展望。第三季度营收11.12亿美元、同比增长27%，高于约10.5亿美元预期；调整后EBITDA达到2.37亿美元、同比增长73%，公司把全年营收指引提高到41.5亿至42.0亿美元，并把调整后EBITDA指引提高到7.90亿至8.00亿美元。多头看到配送、出行与金融服务的规模效应开始转成利润，空头担心补贴、竞争和东南亚消费波动。订单增长、利润率和自由现金流中，哪个最能证明Grab已进入可持续盈利阶段？", title_en: "Revenue Up 27%, Guidance Raised — Can Grab Hold Its New Margin?", body_en: "Grab surged 8.71% in the Tuesday, November 3 U.S. session, directly catalysed by quarterly revenue beating estimates, improved profitability and a raised full-year outlook. Revenue of $1.112 billion grew 27% year over year, topping the roughly $1.05 billion consensus, while adjusted EBITDA reached $237 million, up 73% year over year; the company raised full-year revenue guidance to $4.15 billion to $4.20 billion and adjusted EBITDA guidance to $790 million to $800 million. Bulls see the scale economics of deliveries, mobility and financial services beginning to convert into sustainable profit; bears flag subsidies, competition and volatile Southeast Asian consumer spending. Among order growth, margin expansion and free cash flow, which metric best confirms that Grab has entered a sustainably profitable phase?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
