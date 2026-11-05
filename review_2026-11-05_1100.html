@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-05 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-05</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / SPY / CLmain / BZmain", title_cn: "民主党横扫，科技反弹能持续吗？", body_cn: "QQQ在美股周三（11月4日）涨0.96%、SPY涨1.64%，民主党赢得参众两院控制权后，微软涨6.73%、亚马逊涨6.10%、苹果涨5.36%，资金先回流现金流更强的大型科技股。与此同时，截至北京时间11月5日早间，WTI原油跌8.82%、布伦特跌9.13%，市场正在交易美伊冲突降温与霍尔木兹海峡恢复通航的可能性。多头的抓手是油价回落减轻通胀和利率压力，空头的抓手是芯片股仍普遍下跌，说明AI资本开支与监管风险没有消失。大型科技、芯片广度和油价中，哪个会决定这轮选举后反弹的持续性？", title_en: "Oil Collapses, Megacaps Rally — Has the Election Reset Risk?", body_en: "QQQ rose 0.96% and SPY gained 1.64% in the Wednesday, November 4 U.S. session after Democrats won both chambers. Microsoft rose 6.73%, Amazon 6.10% and Apple 5.36% as money rotated into large-cap tech with stronger cash flow. As of early November 5 Beijing time, WTI fell 8.82% and Brent 9.13% on hopes the U.S.-Iran conflict cools and Hormuz shipping resumes. Bulls cite oil relief for inflation and rates; bears note chips remain broadly lower, with AI capex and regulatory risks intact. Which of mega-cap tech, chip breadth and oil will determine whether the post-election rebound lasts?" },
+  { ticker: "QCOM / ARM", title_cn: "高通Arm财报分化，为何仍被卖出？", body_cn: "高通在美股周三（11月4日）正式收盘涨5.33%，财报公布后跌7.52%；Arm正式收盘跌5.28%，财报后再跌1.83%，两家公司都交出增长，却未能消除需求结构与成本担忧。高通季度营收104.4亿美元，高于约103.2亿美元预期；非GAAP每股收益2.17美元，略低于约2.20美元预期，手机芯片收入还下降26%至51.4亿美元。公司预计下一季营收104亿至112亿美元、每股收益2.15至2.35美元。Arm营收14.43亿美元、同比增长27%，调整后每股收益0.52美元，并预计下一季营收约15.4亿美元、上下浮动0.5亿美元；这些指引是管理层预测，不等于已签客户合同。高通汽车业务、Arm版税率和手机需求中，哪个最可能先改善估值？", title_en: "Revenue Beats, Handsets Shrink — What Is the Market Pricing?", body_en: "Qualcomm closed up 5.33% in the Wednesday, November 4 U.S. session but slid 7.52% after results; Arm closed down 5.28% and fell another 1.83% post-earnings. Both grew yet failed to ease demand-mix and cost worries. Qualcomm's revenue was $10.44 billion, above the roughly $10.32 billion estimate; non-GAAP EPS of $2.17 was slightly below the roughly $2.20 estimate, while handset-chip revenue dropped 26% to $5.14 billion. It guides next quarter to $10.4 billion to $11.2 billion in revenue and $2.15 to $2.35 EPS. Arm posted $1.443 billion in revenue, up 27%, with $0.52 adjusted EPS, and guided to about $1.54 billion, plus or minus $50 million — forecasts, not signed contracts. Which of Qualcomm automotive growth, Arm's royalty rate and handset demand is most likely to improve valuations first?" },
+  { ticker: "COHR", title_cn: "Coherent盘后涨5%，光模块能重估吗？", body_cn: "Coherent在美股周三（11月4日）正式收盘跌5.98%，财报公布后反弹4.97%，直接催化是业绩和下一季指引均高于市场预期。公司季度营收23.7亿美元、同比增长50%，高于约23.5亿美元预期；调整后每股收益2.09美元，也超过约2.01美元预期。下一季营收指引为25.5亿至27.5亿美元，调整后每股收益2.28至2.48美元。多头看到800G与1.6T光模块订单继续扩张，空头担心扩产、客户集中和迈威尔收购Lumentum后竞争格局变化。订单积压、毛利率和1.6T出货中，哪个最能推动Coherent持续重估？", title_en: "Guidance Accelerates — Can Coherent Convert 1.6T Demand?", body_en: "Coherent closed down 5.98% in the Wednesday, November 4 U.S. session, then rebounded 4.97% after results, as both earnings and next-quarter guidance topped consensus. Quarterly revenue was $2.37 billion, up 50% year over year and above the roughly $2.35 billion estimate; adjusted EPS came in at $2.09 versus roughly $2.01 expected. Guidance calls for $2.55 billion to $2.75 billion in revenue and $2.28 to $2.48 adjusted EPS next quarter. Bulls see 800G and 1.6T optical-module orders expanding; bears flag capacity additions, customer concentration and a shifting competitive landscape after Marvell's Lumentum deal. Which of backlog, gross margin and 1.6T shipments best sustains the re-rating?" },
+  { ticker: "UBER", title_cn: "Uber涨4.91%，订单增长能转成利润吗？", body_cn: "Uber在美股周三（11月4日）涨4.91%，市场更关注订单与下一季展望，而非单一利润数字。第三季度营收147.7亿美元、同比增长10%，总预订额达到598亿美元、增长20%；非GAAP每股收益0.88美元，略低于约0.90美元预期。公司预计第四季度总预订额632.5亿至652.5亿美元、调整后EBITDA为27.4亿至28.4亿美元。多头的抓手是出行与外卖规模继续扩大，空头担心保险、司机激励和自动驾驶合作投入压低利润率。总预订额、调整后EBITDA和自由现金流中，哪个能证明Uber的规模优势正在兑现？", title_en: "Bookings Reach $59.8 Billion — Where Is Uber's Leverage?", body_en: "Uber rose 4.91% in the Wednesday, November 4 U.S. session as investors focused on bookings and the next-quarter outlook rather than any single profit figure. Third-quarter revenue was $14.77 billion, up 10%, with gross bookings of $59.8 billion, up 20%; non-GAAP EPS of $0.88 came in slightly below the roughly $0.90 estimate. The company expects fourth-quarter gross bookings of $63.25 billion to $65.25 billion and adjusted EBITDA of $2.74 billion to $2.84 billion. Bulls point to mobility and delivery scale; bears fear insurance, driver incentives and autonomous-vehicle partnerships squeeze margins. Which of gross bookings, adjusted EBITDA and free cash flow proves the scale advantage is paying off?" },
+  { ticker: "NVO", title_cn: "诺和诺德涨4.95%，减重药重回增长吗？", body_cn: "诺和诺德在美股周三（11月4日）涨4.95%，直接催化是季度增长回稳并上调全年展望。第三季度销售额792亿丹麦克朗，按固定汇率增长4%；肥胖症药物销售增长22%，调整后营业利润增长27%。公司把全年销售和营业利润增速指引提高到按固定汇率计算下降2%至增长2%，较此前区间有所改善。多头看到Wegovy与Ozempic需求仍强，空头担心美国定价、礼来竞争和高基数限制增速。处方量、净售价和产能利用率中，哪个最能确认诺和诺德已走出增长低谷？", title_en: "Obesity Sales Rise 22% — Has Novo Found Its Floor?", body_en: "Novo Nordisk rose 4.95% in the Wednesday, November 4 U.S. session, catalysed by stabilising quarterly growth and a raised full-year outlook. Third-quarter sales were DKK 79.2 billion, up 4% at constant currencies; obesity-drug sales rose 22% and adjusted operating profit climbed 27%. The company lifted full-year guidance for sales and operating-profit growth to a range of negative 2% to positive 2% at constant exchange rates, an improvement on the prior range. Bulls see strong Wegovy and Ozempic demand; bears cite U.S. pricing, Eli Lilly competition and high-base constraints. Which of prescriptions, net price and capacity utilisation best confirms Novo has exited the growth trough?" },
+  { ticker: "HSTECH / 01810 / 09988 / 00700", title_cn: "恒科涨5%，港股科技可以追了吗？", body_cn: "截至11月5日香港盘中，恒生科技指数涨约5%，小米涨7.93%、阿里巴巴涨5.86%、腾讯涨5.28%，资金在美国选举结果落地和海外大型科技反弹后重新提高亚洲成长资产敞口。多头的抓手是港股科技估值低于美股同行，AI云、手机与广告业务仍有盈利修复空间；空头的抓手是这轮上涨包含风险偏好和空头回补，后续仍要验证人民币、南向资金与企业盈利。小米硬件、阿里云和腾讯广告中，哪个业务最能把估值修复转成持续行情？", title_en: "Xiaomi Leads a 5% Tech Surge — Is Hong Kong Re-rating?", body_en: "As of the November 5 Hong Kong session, the Hang Seng Tech Index was up about 5%, with Xiaomi gaining 7.93%, Alibaba 5.86% and Tencent 5.28%, as investors rebuilt exposure to Asian growth assets after the U.S. election result and a rebound in overseas mega-cap tech. Bulls note Hong Kong tech trades below U.S. peers, with room for earnings repair in AI cloud, handsets and advertising; bears say the rally reflects risk appetite and short covering, and must still be validated by the yuan, southbound flows and corporate earnings. Which of Xiaomi hardware, Alibaba Cloud and Tencent advertising best turns re-rating into a lasting move?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
