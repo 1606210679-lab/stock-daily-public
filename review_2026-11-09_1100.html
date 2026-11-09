@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-09 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-09</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ / .SPX", title_cn: "非农超预期，周二CPI能让科技喘息吗？", body_cn: "QQQ在美股周五（11月6日）涨1.29%、标普500涨0.27%，此前AI数据中心审批争议引发的抛售暂时放缓，但上周五的反弹仍偏向科技。美国10月非农新增16.5万人，高于约5.9万人的市场预期，失业率降至4.1%；就业韧性让12月加息押注升温，也使收益率成为科技估值的压力。北京时间周二（11月10日）21:30将公布10月CPI，整体与核心环比预期约0.3%和0.2%，9月分别为0.6%和0.3%。多头希望通胀降温缓解利率压力，空头担心就业偏强与AI投资回报受质疑同时压制估值；部分暂停新建数据中心的倡议目前并非全国禁令。CPI整体、核心分项和美债收益率中，哪个会决定QQQ能否延续修复？", title_en: "Jobs Surprise Sets a Higher Bar — Can CPI Rescue Tech?", body_en: "QQQ gained 1.29% and the S&P 500 rose 0.27% in the Friday, November 6 U.S. session, the selloff over AI data-center approval disputes easing, though the bounce stayed tech-led. October payrolls came in at 165K versus about 59K expected, with unemployment at 4.1% — enough resilience to firm December rate-hike bets and keep yields a weight on tech multiples. October CPI is due Tuesday (Nov 10) 21:30 Beijing time, headline and core seen at roughly 0.3% and 0.2% month on month after 0.6% and 0.3%. Bulls want inflation to cool; bears see strong jobs and doubts over AI returns squeezing valuations together. Calls to pause new data-centre construction are proposals, not a nationwide ban. Headline CPI, core components or Treasury yields — which decides whether QQQ extends its rebound?" },
+  { ticker: "AMD", title_cn: "AMD反弹11.56%，财报底牌够硬吗？", body_cn: "AMD在美股周五（11月6日）涨11.56%，从前一日17.28%的暴跌中反弹，直接催化是AI硬件股的风险偏好修复，而非公司又签下新订单。公司刚公布的季度营收与调整后每股收益均高于市场预期，数据中心收入85亿美元、同比增长97%，下一季营收指引约170亿美元；这仍是管理层预测，不能视作已锁定的交付。多头看MI450与EPYC需求能支撑收入，空头担心数据中心审批和云厂资本开支拖慢兑现，使高估值再次承压。MI450实际出货、数据中心增长和毛利率中，哪个最能证明这次反弹并非纯粹的超跌回补？", title_en: "MI450 Must Deliver — What Makes AMD's Bounce Durable?", body_en: "AMD rose 11.56% in the Friday, November 6 U.S. session, rebounding from the prior session's 17.28% plunge, driven by a recovery in risk appetite for AI hardware rather than any new order win. Quarterly revenue and adjusted EPS both topped consensus, with data-center revenue of $8.5 billion, up 97% year on year, and guidance of roughly $17 billion for the next quarter — still management forecasts, not locked-in deliveries. Bulls point to MI450 and EPYC demand; bears fear data-center approvals and cloud capex will slow conversion, squeezing a rich multiple. MI450 shipments, data-center growth or gross margin — which best proves this is more than an oversold bounce?" },
+  { ticker: "RKLB", title_cn: "Rocket Lab涨15.42%，今晚财报接得住吗？", body_cn: "Rocket Lab在美股周五（11月6日）涨15.42%，定于美股周一（11月9日）收盘后公布季度业绩，市场正提前交易发射业务与Neutron项目的下一次进度验证，而非已经披露的财报结果。Finnhub一致预期营收约2.61亿美元、每股亏损约0.07美元；Neutron首飞目标已推迟至2027年，收入之外更需看发射排期、制造订单、现金消耗和项目里程碑。多头押注Electron稳定发射与太空系统订单，空头担心Neutron进度再拖累估值。与已形成更大商业规模的SpaceX相比，Rocket Lab要靠订单交付和亏损收窄证明溢价；哪个指标最能让这轮涨势站稳？", title_en: "Neutron Timetable Meets a Rally — What Must Rocket Lab Prove?", body_en: "Rocket Lab rose 15.42% in the Friday, November 6 U.S. session ahead of quarterly results due after the Monday, November 9 U.S. close, with the market trading the next progress check on its launch business and Neutron rather than any reported figures. Finnhub consensus points to revenue of about $261 million and a loss of about $0.07 per share; Neutron's first-flight target has slipped to 2027, so beyond revenue the focus is launch cadence, manufacturing orders, cash burn and milestones. Bulls bet on steady Electron launches and space-systems orders; bears fear further Neutron slippage. Against SpaceX, which already has larger commercial scale, Rocket Lab must prove its premium through deliveries and narrowing losses — which metric best makes this rally stick?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "存储三股反弹，订单能扛住政策风险吗？", body_cn: "存储链在美股周五（11月6日）同步修复：美光涨4.75%、闪迪涨3.57%、SK海力士涨2.78%，共同背景是前一日AI数据中心政策担忧引发的急跌后资金回补，但三家的验证点不同。美光要看HBM多年供货协议是否按预定价格与产能兑现；闪迪此前企业级SSD需求和高毛利率仍强，重点是云客户库存与价格；海力士除HBM订单外，还要追踪美国项目许可与扩产时序。多头认为供给紧张并未一夜消失，空头担心审批、云厂预算和周期价格会削弱远期现金流。HBM合同、企业级SSD订单和扩产许可中，哪个会先给出存储反弹的硬证据？", title_en: "HBM, SSDs and Permits — Which Memory Signal Comes First?", body_en: "The memory complex recovered in lockstep in the Friday, November 6 U.S. session: Micron rose 4.75%, SanDisk 3.57% and SK Hynix 2.78%, with money returning after the prior day's sharp AI data-center policy selloff, though each name has a different test. Micron must show multi-year HBM supply agreements delivering at agreed prices and volumes; SanDisk's enterprise SSD demand and high gross margins remain strong, with cloud customer inventories and pricing the key; Hynix needs US project permits and expansion timing tracked beyond HBM orders. Bulls say supply tightness has not vanished overnight; bears see approvals, cloud budgets and cyclical pricing eroding forward cash flow. HBM contracts, enterprise SSD orders or expansion permits — which delivers hard evidence first?" },
+  { ticker: "NBIS", title_cn: "Nebius反弹7.87%，算力交付如何验？", body_cn: "Nebius在美股周五（11月6日）涨7.87%，从前一日14.89%的回撤中修复，市场仍在权衡美国数据中心审批讨论与已签算力需求。公司定于美股周四（11月12日）开市前公布业绩，市场预期营收约9.26亿美元、每股亏损约0.70美元；这些预期不等于已交付容量。内蒙古此前公开推进绿色算力与算电协同，可作海外云厂供电条件的对照，却不意味着Nebius获得新增订单。多头看长期客户需求，空头盯供电、融资和上架进度。已签容量、投入使用的机柜和单位资本回报中，哪个最能证明Nebius营收增长可持续？", title_en: "Signed Capacity Is Not Revenue — What Can Nebius Deliver?", body_en: "Nebius rose 7.87% in the Friday, November 6 U.S. session, recovering from the prior day's 14.89% drawdown as the market weighs US data-center approval debate against already-signed compute demand. Results are due before the US open on Thursday (Nov 12), with consensus at roughly $926 million in revenue and a loss of about $0.70 per share — expectations are not delivered capacity. Inner Mongolia's earlier green-compute and power-coordination policies provide a comparison for cloud operators' electricity access, but they do not mean Nebius has won new orders. Bulls watch long-term customer demand; bears watch power supply, financing and rack deployment. Of signed capacity, racks in service and unit capital returns, which best proves Nebius can sustain revenue growth?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
