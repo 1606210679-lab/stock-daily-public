@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-11 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-11</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 7</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:14.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 7 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "NVDA", title_cn: "英伟达再跌5.47%，治理风波会拖累反弹吗？", body_cn: "英伟达（NVDA）美股周二（11月10日）收跌5.47%，此前有关董事会调查管理层的报道和前一日收盘后的股东诉讼继续受到关注，叠加10月CPI偏热带来的利率压力。诉讼是原告提出的披露指控，并非已获法院裁决；不能把周一收盘后提出的诉讼倒写为周一盘中的跌因，也不能断言它单独导致周二跌幅。多头仍看AI算力订单与软件生态，空头则担心公司治理、客户自研芯片和融资利率同时压低估值；同日台积电涨2.02%，表明芯片需求和英伟达个股风险并不完全同向。英伟达回应、台积电需求和GPU估值中，哪个验证点最值得先跟踪？", title_en: "Nvidia Falls Another 5.47%: Will Governance Turmoil Sink the Rebound?", body_en: "Nvidia (NVDA) closed down 5.47% Tuesday (Nov 10), with reports of a board probe into management and a shareholder suit filed after the prior close still in focus, plus rate pressure from a hot October CPI. The suit is a plaintiff disclosure allegation, not a court ruling — it cannot be back-dated to explain Monday's intraday drop, nor said to have solely caused Tuesday's fall. Bulls cite AI compute orders and software; bears cite governance, customer in-house chips and financing costs. TSMC gained 2.02%, showing foundry demand and Nvidia-specific risks do not move in lockstep. Of Nvidia's response, TSMC demand and GPU valuation, which checkpoint should be tracked first?" },
+  { ticker: "QQQ", title_cn: "CPI双双超预期，科技股回调会扩大吗？", body_cn: "纳指100 ETF（QQQ）美股周二（11月10日）收跌0.68%，当天公布的美国10月CPI使前一天的反弹面临新考验：整体环比实际0.4%，高于0.3%预期、低于9月0.6%；核心环比实际0.3%，高于0.2%预期、与9月持平。美国劳工统计局数据显示，食品、居住与能源分项环比分别涨0.5%、0.3%和0.7%；由于去年10月同期数据缺口，不应自行拼出同比率。多头认为整体环比仍比前月回落、经济需求有韧性，空头担心核心黏性推动美债收益率上行并压制科技估值；“12月加息50基点”不是已宣布政策。核心分项、美债收益率与台积电订单中，哪个信号更能决定QQQ的下一步？", title_en: "CPI Beats on Both Measures: Will the Tech Pullback Widen?", body_en: "QQQ fell 0.68% Tuesday (Nov 10) as October CPI posed a fresh test to the prior day's rebound: headline MoM came in at 0.4% versus 0.3% expected and below September's 0.6%; core MoM 0.3% versus 0.2% expected, flat on September. BLS data showed food, shelter and energy up 0.5%, 0.3% and 0.7% MoM; a year-ago data gap means the YoY rate should not be derived. Bulls note headline MoM still cooled and demand remains resilient; bears fear sticky core lifting Treasury yields and weighing on tech valuations. A 50bp December hike is not announced policy. Of core components, Treasury yields and TSMC orders, which signal drives QQQ next?" },
+  { ticker: "GOOG", title_cn: "Anthropic公布IPO新区间，谷歌云能受益吗？", body_cn: "Alphabet的GOOG美股周二（11月10日）收跌0.38%，相关联的Anthropic当天正式启动IPO路演，预计以每股70至78美元发行合计8.25亿股；这比昨天被撤回的非正式定价材料更具确认性，但仍不是最终发行价。按区间上限乘总股数，发售总额约643.5亿美元，其中约8.0135亿股为公司新发行，另约2365万股为老股出售，不能把总额全部算作公司融资。多头看Google Cloud算力合作与投资价值的潜在兑现，空头担心高估值、未来稀释和AI基础设施成本；GOOG当天跌幅不能说成由路演造成。正式招股更新后，Google Cloud收入、AWS算力合作和Anthropic最终定价中，哪个更能验证云巨头受益？", title_en: "Anthropic Sets New IPO Range: Can Google Cloud Benefit?", body_en: "Alphabet's GOOG fell 0.38% Tuesday (Nov 10); Anthropic formally launched its IPO roadshow the same day, expected to offer 825 million shares at $70 to $78 apiece — more definitive than yesterday's withdrawn informal pricing materials, but still not a final price. At the top of the range the deal totals about $64.35 billion, of which roughly 801.35 million shares are new and about 23.65 million are secondary, so the full amount is not company fundraising. Bulls see potential Google Cloud compute revenue and investment gains; bears worry about high valuation, dilution and AI infrastructure costs. GOOG's decline cannot be attributed to the roadshow. After the formal filing, does Google Cloud revenue, the AWS compute partnership or Anthropic's final pricing best validate potential cloud upside?" },
+  { ticker: "CRWV", title_cn: "CoreWeave盘后交卷，订单能转成利润吗？", body_cn: "CoreWeave（CRWV）美股周二（11月10日）正式时段收跌0.51%，收盘后公布季度营收36.61亿美元，高于Finnhub日历所列约36.2亿美元预期；GAAP每股亏损1.27美元，Finnhub事前列示每股亏损约1.18美元，但未注明是否为同一会计口径，不能直接据此判定每股收益是否达标。公司披露收入积压约1325亿美元，并把全年营收指引提高到130亿至133亿美元。多头看订单与指引，空头看当季约8.46亿美元净利息费用及扩张融资；盘后19:59美东最后一笔约52.58美元，较48.73美元正式收盘约高7.90%，不是日间涨幅。合同转收入、利息负担与自由现金流中，哪个指标最先证明扩张有回报？", title_en: "CoreWeave Reports After the Bell: Can Orders Convert to Profit?", body_en: "CoreWeave (CRWV) fell 0.51% in Tuesday's (Nov 10) regular session and reported quarterly revenue of $3.661 billion after the close, above the roughly $3.62 billion expected on the Finnhub calendar; GAAP loss per share was $1.27 versus about $1.18 listed beforehand, but no accounting basis was specified, so an EPS beat or miss cannot be determined on a like-for-like basis. Revenue backlog is about $132.5 billion, and full-year revenue guidance rose to $13.0–13.3 billion. Bulls cite backlog and raised guidance; bears note roughly $846 million of quarterly net interest expense and financing pressure. The last after-hours print was $52.58 at 19:59 ET, about 7.90% above the $48.73 close. Does contract conversion, interest burden or free cash flow best prove the buildout pays?" },
+  { ticker: "TSM", title_cn: "台积电10月营收跃升，AI链还能分化走强吗？", body_cn: "台积电（TSM）美股周二（11月10日）收涨2.02%，公司同日公布10月合并营收约新台币5868.9亿元，环比增长14.7%、同比增长59.7%，给晶圆代工需求提供了比单日板块波动更实在的检验。同日英伟达跌5.47%，说明客户治理风波和上游订单预期不能画等号；但一个月营收也不能直接推算先进制程利润，产品组合、产能与汇率仍需等季报验证。多头看AI加速器及先进封装需求，空头担心客户资本开支和出口限制改变后续排产。台积电月度营收、英伟达订单和设备公司财报中，哪个会先确认扩产节奏？", title_en: "TSMC October Revenue Jumps: Can the AI Chain Keep Diverging?", body_en: "TSMC (TSM) rose 2.02% Tuesday (Nov 10) after reporting October consolidated revenue of about NT$586.89 billion, up 14.7% month on month and 59.7% year on year — a firmer read on foundry demand than single-day sector moves. Nvidia fell 5.47% the same day, showing customer governance turmoil and upstream order expectations are not the same thing; one month of revenue also cannot extrapolate advanced-node profit, with mix, capacity and FX still awaiting quarterly results. Bulls cite AI accelerator and advanced packaging demand; bears worry customer capex and export limits could change production. Of TSMC's monthly revenue, Nvidia orders and equipment makers' results, which first confirms the pace of expansion?" },
+  { ticker: "SE", title_cn: "Sea营收超预期，利润能跟上增长吗？", body_cn: "Sea（SE）美股周二（11月10日）收跌1.49%，当日公布的季度GAAP营收约86亿美元，高于Finnhub日历约82.9亿美元预期，同比增43.4%；摊薄每股收益约0.78美元，低于该日历约0.82美元预期，实际净利润约5.03亿美元。营收加速与股价反应并不一致：多头看电商和数字金融扩张带来的规模效应，空头担心增长投入侵蚀利润、不同机构每股收益预期的会计口径不完全一致。营收与每股收益来自同一份本季公司财报，比较预期时仍需核对GAAP口径。Shopee利润率、数字金融信贷质量与下一季每股收益中，哪个最能支撑Sea估值？", title_en: "Sea Revenue Tops Estimates: Can Profit Keep Pace With Growth?", body_en: "Sea (SE) fell 1.49% Tuesday (Nov 10) despite quarterly GAAP revenue of about $8.6 billion, above the roughly $8.29 billion Finnhub calendar estimate and up 43.4% year on year; diluted earnings per share were about $0.78 versus roughly $0.82 expected, with net income of about $503 million. Revenue acceleration and the share reaction diverged: bulls see e-commerce and digital finance scale benefits, bears fear growth spending eroding profit and inconsistent EPS accounting bases across houses. Of Shopee margins, digital finance credit quality and next quarter's EPS, which best supports Sea's valuation?" },
+  { ticker: "BABA", title_cn: "平头哥拟赴港挂牌，阿里芯片价值会重估吗？", body_cn: "阿里巴巴美股ADR（BABA）周二（11月10日）收跌2.52%，阿里当天披露旗下平头哥拟分拆并在香港主板独立挂牌，已于9月11日保密提交申请；这只是拟议安排，并非获批、确定估值或已开始交易。多头看芯片业务独立融资、估值透明度提升，且AI基础设施需求可为自研芯片提供应用场景；空头担心母公司持股稀释、外部融资成本以及国产芯片竞争，分拆也不等于阿里云收入立刻增加。平头哥招股文件、阿里云芯片部署与BABA现有业务现金流中，哪个更能检验分拆价值？", title_en: "T-Head Eyes Hong Kong Listing: Will Alibaba's Chip Value Be Repriced?", body_en: "Alibaba's ADR (BABA) fell 2.52% Tuesday (Nov 10); the company disclosed plans to spin off and separately list its T-Head chip unit on the Hong Kong main board, following a confidential filing on September 11 — a proposed arrangement only, not approved, valued or trading. Bulls see independent chip financing and greater valuation transparency, with AI infrastructure demand giving in-house chips a use case; bears see parent stake dilution, external funding costs and domestic competition; the spin-off does not immediately increase Alibaba Cloud revenue. Does the T-Head prospectus, Alibaba Cloud chip deployment or BABA's cash flow best test the spin-off's value?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
