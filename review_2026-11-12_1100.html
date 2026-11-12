@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-12 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-12</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 7</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:14.3%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 7 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "NVDA", title_cn: "英伟达盘后传换帅，反弹能否守住？", body_cn: "英伟达（NVDA）美股周三（11月11日）正式时段收涨2.92%，与芯片股反弹同向；收盘后才有媒体报道其董事会正讨论首席执行官黄仁勋的去留，盘后20:00美东最后一笔约158.78美元，较正式收盘低约8.61%。董事会尚未公布去留决定，不能把“讨论”写成“已罢免”，更不能用盘后新闻倒推解释日间上涨。多头看AI算力订单和现有产品生态，空头担心领导层变化扰动客户关系、治理风险叠加高估值；前几日的股东诉讼也只是未经裁决的原告指控。董事会正式公告、英伟达订单披露与AMD替代份额中，哪个信号会先决定后续走势？", title_en: "Nvidia After-Hours CEO-Change Report: Can the Rally Hold?", body_en: "Nvidia (NVDA) closed Wednesday's (Nov. 11) regular session up 2.92%, tracking the chip-stock rebound; only after the close did media report its board is discussing CEO Jensen Huang's future, with the last after-hours trade at about $158.78, roughly 8.61% below the regular close. The board has not announced a decision — discussion is not removal, and after-hours news cannot be used to explain the intraday gain. Bulls point to AI compute orders and the product ecosystem; bears fear a leadership change would disrupt customer ties, adding governance risk on top of a rich valuation, while the shareholder suit filed earlier this week remains an unadjudicated plaintiff allegation. What would the formal board statement and Nvidia order data need to show before the regular-session rally can be trusted?" },
+  { ticker: "MU / SNDK / SKHY", title_cn: "美光涨11.89%，存储反弹有后劲吗？", body_cn: "美光（MU）美股周三（11月11日）收涨11.89%，闪迪（SNDK）涨13.69%、SK海力士（SKHY）涨9.71%，与AI硬件风险偏好回升同向，但不能由股价同涨推断三家同时获得新订单。Anthropic最新招股书列出美光拟在其IPO完成后认购约10亿美元股份：这是附条件的股权投资，不是美光新增HBM销售；闪迪的企业级SSD需求要看云客户采购和产品价格，海力士则要验证HBM供给与扩产兑现。两只涨超10%的美股在同一存储主题里逐一比较，多头看AI投入推动高端存储需求，空头担心融资承诺、普通存储价格周期和客户库存会使反弹难以转为利润。后续更值得核对的是美光的HBM出货、闪迪的SSD订单，还是海力士的产能与定价？", title_en: "Micron Jumps 11.89%: Does the Memory Rally Have Legs?", body_en: "Micron (MU) rose 11.89% Wednesday (Nov. 11), SanDisk (SNDK) gained 13.69% and SK Hynix (SKHY) 9.71%, alongside a rebound in AI hardware sentiment; Micron and SanDisk both rose more than 10%, but shared price gains do not establish new orders for all three. Anthropic's latest prospectus lists Micron intending to subscribe about $1 billion of shares after its IPO closes: a conditional equity investment, not new HBM sales. SanDisk's enterprise SSD demand hinges on cloud purchasing and pricing, while Hynix must prove out HBM supply and capacity additions. Bulls see AI spending lifting high-end memory demand; bears cite financing commitments, commodity memory pricing cycles and customer inventories. What shipment, order and pricing evidence would show that the memory rebound is durable?" },
+  { ticker: "CRWV", title_cn: "CoreWeave涨24.71%，订单能转成现金吗？", body_cn: "CoreWeave（CRWV）美股周三（11月11日）正式时段收涨24.71%，这是周二收盘后财报发布后的首个完整交易日反应，不能与财报当晚的盘后波动相加。公司本季营收36.61亿美元，高于Finnhub日历约36.2亿美元的预期，全年营收指引提高至130亿—133亿美元；但本季GAAP每股亏损1.27美元，日历所列约亏1.18美元未标明相同会计口径，不能硬判EPS达标与否。公司披露约1325亿美元收入积压，其中含预计未来确认的金额，并非现有现金；净利息费用约8.46亿美元。多头看合同规模和指引，空头盯融资成本与交付速度：后续订单转收入、净利息和自由现金流中，哪项最能支撑这次急涨？", title_en: "CoreWeave Jumps 24.71%: Can Orders Convert to Cash?", body_en: "CoreWeave (CRWV) closed Wednesday (Nov. 11) up 24.71%, the first full session after Tuesday's post-close results, and should not be added to the after-hours move from earnings night. Revenue was $3.661 billion, above the roughly $3.62 billion Finnhub calendar estimate, and full-year guidance rose to $13 billion to $13.3 billion; but GAAP loss per share was $1.27 versus a calendar figure of about $1.18 on an unstated accounting basis, so no hard EPS verdict is possible. Backlog is about $132.5 billion, including amounts still to be recognized rather than cash in hand; net interest expense ran about $846 million. Bulls cite the contract base and raised guidance; bears point to financing costs and delivery risk. What cash-conversion evidence would validate the rally?" },
+  { ticker: "QQQ", title_cn: "AI财报带动QQQ反弹，盘后风险会逆转吗？", body_cn: "纳指100 ETF（QQQ）美股周三（11月11日）收涨2.31%，前一日偏热的10月CPI并未阻断当日科技股修复：CoreWeave在财报后的正式交易时段大涨24.71%，存储与部分芯片股同步回升。多头将其视为AI订单仍在兑现的证据，空头认为单家公司营收和巨额积压未解决整个行业的融资成本；美国通胀和利率风险也未因一天反弹消失。英伟达治理消息是在收盘后才出现、盘后股价一度明显回落，不应混入QQQ的正式收盘涨幅。接下来是等英伟达正式回应、观察美债收益率，还是用CoreWeave订单交付验证QQQ反弹的广度？", title_en: "AI Earnings Lift QQQ: Will After-Hours Risk Reverse It?", body_en: "Nasdaq 100 ETF (QQQ) closed Wednesday (Nov. 11) up 2.31%, with the prior day's hot October CPI failing to block the tech recovery: CoreWeave surged 24.71% in the regular session after its results, and memory and several chip names rose alongside. Bulls take it as a sign that AI orders may still be translating into revenue; bears argue one company's revenue and huge backlog do not fix industry-wide financing costs, and US inflation and rate risk did not vanish in a day. Nvidia's governance news broke after the close and the stock fell sharply in after-hours trade, so it should not be folded into QQQ's regular-session gain. What would Nvidia's formal response, Treasury yields and CoreWeave deliveries need to show for the QQQ rebound to persist?" },
+  { ticker: "NBIS", title_cn: "Nebius涨15.44%，今晚财报能接住吗？", body_cn: "Nebius（NBIS）美股周三（11月11日）正式时段收涨15.44%，同业CoreWeave财报后的强势让AI算力云再受关注，但Nebius自己的业绩尚未公布，涨幅不能写成财报超预期。Finnhub日历列其美东周四（11月12日）开市前发布，营收预期约9.3亿美元、每股亏损约0.70美元；这两项只是事前预测，仍需以公司正式财报核对季度和会计口径。多头期待已签算力需求转为机柜上线和收费，空头担心电力、融资及折旧先于回款。与CoreWeave的收入积压相比，Nebius应给出实际上架容量、现金消耗和后续指引；这些指标中哪个最能证明股价提前反应有基本面支撑？", title_en: "Nebius Jumps 15.44% Ahead of Results: What Must It Deliver?", body_en: "Nebius (NBIS) closed Wednesday (Nov. 11) up 15.44%, drawing fresh attention to AI compute clouds after peer CoreWeave's post-earnings strength, but Nebius has yet to report and the gain should not be described as an earnings beat. The Finnhub calendar lists results before Thursday's (Nov. 12) US open, with revenue expected near $930 million and a loss of about $0.70 per share; both are forecasts only, still to be checked against the company's formal report for period and accounting basis. Bulls expect signed compute demand to become live racks and billing; bears worry power, financing and depreciation outrun collections. What live-capacity and cash-flow evidence would justify the pre-results surge?" },
+  { ticker: "GOOG", title_cn: "谷歌拟认购Anthropic百亿，云收入能兑现吗？", body_cn: "Alphabet的GOOG美股周三（11月11日）收涨2.00%，Anthropic最新SEC招股书把其IPO之外的伙伴认购结构写清：若IPO完成且相关条件满足，Google拟按发行价购买约100亿美元Class N股份，七家伙伴合计约260亿美元。这不是已完成交易，而且Google所认购的一部分用于履行此前的2026年投资承诺，不能把100亿美元全部当作新追加资金。多头看Google Cloud算力合作及潜在持股价值，空头看资本占用、估值波动与Anthropic在模型市场同时也是竞争者；当天GOOG涨幅也不能直接说成由招股书推动。云业务实际收入、认购交割和投资回报中，哪个更能验证这笔布局？", title_en: "Google Plans a $10 Billion Anthropic Stake: Can Cloud Revenue Follow?", body_en: "Alphabet's GOOG rose 2.00% Wednesday (Nov. 11); Anthropic's latest SEC prospectus laid out partner subscriptions alongside its IPO: if the IPO closes and conditions are met, Google intends to buy about $10 billion of Class N shares at the offering price, with seven partners totaling about $26 billion. This is not a completed transaction, and part of Google's subscription fulfills an earlier 2026 investment commitment, so the full $10 billion is not all new money. Bulls cite Google Cloud compute ties and potential stake value; bears flag capital use, valuation swings and Anthropic competing in models. The GOOG gain cannot be attributed to the filing alone. What evidence of cloud revenue and investment return would validate the conditional stake?" },
+  { ticker: "MRVL / LITE / COHR", title_cn: "光通信链三股反弹，进口政策会改写机会吗？", body_cn: "美股光通信链周三（11月11日）反弹：Marvell（MRVL）收涨9.33%，Lumentum（LITE）涨10.67%，Coherent（COHR）涨9.25%。路透报道微软要求美国政府重新考虑对中国新型光收发模块的拟议进口限制，理由是供应收紧可能拖慢AI数据中心建设；这是政策游说，尚未宣布撤回拟议限制，也不能直接证明三家公司当天涨幅都由此造成。Lumentum与Coherent的光器件更贴近模块供给，Marvell则侧重网络芯片及互连；多头看扩容和高速连接需求，空头担心放宽进口后本土供应商的竞争与价格压力。港股截图所示盘中涨幅不混作美股收盘，下一步该重点看政策正式文本、三家新增订单，还是毛利率兑现？", title_en: "Optical-Chain Stocks Rebound: Will Import Policy Redraw the Trade?", body_en: "The US optical communications chain rebounded Wednesday (Nov. 11): Marvell (MRVL) closed up 9.33%, Lumentum (LITE) 10.67% and Coherent (COHR) 9.25%. Reuters reported Microsoft asked the US government to reconsider proposed import limits on Chinese optical transceiver modules, arguing tighter supply could slow AI data-center buildouts; that is lobbying, not an announced withdrawal of the proposed restriction, and does not by itself prove the gains came from it. Lumentum and Coherent sit closer to module supply, Marvell to networking chips and interconnect. Bulls see data-center buildouts and faster optical links; bears warn eased import limits could heighten competition and pressure US supplier pricing. Intraday Hong Kong moves are not US closes. What policy text and order-margin evidence would establish a lasting opportunity?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
