@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-16 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-16</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "NVDA", title_cn: "英伟达周二交卷，换帅后订单能稳住吗？", body_cn: "英伟达定于美东周二（11月17日）收盘后公布业绩，这是公司宣布管理层交接后的首份季报，市场会同时检验数据中心需求和新管理层的执行能力。Finnhub日历列营收预期约1112亿美元、每股收益预期约2.52美元；日历未注明每股收益采用GAAP还是调整后口径，结果出炉后应按同口径核对。多头看GPU平台、软件生态与云厂既有采购仍可支撑交付，空头担心领导过渡、客户自研芯片和融资环境影响新订单与估值。除了本季实际收入，更重要的是下一季指引、产品交付时点和毛利率；投资者该优先看英伟达自身订单，还是AMD与博通能否接到分流需求？", title_en: "Nvidia Reports Tuesday: Can Orders Hold After Leadership Change?", body_en: "Nvidia reports after the close on Tuesday, Nov. 17, its first quarterly results since announcing a management transition, with markets testing data-center demand and the new leadership's execution. Finnhub's calendar lists revenue consensus near $111.2 billion and EPS near $2.52, without specifying GAAP or adjusted basis — compare like for like once results land. Bulls cite the GPU platform, software ecosystem and existing cloud orders; bears flag the leadership transition, customer-designed chips and financing conditions. The next-quarter outlook, delivery schedule and gross margin will matter as much as reported revenue. Investors can compare any confirmed customer shift toward AMD and Broadcom. What delivery evidence would show Nvidia orders remain intact through the leadership transition?" },
+  { ticker: "JD / BABA", title_cn: "京东阿里接连放榜，电商与云谁更能增利？", body_cn: "京东定于美东周二（11月17日）开市前发布业绩，阿里巴巴定于周四（11月19日）开市前发布。两家都面对消费支出和获客成本，但检验路径不同：京东要看零售与物流的订单增长、履约效率和利润率；阿里除电商盈利，还要交代云业务增长、AI算力投入及平头哥拟分拆对资本配置的影响。多头押注规模和效率改善，空头担心促销投入压利润、AI基础设施支出先于回款。京东的物流效率能否变成经营现金流，阿里云的增长能否同时改善利润率，都是各自财报里的验证点。电商利润、云收入和自由现金流中，哪项更能区分京东与阿里的投资价值？", title_en: "JD, Alibaba Report Back-to-Back: E-commerce or Cloud Drives Profit?", body_en: "JD reports before the open Tuesday, Nov. 17, and Alibaba before the open Thursday, Nov. 19, both facing consumer spending and customer-acquisition costs but on different tests. JD's read is retail and logistics order growth, fulfillment efficiency and margins; Alibaba must show e-commerce profit plus cloud growth, AI compute spending and the capital-allocation impact of its planned T-Head spin-off. Bulls bet on scale and efficiency gains; bears fear promotions squeeze profit and AI infrastructure outlays outrun returns. JD must show that logistics efficiency turns into operating cash flow, while Alibaba Cloud needs growth that also improves margins. What earnings and cash-flow evidence would distinguish JD retail efficiency from Alibaba cloud investment?" },
+  { ticker: "PANW / INTU", title_cn: "安全与财务软件本周交卷，AI能否变收入？", body_cn: "Palo Alto Networks定于美东周三（11月18日）收盘后、Intuit定于周四（11月19日）收盘后公布业绩。两家公司都谈AI应用，但前者的验证点是安全平台与订阅合同续约、剩余履约义务及利润率，后者则要看QuickBooks等企业软件的付费客户、每客收入与经营现金流。多头看企业持续投入安全和自动化工具，空头担心销售周期变长、新功能推广未必带来额外付费，收购或产品投入亦会影响利润。仅有AI产品叙述不足以证明财务回报；财报后是Palo Alto Networks的订阅订单，还是Intuit的客户留存和付费转化更值得跟踪？", title_en: "Security and Finance Software Report This Week: Can AI Become Revenue?", body_en: "Palo Alto Networks reports after the close Wednesday, Nov. 18, and Intuit after the close Thursday, Nov. 19, both pitching AI but with different proof points. Palo Alto faces scrutiny on security platform and subscription renewals, remaining performance obligations and margins; Intuit on paying customers, revenue per customer and operating cash flow across QuickBooks and its business software. Bulls see sustained enterprise spending on security and automation; bears warn of longer sales cycles, features that may not command extra payment, and acquisition costs hitting profit. What evidence would show Palo Alto renewals and Intuit paid conversion generating real returns?" },
+  { ticker: "HD / TGT / WMT", title_cn: "三家零售商本周交卷，消费韧性由谁验证？", body_cn: "家得宝定于美东周二（11月17日）开市前、塔吉特周三（11月18日）开市前、沃尔玛周四（11月19日）开市前公布业绩。Finnhub日历对三家的营收预期依次约440.9亿、267.9亿和1890.5亿美元，每股收益预期约3.96、2.08和0.64美元；市场预期不等于公司指引，且各家公司财季和EPS口径须在正式披露后逐一对照。家得宝看家装大件需求与专业客户，塔吉特看可选消费及库存，沃尔玛看食品与线上业务的客流、毛利率。多头押注就业韧性支撑消费，空头担心物价和促销蚕食利润；同店销售、毛利率与管理层后续指引中，哪个最能说明消费是在扩张还是转向低价？", title_en: "Three Retailers Report This Week: Who Confirms the Consumer Is Holding Up?", body_en: "Home Depot reports before the open Tuesday, Nov. 17, Target Wednesday, Nov. 18, and Walmart Thursday, Nov. 19. Finnhub consensus puts revenue at roughly $44.09 billion, $26.79 billion and $189.05 billion, with EPS near $3.96, $2.08 and $0.64 — expectations are not guidance, and fiscal quarters and EPS bases must be checked against actual disclosures. Home Depot hinges on big-ticket home improvement and pros, Target on discretionary spending and inventory, Walmart on grocery and online traffic and margins. What same-store sales and margin pattern would show whether consumers are trading down after these results?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
