@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-18 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-18</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 4</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:25.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 4 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "NVDA", title_cn: "英伟达营收超预期，1300亿美元指引能托住AI链吗？", body_cn: "英伟达（NVDA）美股周二（11月17日）正式时段收跌0.44%，财报在收盘后才公布，不能倒用业绩解释日间跌幅。公司披露财年第三季营收1158亿美元，高于Finnhub日历事前约1112.8亿美元的预期；数据中心营收1076亿美元，同比增长110%。GAAP每股收益2.70美元、非GAAP为2.68美元；日历EPS口径不明，不据此判定超预期。财年第四季营收指引1300亿美元、上下浮动3%，但指引不是已签客户合同，这一季多一周，且指引没有计入中国数据中心计算业务收入。多头看Vera Rubin交付和云厂采购继续放量，空头看下一季毛利率指引71%至72%低于本季非GAAP的74.9%，也担心换帅后的执行。英伟达交付、台积电产能和云厂回款中，你认为哪一项最先验证这份高指引？", title_en: "Nvidia Beats Revenue Estimates — Can $130B Guidance Hold the AI Supply Chain?", body_en: "Nvidia (NVDA) fell 0.44% in the regular session on Tuesday, November 17; results released after the close cannot explain that decline. Revenue for its financial-year third quarter was $115.8B, above Finnhub calendar's prior estimate of approximately $111.28B; data-center revenue was $107.6B, up 110% year over year. GAAP EPS was $2.70 and non-GAAP EPS $2.68, but the calendar's EPS accounting basis is unclear, so no like-for-like comparison is claimed. Next-quarter revenue guidance is $130B, plus or minus 3%, includes an extra week, excludes China data-center compute revenue and is not a signed customer contract. Bulls see Vera Rubin deliveries and cloud spending; bears note a gross-margin outlook of 71% to 72%, below this quarter's 74.9% non-GAAP margin, and execution risk under new leadership. Would TSMC capacity or cloud-customer receipts be the first external proof of that guidance?" },
+  { ticker: "JD / 00700.HK / 09988.HK", title_cn: "京东利润增长，腾讯阿里能否接力港股？", body_cn: "京东（JD）周二（11月17日）公布第三季营收3095.93亿元、同比增3.5%；GAAP归母净利65.03亿元，较去年52.76亿元增约23%。但收入及盈利不能只看总额：京东零售营业利润150.68亿元，新业务营业亏损96.42亿元，较去年157.36亿元收窄，却仍在消耗利润；履约费用同比增7.4%。尽管总利润增长，新业务仍亏损，接下来要看亏损能否继续缩小而不拖累零售主业。接力披露的是腾讯（00700.HK）11月18日审议业绩、阿里（09988.HK）11月19日公布结果，截稿时两家结果未落地。多头看京东亏损收窄后，腾讯游戏广告和阿里云增长可支撑板块信心；空头担心消费偏弱、AI资本支出与现金流压力。京东零售盈利、腾讯游戏广告和阿里云增长中，你认为哪项最可能带来有利润支撑的港股修复？", title_en: "JD.com Profit Rises — Can Tencent and Alibaba Sustain Hong Kong's Momentum?", body_en: "JD.com (JD) reported third-quarter revenue of RMB309.593B on Tuesday, November 17, up 3.5% year over year; GAAP net income attributable to shareholders was RMB6.503B versus RMB5.276B, up approximately 23%. JD Retail operating profit was RMB15.068B, while New Businesses posted an operating loss of RMB9.642B, narrower than last year's RMB15.736B but still a drag; fulfillment costs rose 7.4%. Despite group profit growth, the next test is whether those losses keep narrowing without eroding JD Retail. Tencent (00700.HK) is scheduled to review results on November 18 and Alibaba (09988.HK) to report on November 19; neither had released results as of writing. Bulls see a sector rebound if Tencent gaming and ads and Alibaba Cloud support earnings; bears cite weak consumption, AI capital spending and cash-flow pressure. What evidence in the upcoming releases would turn JD's profit improvement into a broader Hong Kong tech recovery?" },
+  { ticker: "QQQ", title_cn: "QQQ收跌0.73%，英伟达指引能带动科技修复吗？", body_cn: "纳指100 ETF（QQQ）美股周二（11月17日）正式时段收跌0.73%，标普500 ETF（SPY）跌1.01%；微软（MSFT）跌2.27%，谷歌（GOOG）跌1.30%，科技内部也未同步企稳。英伟达收盘后才公布1158亿美元营收和下季1300亿美元的收入指引，这些新信息要等随后交易时段检验，不能回填成当天指数跌因。多头看算力交付兑现有机会带动云厂和芯片供应链修复，空头担心个别龙头利好不足以抵消软件估值、云厂资本支出及其他大型科技股的压力。英伟达财报之后，微软和谷歌是否跟涨，才能证明QQQ的修复并非龙头独行？", title_en: "QQQ Falls 0.73% — Can Nvidia's Guidance Spark a Tech Rebound?", body_en: "The Nasdaq-100 ETF (QQQ) dropped 0.73% in Tuesday's regular session, while the S&P 500 ETF (SPY) fell 1.01%; Microsoft (MSFT) shed 2.27% and Alphabet (GOOG) lost 1.30%, with no broad stabilization across the tech sector. Nvidia's post-close report of $115.8B in revenue and $130B in next-quarter guidance represents new information to be tested in subsequent trading and cannot be attributed as a cause of the day's declines. Bulls see compute delivery potentially lifting cloud names and chip supply chains, while bears argue that one bellwether's upside may not offset software valuations, hyperscaler capex concerns, and pressure on other large-cap tech. Would Microsoft and Alphabet need to recover alongside Nvidia before a QQQ rebound looks broad-based?" },
+  { ticker: "SPCX", title_cn: "SpaceX涨3.16%，算力扩张能撑起估值吗？", body_cn: "SpaceX（SPCX）美股周二（11月17日）正式时段收涨3.16%；收盘后的英伟达财报称Vera Rubin机架将很快在SpaceXSI上线，不能把这条盘后披露当成日间涨幅的已证实原因。SpaceX上季披露超级智能业务营收75.60亿美元，同期该业务资本支出164.44亿美元；新机架何时上线、增加多少付费需求仍待验证。以11月17日收盘价和公司10月15日披露的已发行股数粗算，股权市值接近1.9万亿美元；这不是最新实时股本或目标价。多头看算力部署与现有业务协同，空头担心设备、电力和融资先于收入兑现，高估值又放大交付风险。SpaceXSI的容量上线、客户付费和现金流中，哪项会先为高估值提供支撑？", title_en: "SpaceX Rises 3.16% — Can Compute Expansion Justify Its Valuation?", body_en: "SpaceX (SPCX) rose 3.16% in the regular session on Tuesday, November 17; Nvidia's post-close results said Vera Rubin racks would come online soon at SpaceX SI, but that later disclosure cannot explain the regular-session gain. SpaceX reported quarterly superintelligence revenue of $7.56B and capital expenditure of $16.444B for the same period; the launch timetable and incremental paying demand for new racks remain unverified. Using the November 17 close and the share count disclosed on October 15 gives an approximate equity valuation of $1.9 trillion, not a live share count or price target. Bulls expect new capacity to complement current operations; bears worry that equipment, power and financing costs arrive before revenue and that the valuation magnifies execution risk. Would capacity commissioning and customer cash receipts suffice to support the valuation?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
