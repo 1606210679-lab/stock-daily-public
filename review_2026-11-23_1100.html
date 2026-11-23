@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-23 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-23</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 6</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:16.7%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 6 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ", title_cn: "QQQ跌5.67%且VIX摸40，科技该抄底吗？", body_cn: "纳指100 ETF（QQQ）美股上周五（11月20日）收跌5.67%，标普500 ETF（SPY）跌3.64%；VIX恐慌指数盘中触及40.03，收于35.89，科技和大盘同时承压，但指数风险并不等于每家公司订单突然消失。英伟达同日跌14.01%，Anthropic上市第二个交易日跌8.50%，集中持有AI龙头的风险被放大。多头认为前期急跌后若龙头业绩与交付仍兑现，指数可能修复；空头担心估值、算力资本开支和融资条件继续压缩风险偏好。仅凭价格下跌，无法断定是监管事件或机构集中卖出所致。本周看QQQ能否带动芯片、云厂一起企稳，还是先用更分散的SPY降低单一赛道敞口？", title_en: "QQQ Falls 5.67%, VIX Hits 40 — Is It Time to Buy the Tech Dip?", body_en: "The Nasdaq 100 ETF (QQQ) closed down 5.67% on Friday, November 20 while the S&P 500 ETF (SPY) fell 3.64%; the VIX touched 40.03 intraday before settling at 35.89, as both tech and the broader market came under simultaneous pressure. Nvidia dropped 14.01% the same session and Anthropic fell 8.50% in its second trading day, amplifying the risks of concentrated AI-leader exposure. Bulls argue that if top-line delivery holds post-selloff, indices could recover — bears cite stretched valuations, AI capex cycles, and tightening financial conditions. What evidence of breadth across chip and cloud stocks would make a QQQ recovery credible this week?" },
+  { ticker: "ANT", title_cn: "Anthropic跌8.50%，双倍杠杆ETF能碰吗？", body_cn: "Anthropic（ANT）美股上周五（11月20日）收跌8.50%，报88.91美元，盘中低点83.05美元，几乎回到83美元发行价；与首日相对发行价上涨17.07%的表现相比，价格发现仍很剧烈。Leverage Shares by Themes计划在美东周一（11月23日）推出ANUU双倍做多、ANDD双倍做空及ANSS单倍做空Anthropic的ETF；截至北京时间周一上午，美股尚未开市，不能给新产品编造首日涨跌。多头看Claude需求与上市后的机构配置，空头看模型算力成本、流通筹码和高波动。杠杆ETF以每日目标倍数重置，多日复利、费用及买卖价差会让回报偏离简单两倍；持有ANT、等待价格稳定，还是短线使用有每日重置风险的工具，哪条路径更能承受价格波动？", title_en: "Anthropic Drops 8.50% — Should Investors Touch the 2x Leveraged ETFs?", body_en: "Anthropic (ANT) closed down 8.50% on Friday, November 20 at $88.91, with an intraday low of $83.05 — nearly back to its $83 IPO price — a sharp reversal from the 17.07% first-day gain above issue price, underscoring that price discovery remains volatile. Leverage Shares by Themes plans to launch three Anthropic-linked products: ANUU (2x long), ANDD (2x short), and ANSS (1x short), with a Monday, November 23, U.S. market open pending at time of writing. Leveraged ETFs reset to their daily target multiplier, meaning multi-day compounding, fees, and bid-ask spreads can cause returns to diverge significantly from a simple two-times outcome. Would a daily-reset instrument still fit a thesis that takes several sessions to play out?" },
+  { ticker: "GC=F", title_cn: "黄金期货周跌9.54%，避险为何也遭抛售？", body_cn: "黄金期货（GC=F）上周五（11月20日）日线收于每盎司3515.40美元，较前一周五的3886.30美元低9.54%，周五盘中低至3502.90美元；同期SPY单日跌3.64%，黄金与风险资产同步回落，并未发挥短线对冲效果。周日晚交易重开后金价一度回到3600美元上方，那是另一时段，不能说上周五收盘没有跌破3600。多头看急跌后若流动性压力缓和，黄金仍有配置需求；空头担心资金需要现金时，即便盈利头寸也会被卖出。股金同跌可能与筹集现金有关，但价格本身不能证明保证金追缴是主因。本周金价能否守住反弹、VIX能否回落，还是先保留现金更符合你的风险判断？", title_en: "Gold Futures Slide 9.54% on the Week — Why Did the Safe Haven Sell Off Too?", body_en: "Gold futures (GC=F) closed on Friday, November 20 at $3,515.40 per ounce, down 9.54% from the prior Friday's $3,886.30, with an intraday low of $3,502.90; SPY fell 3.64% the same session, meaning gold declined in lockstep with risk assets rather than providing a short-term hedge. Gold rebounded above $3,600 in Sunday evening trade — a separate session that does not change Friday's close. Bulls see renewed allocation demand if liquidity stress eases after the sharp drop; bears note that even profitable positions get liquidated when investors need to raise cash. Would gold holding above Friday’s low while VIX eases help distinguish temporary liquidity selling from a lasting repricing?" },
+  { ticker: "NVDA", title_cn: "英伟达跌14.01%，高指引为何没托住股价？", body_cn: "英伟达（NVDA）美股上周五（11月20日）收跌14.01%，此前公司公布的季报收入1158亿美元、下一季收入指引1300亿美元，交付与需求叙事没有同步撑住估值。市场担忧管理层过渡、下一季毛利率预期71%至72%低于本季调整后74.9%，以及客户算力资本开支能否按时回款；这不等于公司已经失去订单，也不能把未经证实的监管调查写成已发生事实。多头看Vera Rubin开始交付和云厂既有采购，空头看新品爬坡、价格和毛利率压力。强财报之后再跌说明市场要的可能不只是规模增长；下一次财报前，产品实际交付、毛利率兑现，还是客户回款，哪项最有机会修复英伟达的估值？", title_en: "Nvidia Tumbles 14.01% — Why Couldn't Strong Guidance Hold the Stock?", body_en: "Nvidia (NVDA) closed down 14.01% on Friday, November 20, even after the company reported quarterly revenue of $115.8 billion and issued next-quarter revenue guidance of $130 billion — strong delivery and demand narrative failed to support the valuation. The market focused on the management transition, next-quarter adjusted gross margin guidance of 71%–72% versus this quarter's 74.9%, and uncertainty over whether cloud customers' AI capex will convert to timely revenue. Bulls point to Vera Rubin delivery timelines and existing cloud procurement commitments; bears flag new-product ramp risk, pricing pressure, and margin compression. A post-beat selloff suggests the market may want more than scale growth — heading into the next earnings report, how much delivery and margin progress would be needed to justify Nvidia's valuation?" },
+  { ticker: "AMD", title_cn: "AMD跌13.25%，替代芯片叙事还站得住吗？", body_cn: "AMD美股上周五（11月20日）收跌13.25%，与英伟达的大跌同向，前几日市场追逐的“客户可能分散采购”题材没能在这轮AI抛售中提供保护。AMD已有服务器CPU和加速器产品，但竞争对手的治理变化并不等于采购合同已经改签；目前也没有可核实的新客户订单证明云厂在上周五把英伟达采购整体转向AMD。多头看大型云厂保留多供应商方案、AMD产品迭代有机会争取份额，空头担心软件迁移、供货认证和价格谈判拉长实际兑现时间。若市场风险偏好回升，AMD的服务器CPU出货、数据中心GPU客户认证，还是云厂采购合同，哪项更能让股价摆脱英伟达牵引？", title_en: "AMD Falls 13.25% — Can the Alternative Chip Thesis Still Hold?", body_en: "AMD dropped 13.25% on Friday, November 20, moving in tandem with Nvidia's selloff; the recent narrative that customers might diversify AI chip procurement provided no protection during this broad AI-sector liquidation. AMD has competitive server CPU and accelerator products, but a competitor's governance change does not mean procurement contracts have been rewritten — no verifiable new customer orders confirm that cloud providers shifted Nvidia spend to AMD last Friday. Bulls cite multi-vendor sourcing strategies at large hyperscalers and AMD's product roadmap as a path to share gains; bears point to software migration costs, supply certification timelines, and prolonged price negotiations. If risk appetite recovers, what specific order and shipment progress would AMD need to show to decouple its stock from Nvidia's volatility?" },
+  { ticker: "MU / SNDK", title_cn: "美光闪迪双双急跌，存储需求会松动吗？", body_cn: "美光（MU）美股上周五（11月20日）跌13.89%，闪迪（SNDK）跌16.05%，存储链与AI芯片抛售同步承压；闪迪11月19日生效一股拆八股，跌幅按拆股调整后的前收盘价计算，不能把拆股前后的名义股价直接相减。两家公司产品不同：美光的HBM与DRAM更紧贴GPU及服务器建设，闪迪的NAND与数据中心闪存受存储容量、采购节奏和价格周期影响。多头看AI训练与推理仍需要内存和存储扩容，空头担心云厂放慢支出或闪存供给走强，使需求未必能及时转化为更好利润。大跌本身不是订单被取消的证据；接下来美光的HBM出货，还是闪迪的NAND价格与库存，哪个能先证明存储链仍有基本面支撑？", title_en: "Micron and SanDisk Plunge — Will Memory Demand Start to Soften?", body_en: "Micron (MU) fell 13.89% and SanDisk (SNDK) dropped 16.05% on Friday, November 20, with the memory supply chain selling off alongside AI chips; SanDisk completed an 8-for-1 stock split on November 19, so the percentage decline is calculated against the split-adjusted prior close — pre- and post-split nominal prices cannot be compared directly. The two companies serve distinct markets: Micron's HBM and DRAM are closely tied to GPU and server build-out, while SanDisk's NAND and data-center flash are driven by storage capacity cycles, procurement timing, and pricing trends. Bulls argue AI training and inference still require expanding memory and storage; bears worry that slowing cloud spending or rising NAND supply could prevent demand from translating into margin improvement. The selloff alone is not evidence of cancelled orders. What would distinguish a durable demand slowdown from a temporary inventory reset in memory?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
