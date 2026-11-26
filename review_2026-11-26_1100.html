@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics Review — 2026-11-26 AM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0f1117; color: #e2e8f0;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .container { width: 100%; max-width: 780px; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .date-label { font-size: 13px; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+  .session-badge { display: inline-block; background: #1e3a8a; color: #93c5fd; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 20px; margin-top: 5px; }
+  .progress-text { font-size: 28px; font-weight: 700; color: #f1f5f9; text-align: right; }
+  .progress-sub { font-size: 12px; color: #475569; text-align: right; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 4px; background: #1e293b; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Card */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .ticker-tag { display: inline-block; background: #0f172a; border: 1px solid #334155; color: #94a3b8; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  /* Section divider */
+  .section-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 20px 0 16px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e3a8a;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 2px 12px;
+    border-radius: 20px;
+  }
+  .section-label.cn { color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .section-label.en { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Field */
+  .field-block { margin-bottom: 16px; }
+  .field-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Content boxes */
+  .field-content {
+    font-size: 14px; line-height: 1.65; word-break: break-word;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 9px;
+  }
+  .field-content.cn-content {
+    color: #fcd34d; background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .field-content.en-content {
+    color: #e2e8f0; background: #0f172a;
+    border: 1px solid #334155;
+  }
+  .field-content.body-cn { font-size: 13px; color: #fbbf24; }
+  .field-content.body-en { font-size: 13px; color: #cbd5e1; }
+
+  /* Buttons */
+  .copy-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+  .copy-title-cn-btn { background: rgba(217,119,6,0.8); color: #fff; }
+  .copy-title-cn-btn:hover { background: #d97706; }
+  .copy-title-en-btn { background: #1d4ed8; color: #fff; }
+  .copy-title-en-btn:hover { background: #2563eb; }
+  .copy-body-cn-btn  { background: rgba(180,83,9,0.8); color: #fff; }
+  .copy-body-cn-btn:hover  { background: #b45309; }
+  .copy-body-en-btn  { background: #0f766e; color: #fff; }
+  .copy-body-en-btn:hover  { background: #0d9488; }
+  .copy-btn.copied { background: #166534 !important; color: #bbf7d0 !important; }
+
+  /* Hint */
+  .hint { font-size: 12px; color: #334155; text-align: center; margin-bottom: 14px; }
+  .hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1px 6px; font-size: 11px; color: #64748b; }
+
+  /* Nav */
+  .nav { display: flex; gap: 12px; }
+  .nav-btn { flex: 1; padding: 13px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: #334155; color: #e2e8f0; border-color: #475569; }
+  .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  /* Done */
+  .done-banner { display: none; text-align: center; padding: 28px; background: #14532d; border: 1px solid #166534; border-radius: 16px; color: #bbf7d0; font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .done-sub { font-size: 13px; opacity: 0.8; margin-top: 8px; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <div class="date-label">2026-11-26</div>
+      <div class="session-badge">AM</div>
+    </div>
+    <div>
+      <div class="progress-text" id="progressText">1 / 5</div>
+      <div class="progress-sub">topics</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:20.0%"></div>
+  </div>
+
+  <div id="doneBanner" class="done-banner">
+    ✅ All done! 5 topics uploaded
+    <span class="done-sub">记得运行 python3 learn_from_edits.py 记录本次偏好</span>
+  </div>
+
+  <div id="card" class="card" >
+    <div class="ticker-tag" id="tickerTag"></div>
+
+    <!-- ── 中文区块 ── -->
+    <div class="section-divider"><span class="section-label cn">中文</span></div>
+
+    <div class="field-block">
+      <div class="field-label">标题</div>
+      <div class="field-content cn-content" id="titleCn"></div>
+      <button class="copy-btn copy-title-cn-btn" onclick="copyField('title_cn')">复制标题（中文）</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">正文</div>
+      <div class="field-content cn-content body-cn" id="bodyCn"></div>
+      <button class="copy-btn copy-body-cn-btn" onclick="copyField('body_cn')">复制正文（中文）</button>
+    </div>
+
+    <!-- ── 英文区块 ── -->
+    <div class="section-divider"><span class="section-label en">English</span></div>
+
+    <div class="field-block">
+      <div class="field-label">Title</div>
+      <div class="field-content en-content" id="titleEn"></div>
+      <button class="copy-btn copy-title-en-btn" onclick="copyField('title_en')">Copy Title (EN)</button>
+    </div>
+
+    <div class="field-block">
+      <div class="field-label">Body</div>
+      <div class="field-content en-content body-en" id="bodyEn"></div>
+      <button class="copy-btn copy-body-en-btn" onclick="copyField('body_en')">Copy Body (EN)</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;|&nbsp;
+    <kbd>1</kbd> 复制标题(中) &nbsp;|&nbsp;
+    <kbd>2</kbd> 复制正文(中) &nbsp;|&nbsp;
+    <kbd>T</kbd> Copy Title(EN) &nbsp;|&nbsp;
+    <kbd>B</kbd> Copy Body(EN)
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)" >Next →</button>
+  </div>
+
+</div>
+<script>
+const topics = [
+  { ticker: "QQQ", title_cn: "核心PCE升至3.3%，QQQ还能稳住吗？", body_cn: "纳指100ETF（QQQ）美股11月25日收跌0.65%，标普500ETF（SPY）跌0.29%；美国商务部当天公布的10月剔除食品和能源的PCE物价指数同比上涨3.3%、环比上涨0.3%，整体PCE同比上涨3.8%。通胀仍有黏性，但一次数据不足以确定美联储12月必然加息或加息幅度。多头看周三指数跌幅有限，科技股在前两日急涨急跌后有机会消化估值；空头担心较高的融资成本继续压制算力建设和高估值股票。美国股票市场11月26日感恩节休市、27日美东13时提前收盘，周五交易时段较短，成交深度也可能不同于常日。周五QQQ相对SPY的强弱、芯片成交和债券收益率，哪些变化能说明市场正在消化这份通胀数据？", title_en: "Core PCE rises to 3.3% — can QQQ hold steady?", body_en: "The Nasdaq-100 ETF (QQQ) fell 0.65% on Nov. 25 while the S&P 500 ETF (SPY) slipped 0.29%. Commerce Department data that day showed October core PCE, excluding food and energy, up 3.3% year on year and 0.3% month on month, with headline PCE up 3.8%. Inflation remains sticky, but one print is not enough to lock in a December Fed hike or its size. Bulls note Wednesday's limited index decline and room for tech to digest valuations after two days of sharp swings; bears worry high financing costs will keep pressuring compute buildout and richly valued stocks. U.S. markets are closed Nov. 26 for Thanksgiving and close early at 1 p.m. ET on Nov. 27, so Friday's session is shorter and depth may differ. Which shifts — QQQ's relative strength versus SPY, chip trading, Treasury yields — would show the market is digesting this inflation data?" },
+  { ticker: "SPCX", title_cn: "SpaceX轨道算力获部分许可，如何落地？", body_cn: "SpaceX（SPCX）美股11月25日收涨1.30%；美国联邦通信委员会同日就其“Starmind”轨道数据中心系统作出一项有条件、部分批准的授权，申请规模最多100万颗卫星。这份命令的具体无线电许可范围是系统在光学通信故障时使用的后备与紧急遥测、跟踪和控制频段，部分卫星退役处置豁免仍待审议；它不等于已发射100万颗，也不是已经形成太空数据中心收入。多头看监管路径明确一部分，有利于后续技术验证；空头看发射和算力载荷成本、太空碎片处置及客户付款仍远未兑现。周三股价上涨与命令同日发生，不能仅凭收盘数据断定全部涨幅由此产生。接下来实际部署数量、在轨运行成本与首批客户合同，哪项最能把许可转为可估值的业务？", title_en: "SpaceX Wins Partial Orbital-Compute Approval: What Comes Next?", body_en: "SpaceX (SPCX) rose 1.30% on Nov. 25 as the FCC issued a conditional, partially granted authorization for its \"Starmind\" orbital data center system, covering an application of up to 1 million satellites. The order's specific radio licensing covers backup and emergency telemetry, tracking and control frequencies used when optical links fail; some satellite disposal waivers remain under review. It does not mean 1 million satellites have launched, nor that space data center revenue exists. Bulls see a clearer regulatory path aiding technical validation; bears note launch and compute payload costs, debris disposal and customer payments are far from realized. The gain coincided with the order, but closing data alone cannot prove the order drove all of it. Going forward — deployment volumes, on-orbit costs, or first customer contracts — which best converts the license into a business that can be valued?" },
+  { ticker: "NVDA", title_cn: "Burry减少做空，英伟达跌3.91%怎么读？", body_cn: "英伟达（NVDA）美股11月25日再跌3.91%，与周一公司首席执行官黄仁勋复任后的急弹形成反差。投资人Michael Burry当天一篇公开可见的付费文章副题写着“增持、减少做空、寻找机会”；这说明其公开表达较此前更偏多，但文章具体仓位属于付费内容，不能据此推断他已买入英伟达看涨期权或持有多少现金，更不能把他的表态写成公司新订单。多头看英伟达产品交付及大型云厂采购仍能提供基本面支撑，空头看公司独立调查、国会监督和高估值下的获利回吐。周三芯片与大盘表现分化，单一名人态度并未改变股价继续回落的事实。接下来客户实际采购、调查进展和新产品交付，哪个更能决定这轮反弹是否真正企稳？", title_en: "Burry trims short, Nvidia falls 3.91% — how to read it?", body_en: "Nvidia (NVDA) fell another 3.91% on Nov. 25, a reversal from Monday's sharp rebound after chief executive Jensen Huang's return. Investor Michael Burry's publicly visible paid article that day carried the subtitle \"adding, reducing shorts, looking for opportunities,\" suggesting a more bullish public stance than before. Its specific positions are paywalled, so one cannot infer he bought Nvidia calls or how much cash he holds, still less recast his remarks as new corporate orders. Bulls point to Nvidia's product deliveries and large cloud purchases as fundamental support; bears cite the company's independent investigation, congressional oversight and profit-taking at high valuations. Chips and the broader market diverged Wednesday, and one celebrity's stance did not change the fact that shares kept falling. Which matters more for a durable rebound — actual customer purchases, the investigation's progress, or new product deliveries?" },
+  { ticker: "LI", title_cn: "理想财报后涨11.03%，毛利修复能延续吗？", body_cn: "理想汽车美股（LI）11月25日收涨11.03%，公司在美股当日开市前已发布第三季财报：收入人民币288亿元、同比增5.4%，交付99,964辆、增7.2%，汽车毛利率15.3%，高于第二季9.4%。不过第三季仍净亏约3.10亿元；毛利率改善不等于已经恢复净盈利。公司对第四季给出的交付指引为11万至11.5万辆，收入指引317亿至331亿元，下一步要检验新车型交付、售价与费用控制能否同步兑现。多头看交付恢复和经营现金流转正，空头担心产品结构与竞争压制单车利润。相比上一季汽车毛利率的低点，后续新增交付能否在不牺牲售价的情况下把理想推回持续盈利？", title_en: "Li Auto up 11.03% post-earnings — can margin recovery last?", body_en: "Li Auto's U.S. shares (LI) rose 11.03% on Nov. 25 after the company released third-quarter results before the U.S. open: revenue of RMB 28.8 billion, up 5.4% year on year; 99,964 deliveries, up 7.2%; and a vehicle margin of 15.3%, above the second quarter's 9.4%. Still, the quarter posted a net loss of about RMB 310 million — margin improvement does not equal a return to net profit. Guidance calls for fourth-quarter deliveries of 110,000 to 115,000 vehicles and revenue of RMB 31.7 billion to 33.1 billion, so the next test is whether new model deliveries, pricing and cost control land together. Bulls see delivery recovery and positive operating cash flow; bears worry product mix and competition are squeezing per-vehicle profit. Can new deliveries lift Li Auto back to sustained profitability without sacrificing pricing?" },
+  { ticker: "01810.HK / 09626.HK", title_cn: "小米微涨、B站涨7.19%，财报谁能撑住？", body_cn: "小米（01810.HK）与哔哩哔哩（09626.HK）11月25日港股正式收盘分别上涨0.23%和7.19%，是两家公司11月24日晚发布业绩后的完整交易日反应，而不是前一天上午的盘中报价。小米第三季收入1072.4亿元、同比降5.2%，经调整净利润48.84亿元、降56.8%；新车交付100,975辆，但汽车及AI等创新业务分部毛利率从25.5%降至19.2%，手机业务也承受存储等器件涨价。该分部收入239亿元中汽车占227亿元、其他业务12亿元包含AI，不能把合计值写成“AI收入”。B站收入83.2亿元、增8%，其中广告30.9亿元、增20%，手游14.1亿元、降7%；净利润5.04亿元、增7%。两家公司都曾在盘中受到关注，但收盘涨幅明显分化：小米的汽车与手机毛利、B站的广告增长与游戏企稳，哪条利润路径更有可能延续？", title_en: "Xiaomi edges up, Bilibili jumps 7.19% — which earnings hold?", body_en: "Xiaomi (01810.HK) and Bilibili (09626.HK) closed Hong Kong trading on Nov. 25 up 0.23% and 7.19% respectively — the full-session reaction to results released on the evening of Nov. 24, not the prior morning's intraday quotes. Xiaomi's third-quarter revenue fell 5.2% year on year to RMB 107.24 billion, with adjusted net profit down 56.8% to RMB 4.884 billion; it delivered 100,975 new vehicles, but the smart EV and AI innovation segment's gross margin fell to 19.2% from 25.5%, and the phone business faced rising component costs including memory. That segment had RMB23.9 billion of revenue, including RMB22.7 billion from cars and RMB1.2 billion from other activities including AI; the combined total is not AI revenue. Bilibili's revenue rose 8% to RMB 8.32 billion, with advertising up 20% at RMB 3.09 billion and mobile games down 7% at RMB 1.41 billion; net profit rose 7% to RMB 504 million. Both drew intraday attention, but closing gains diverged sharply: which profit path is more likely to last — Xiaomi's auto and phone margins, or Bilibili's ad growth and stabilizing games?" },
+];
+let current = 0;
+
+function render() {
+  if (!topics.length) return;
+  const t = topics[current];
+  document.getElementById('tickerTag').textContent = t.ticker || 'TOPIC';
+  document.getElementById('titleCn').textContent   = t.title_cn;
+  document.getElementById('bodyCn').textContent    = t.body_cn;
+  document.getElementById('titleEn').textContent   = t.title_en;
+  document.getElementById('bodyEn').textContent    = t.body_en;
+  document.getElementById('progressText').textContent = (current+1) + ' / ' + topics.length;
+  document.getElementById('progressBar').style.width  = ((current+1)/topics.length*100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === topics.length - 1;
+  document.getElementById('doneBanner').style.display = 'none';
+  document.getElementById('card').style.display = '';
+  resetBtns();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < topics.length) { current = next; render(); }
+  else if (dir === 1 && current === topics.length - 1) {
+    document.getElementById('doneBanner').style.display = 'block';
+    document.getElementById('card').style.display = 'none';
+  }
+}
+
+function resetBtns() {
+  [
+    ['.copy-title-cn-btn', '复制标题（中文）'],
+    ['.copy-body-cn-btn',  '复制正文（中文）'],
+    ['.copy-title-en-btn', 'Copy Title (EN)'],
+    ['.copy-body-en-btn',  'Copy Body (EN)'],
+  ].forEach(([sel, label]) => {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.textContent = label; btn.classList.remove('copied'); }
+  });
+}
+
+function copyField(field) {
+  const text = topics[current][field];
+  const labelMap = {
+    title_cn: '复制标题（中文）',
+    body_cn:  '复制正文（中文）',
+    title_en: 'Copy Title (EN)',
+    body_en:  'Copy Body (EN)',
+  };
+  const selMap = {
+    title_cn: '.copy-title-cn-btn',
+    body_cn:  '.copy-body-cn-btn',
+    title_en: '.copy-title-en-btn',
+    body_en:  '.copy-body-en-btn',
+  };
+  const btn = document.querySelector(selMap[field]);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = labelMap[field];
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')           navigate(-1);
+  if (e.key === 'ArrowRight')          navigate(1);
+  if (e.key === '1')                   copyField('title_cn');
+  if (e.key === '2')                   copyField('body_cn');
+  if (e.key.toLowerCase() === 't')     copyField('title_en');
+  if (e.key.toLowerCase() === 'b')     copyField('body_en');
+});
+
+render();
+</script>
+</body>
+</html>
